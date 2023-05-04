@@ -40,10 +40,10 @@ in_base_name="/home/sjet/repos/uc3-drosophola-genetics/data/raw/"
 out_base_name_pic="/home/sjet/repos/uc3-drosophola-genetics/Documentation/"
 
 # in_file_name="Europe_50kMutations_0.05missing.tsv"
-in_file_name="Europe_50kMutations.tsv"
-out_file_name="Europe_50kMutations_5perc_missing.csv"
-# in_file_name="North_America_50kMutations.tsv"
-# out_file_name="North_America_50kMutations_5perc_missing.csv"
+# in_file_name="Europe_50kMutations.tsv"
+# out_file_name="Europe_50kMutations_5perc_missing.csv"
+in_file_name="North_America_50kMutations.tsv"
+out_file_name="North_America_50kMutations_5perc_missing.csv"
 
 
 
@@ -55,7 +55,8 @@ df_gap=df.copy()
 # seed random number generator
 seed(1)
 # generate some integers
-number_of_gaps=3400
+# number_of_gaps=3400 #Europe
+number_of_gaps=1250 #North America
 values_pop = randint(2, dim_y, number_of_gaps)
 values_locus = randint(0, dim_x, number_of_gaps)
 values_locus_length=randint(1, 500, number_of_gaps)
