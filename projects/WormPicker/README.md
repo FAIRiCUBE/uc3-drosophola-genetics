@@ -2,6 +2,7 @@
 This code is used for the UC3 Project of FAIRiCUBE. The Wormpicker project is building the framework for  "Wormpicker" (UDF) of UC3.
 
 Currently the OGC Service used is provided by rasdaman (https://ows.rasdaman.org/rasdaman/ows#/services).
+FAIRiCUBE specific OGC is accessable via: https://fairicube.rasdaman.com/rasdaman/ows#/services 
 
 The main workflow established is executed by several python scripts manually, documented compact in a [main file](main.sh) with execution code, further explanation and backround can be read under [Workflow](#workflow). 
 
