@@ -14,7 +14,7 @@ python3 scripts/GetWCSlayerInfo.py
 #python3 scripts/GetBoundary.py --LayerInfoFile output/layer_info_WCS.csv -l AverageCholorColor -l AvgTemperatureColor -l mean_summer_airtemp
 # Call the Python script and store its output as a Bash variable
 
-output=$(python3 scripts/GetBoundary.py --LayerInfoFile output/layer_info_WCS.csv -l AverageCholorColor -l AvgTemperatureColor -l land_cover_class__esa_test_6 )
+output=$(python3 scripts/GetBoundary.py --LayerInfoFile output/fc_layer_info_WCS.csv -l AverageChlorophyll )
 
 ##neeed to include lat boundaries 27.0428:72.2158 !! ARE IN COMMAND BUT NOT IN SCRIPT 
 python3 scripts/FilterSamples.py --source data/dest_v2.samps_25Feb2023.csv --boundary $output
