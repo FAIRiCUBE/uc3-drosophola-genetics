@@ -6,11 +6,23 @@ import xml.etree.ElementTree as ET
 import csv 
 
 
-url = "https://ows.rasdaman.org/rasdaman/ows?service=WCS&request=GetCapabilities"
-#url = "https://fairicube.rasdaman.com/rasdaman/ows?service=WCS&request=GetCapabilities"
+#url = "https://ows.rasdaman.org/rasdaman/ows?service=WCS&request=GetCapabilities"
+
+from dotenv import dotenv_values
+
+# Load environment variables from the .env file
+env_vars = dotenv_values()
+
+# Access specific environment variables
+rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT')
+rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
+rasdaman_password = env_vars.get('RASDAMAN_CRED_PASSWORD')
+
+base_wcs_url = rasdaman_endpoint + "?service=WCS&version=2.1.0"
+response = requests.get(base_wcs_url + "&request=GetCapabilities", auth=(rasdaman_username, rasdaman_password))
 
 # Send the GetCapabilities request and get the response
-response = requests.get(url)
+#response = requests.get(url)
 
 # Parse the response as an XML document
 tree = ET.fromstring(response.content)
