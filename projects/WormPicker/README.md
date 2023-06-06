@@ -44,6 +44,11 @@ In Progress.
 Note: This is python code the subprocesses a *curl* command to obtain the data, no Query Language is used so far. 
 
 
+Filtering: To convert coordinates between EPSG/0/4326 (WGS84) and EPSG/0/3035 (ETRS89 ETRS-LAEA): the pyproj library in Python. This library provides functionalities for coordinate transformations.
+
+
+
+
 ### Output
 
 in progress

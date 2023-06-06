@@ -17,7 +17,6 @@ env_vars = dotenv_values()
 rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT')
 rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
 rasdaman_password = env_vars.get('RASDAMAN_CRED_PASSWORD')
-
 base_wcs_url = rasdaman_endpoint + "?service=WCS&version=2.1.0"
 response = requests.get(base_wcs_url + "&request=GetCapabilities", auth=(rasdaman_username, rasdaman_password))
 
