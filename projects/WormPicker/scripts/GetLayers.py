@@ -45,7 +45,7 @@ for i in range(0,len(wcs_coverage_summary)):
         x_max=bb_upp.split(" ")[1] 
         y_max=bb_upp.split(" ")[2]
         #print(coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_min)
-        layer_info.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_min))
+        layer_info.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max))
     else:
         bb_low=wcs_coverage_summary[i]['ows:BoundingBox']['ows:LowerCorner']
         bb_upp=wcs_coverage_summary[i]['ows:BoundingBox']['ows:UpperCorner']
@@ -61,6 +61,7 @@ for i in range(0,len(wcs_coverage_summary)):
 ##add resolution via describe coverage
 
 for ID in range(1,len(layer_info)):
+#for ID in range(3,4):
     coverage=layer_info[ID][0]
     #print(coverage)
     response = requests.get(base_wcs_url + "&request=DescribeCoverage&coverageId=" + coverage,
@@ -92,6 +93,14 @@ for ID in range(1,len(layer_info)):
         #print(layer_info[ID])
     except KeyError:
         pass
+    try:
+        wcs_coverage_description['ows:ExceptionReport']
+        rr=["NA", "NA", "NA"]
+        layer_info[ID]=layer_info[ID]+tuple(rr)
+    except KeyError:
+        pass
+
+
         
 
 os.chdir("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output")

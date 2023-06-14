@@ -37,18 +37,18 @@ def convert_4326_to_3035(longitude, latitude):
     return x, y
 
 #lat = float(options.lat)
-lat_l = float(str.split(options.bound,":")[0])
-lat_u = float(str.split(options.bound,":")[1])
-lon_l =float(str.split(options.bound,":")[2])
-lon_u = float(str.split(options.bound,":")[3])
+lat_l = float(str.split(options.bound,":")[0])          #latitude lower boundary
+lat_u = float(str.split(options.bound,":")[1])          #latitute upper boundary
+lon_l =float(str.split(options.bound,":")[2])           #longitude lower boundary
+lon_u = float(str.split(options.bound,":")[3])          #longitude upper boundary
 
 
 #lon_l = float(str.split(options.bound, ":")[0]) 
 #lon_u = float(str.split(options.bound, ":")[1])
-lat_l=11541132.485614082
-lat_u=-3168137.0
-lon_l=6763968.203153217
-lon_u=4321000.0
+#lat_l=11541132.485614082
+#lat_u=-3168137.0
+#lon_l=6763968.203153217
+#lon_u=4321000.0
 
 filtered_data=[]
 

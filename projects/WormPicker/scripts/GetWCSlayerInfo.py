@@ -33,14 +33,14 @@ coverages = tree.findall(".//{http://www.opengis.net/wcs/2.1}CoverageSummary")
 layer_info = []
 
 ## BRAND NEW  
-# Loop through the CoverageId elements and print the ones that match the desired namespaces
+# Loop through the CoverageId elements and print the ones that match the desired XLM elements
 for layer in coverages:
     coverage_id=layer.findall(".//{http://www.opengis.net/wcs/2.1}CoverageId")
     for title in coverage_id:
         #print(title.text)
         layer_name=title.text
-    bbwg48 = layer.findall(".//{http://www.opengis.net/ows/2.0}WGS84BoundingBox")
-    for x in bbwg48:
+    bbwg84 = layer.findall(".//{http://www.opengis.net/ows/2.0}WGS84BoundingBox")
+    for x in bbwg84:
         min= x.findall(".//{http://www.opengis.net/ows/2.0}LowerCorner")
         for y in min:
         #print(y.tag)
@@ -57,7 +57,8 @@ for layer in coverages:
     for x in bb:
         stamp=x.attrib['crs'].split('&')[0]
     #match=re.search(r'(?<=\?1=).*AnsiDate', stamp)
-    if (x.attrib.get('dimensions') in ['3', '4']) and re.search(r'(?<=\?1=).*AnsiDate', x.attrib['crs']):
+    #if (x.attrib.get('dimensions') in ['3', '4']) and re.search(r'(?<=\?1=).*AnsiDate', x.attrib['crs']):
+    if int(x.attrib.get('dimensions')) >=3 and re.search(r'(?<=\?1=).*AnsiDate', x.attrib['crs']):
         lc = x.findall(".//{http://www.opengis.net/ows/2.0}LowerCorner")
         for i in lc: 
             #print("")

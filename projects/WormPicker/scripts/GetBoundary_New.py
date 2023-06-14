@@ -7,7 +7,7 @@ import os
 import argparse
 import ast
 import math
-
+from module_crs_converter import trans4mfromwgs84
 
 #########################################################   HELP   #########################################################################
 usage="python %prog --source input.csv "
@@ -24,20 +24,20 @@ parser.add_option_group(group)
 (options, args) = parser.parse_args()
 
 
-def convert_4326_to_3035(longitude, latitude):
-    # Convert degrees to radians
-    lon_rad = math.radians(longitude)
-    lat_rad = math.radians(latitude)
-    # ETRS89 (ETRS-LAEA) projection parameters
-    central_meridian = math.radians(10.0)
-    scale_factor = 1.0
-    false_easting = 4321000.0
-    false_northing = 3210000.0
-    # Lambert Azimuthal Equal Area projection formulas
-    rho = 6378137.0 * scale_factor
-    x = rho * math.cos(lat_rad) * math.sin(lon_rad - central_meridian) + false_easting
-    y = (rho * (math.cos(lat_rad) * math.cos(lon_rad - central_meridian))-(rho * math.sin(lat_rad)) + false_northing)
-    return x, y
+#def convert_4326_to_3035(longitude, latitude):
+#    # Convert degrees to radians
+#    lon_rad = math.radians(longitude)
+#    lat_rad = math.radians(latitude)
+#    # ETRS89 (ETRS-LAEA) projection parameters
+#    central_meridian = math.radians(10.0)
+#    scale_factor = 1.0
+#    false_easting = 4321000.0
+#    false_northing = 3210000.0
+#    # Lambert Azimuthal Equal Area projection formulas
+#    rho = 6378137.0 * scale_factor
+#    x = rho * math.cos(lat_rad) * math.sin(lon_rad - central_meridian) + false_easting
+#    y = (rho * (math.cos(lat_rad) * math.cos(lon_rad - central_meridian))-(rho * math.sin(lat_rad)) + false_northing)
+#    return x, y
 
 
 layer_names=[]
@@ -61,8 +61,8 @@ with open(options.INFO, newline='') as csvfile:
         min_y=(float(row['minlong']))
         max_y=(float(row['maxlong']))
         if crs=="EPSG/0/4326":
-            min_y, min_x = convert_4326_to_3035(min_y, min_x)
-            max_y, max_x = convert_4326_to_3035(max_y, max_x)
+            min_y, min_x = trans4mfromwgs84("EPSG:3035", min_y, min_x)
+            max_y, max_x = trans4mfromwgs84("EPSG:3035",max_y, max_x)
             min_x_values.append(min_x)
             max_x_values.append(max_x)
             min_y_values.append(min_y)
