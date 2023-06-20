@@ -54,9 +54,25 @@ def getlayer():
 
 
 
-trans4mEPSG("EPSG:4326","EPSG:3035",46.8136889,13.50794792)
+#coords=trans4mEPSG("EPSG:4326","EPSG:3035",46.8136889,13.50794792)
 #trans4mEPSG("EPSG:4326","EPSG:3035",13.50794792,46.8136889)
-coords=trans4mEPSG("EPSG:4326","EPSG:3035",46.8136889,13.50794792)
+coords=trans4mEPSG("EPSG:4326","EPSG:3035",13.50794792,46.8136889)
+coords
+coords=trans4mEPSG("EPSG:4326","EPSG:3035",0.6200146,41.6175899)
+coords
+coords=trans4mEPSG("EPSG:4326","EPSG:3035",20.18,45.09)
+coords
+
+##lower ccorner
+coords=(900000,900000)
+
+##upper corner
+coords=(5500000,7400000)
+
+##lower ccorner +1
+coords=(901125,901175)
+
+
 
 latitude_request = coords[1]
 longitude_request = coords[0]
@@ -79,6 +95,8 @@ facts=[]
 values=[]
 resolutions=[]
 cellnumbers=[]
+cellnumbersquadr=[]
+exes=[] 
 for k in range (0,40):
     for i in range(0,4):
         x1= float(longitude_request)
@@ -110,11 +128,12 @@ for k in range (0,40):
         xi=value.split("},{")
         phi=(xi[0].split("', '"))
         cells=len(phi[0].split(','))
-        facts.append(("Quadrant:",i,"Resolution", k*0.5*0.5, "Exclam:", len(xi), "Within:", cells))
+        facts.append(("Quadrant:",i,"Resolution", k*0.5*0.5, "Exclam:", len(xi), "Within:", cells, "GridBoundary:", y1,y2, x1,x2))
         resolutions.append(k*0.5*0.5)
         cellnumbers.append(cells)
+        exes.append((len(xi),cells))
         values.append((k*0.5*0.5, i, value))
-        
+    exes.append(k*0.5*0.5)
         #print(value)
 
 ### 2. set a starting point 
@@ -127,4 +146,73 @@ for k in range (0,40):
 
 ### 6. find pattern in result 
 
+########## REALLLL
 
+import matplotlib.pyplot as plt
+from matplotlib.patches import FancyArrowPatch, Rectangle
+
+for i in range(0, len(facts), 4):
+#for i in range(0, 40, 4):
+    q1 = i
+    q2 = i + 1
+    q3 = i + 2
+    q4 = i + 3
+    resolutionf = facts[i][3]
+    x1, y1 = facts[q1][5], facts[q1][7]
+    x2, y2 = facts[q2][5], facts[q2][7]
+    x3, y3 = facts[q3][5], facts[q3][7]
+    x4, y4 = facts[q4][5], facts[q4][7]
+    bb1=facts[i][9]
+    bb2=facts[i][10]
+    bb3=facts[i][11]
+    bb4=facts[i][12]
+    # Create a new figure and axis
+    fig, ax = plt.subplots()
+    ax.xaxis.set_major_locator(MultipleLocator(1))
+    ax.yaxis.set_major_locator(MultipleLocator(1))
+    # Create FancyArrowPatch objects for the arrows
+    arrow1 = FancyArrowPatch((0, 0), (resolutionf, 0), color='red', arrowstyle='->', linewidth=2)
+    arrow2 = FancyArrowPatch((0, 0), (0, resolutionf), color='red', arrowstyle='->', linewidth=2)
+    arrow3 = FancyArrowPatch((0, 0), (-resolutionf, 0), color='red', arrowstyle='->', linewidth=2)
+    arrow4 = FancyArrowPatch((0, 0), (0, -resolutionf), color='red', arrowstyle='->', linewidth=2)
+    # Add the arrows to the plot
+    ax.add_patch(arrow1)
+    ax.add_patch(arrow2)
+    ax.add_patch(arrow3)
+    ax.add_patch(arrow4)
+    # Draw the squares as rectangles
+    square1 = Rectangle((0, 0), x1, y1, edgecolor='blue',  facecolor=(0, 0, 1, 0.5))
+    square2 = Rectangle((0, 0), -x2, y2, edgecolor='red', facecolor='none')
+    square3 = Rectangle((0, 0), -x3, -y3, edgecolor='green', facecolor='none')
+    square4 = Rectangle((0, 0), x4, -y4, edgecolor='magenta', facecolor='none')
+    # Add the rectangles to the plot
+    ax.add_patch(square1)
+    ax.add_patch(square2)
+    ax.add_patch(square3)
+    ax.add_patch(square4)
+    ax.set_aspect('equal')
+    ax.grid(visible=True, linestyle=':')
+    ax.set_xlim(-(resolutionf+5), resolutionf+5)
+    ax.set_ylim(-(resolutionf+5), resolutionf+5)
+    # Add a legend
+    legend_labels =[f'Resolution factor={resolutionf} for {resolution} metre ', 'Q1', 'Q2', 'Q3', 'Q4', f'Coordinate Bounding ={bb1}-{bb2}:{bb3}-{bb4}']
+    ax.legend([arrow1, square1, square2, square3, square4, square1], legend_labels)
+    # Display all the plots
+    #save_path = f'/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/EggTest/output/Fake_k1_{resolutionf}.png'
+    #plt.savefig(save_path)    
+    # Show the plot
+    plt.show()
+
+
+
+#redo for other alyer and other sample point 
+
+r_set1=resolutions
+c_set1=cellnumbers
+plt.scatter(r_set1, c_set1, color='blue', marker='o', label='Austria')
+r_set2=resolutions
+c_set2=cellnumbers
+plt.scatter(r_set2, c_set2, color='red', marker='o', label='Spain')
+r_set3=resolutions
+c_set3=cellnumbers
+plt.scatter(r_set3, c_set3, color='red', marker='o', label='Serbia')
