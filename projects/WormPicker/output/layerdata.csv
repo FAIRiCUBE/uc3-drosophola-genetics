@@ -1,4 +1,27 @@
-sampleID,AverageChlorophyll,corine_land_cover,european_settlement_map,grassland__change,grassland_change,grassland_status,high_resolution_layer_forest_type,imperviousness,small_woody_features,tree_cover_density,water_and_wetness,AverageChlorophyll,corine_land_cover,european_settlement_map,grassland__change,grassland_change,grassland_status,high_resolution_layer_forest_type,imperviousness,small_woody_features,tree_cover_density,water_and_wetness,AverageChlorophyll,corine_land_cover,european_settlement_map,grassland__change,grassland_change,grassland_status,high_resolution_layer_forest_type,imperviousness,small_woody_features,tree_cover_density,water_and_wetness,AverageChlorophyll
+sampleID,AverageChlorophyll,corine_land_cover,european_settlement_map,grassland__change,grassland_change,grassland_status,high_resolution_layer_forest_type,imperviousness,small_woody_features,tree_cover_density,water_and_wetness
 AT_Kar_See_1_2016-08-01,"""0 0 0""",-128,0,240,NA,240,240,240,NA,NA,0
 AT_Nie_Mau_1_2014-07-20,"""0 0 0""",-128,0,255,NA,255,255,255,NA,255,0
 AT_Nie_Mau_1_2014-10-19,"""0 0 0""",-128,0,255,NA,255,255,255,NA,255,0
+AT_Nie_Mau_1_2015-07-20,"""0 0 0""",-128,0,255,NA,255,255,255,NA,255,0
+AT_Nie_Mau_1_2015-10-19,"""0 0 0""",-128,0,255,NA,255,255,255,NA,255,0
+AT_Wie_Gro_1_2012-08-03,"""0 0 0""",44,0,255,NA,255,255,255,NA,255,0
+AT_Wie_Gro_1_2012-10-20,"""0 0 0""",44,0,255,NA,255,255,255,NA,255,0
+BY_Bre_Bre_1_2015-09-11,"""0 0 0""",-128,0,240,NA,240,240,240,NA,240,255
+CH_Fri_Ors_1_2020-08-23,"""0 0 0""",-128,0,240,NA,240,240,240,NA,NA,0
+CH_Vau_Cha_1_2014-07-24,"""0 0 0""",-128,0,240,NA,240,240,240,NA,NA,0
+CH_Vau_Cha_1_2014-10-05,"""0 0 0""",-128,0,240,NA,240,240,240,NA,NA,0
+CH_Vau_Cha_1_2015-08-01,"""0 0 0""",-128,0,240,NA,240,240,240,NA,NA,0
+CH_Vau_Cha_1_2016-08-15,"""0 0 0""",-128,0,240,NA,240,240,240,NA,NA,0
+CH_Vau_Vul_1_2018-09-18,"""0 0 0""",-128,0,240,NA,240,240,240,NA,NA,0
+CH_Vau_Vul_1_2019-07-17,"""0 0 0""",-128,0,240,NA,240,240,240,NA,NA,0
+CH_Vau_Vul_1_2019-09-24,"""0 0 0""",-128,0,240,NA,240,240,240,NA,NA,0
+CH_Vau_Vul_1_2020-07-29,"""0 0 0""",-128,0,240,NA,240,240,240,NA,NA,0
+CH_Vau_Vul_1_2020-09-15,"""0 0 0""",-128,0,240,NA,240,240,240,NA,NA,0
+CM_Nor_Oku_1_2004-04-15,"""0 0 0""",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CY_Nic_Nic_1_2014-08-10,"""32 112 176""",NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+DE_Bad_Bro_1_2014-06-26,"""0 0 0""",-128,0,240,NA,240,240,240,NA,240,0
+DE_Bad_Bro_1_2014-10-15,"""0 0 0""",-128,0,240,NA,240,240,240,NA,240,0
+DE_Bad_Bro_1_2015-06-30,"""0 0 0""",-128,0,240,NA,240,240,240,NA,240,0
+DE_Bad_Bro_1_2015-10-25,"""0 0 0""",-128,0,240,NA,240,240,240,NA,240,0
+DE_Bad_Bro_1_2016-07-24,"""0 0 0""",-128,0,240,NA,240,240,240,NA,240,0
+DE_Bad_Bro_1_2016-10-23,"""0 0 0""",-128,0,240,NA,240,240,240,NA,240,0

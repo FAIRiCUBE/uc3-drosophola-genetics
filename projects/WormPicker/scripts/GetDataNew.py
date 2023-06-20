@@ -11,20 +11,32 @@ import os
 
 from module_crs_converter import trans4m2wgs84, trans4mfromwgs84
 
-#####
-#OPTIONS
-usage="python %prog --source input.csv "
-parser = OptionParser(usage=usage)
-group=OptionGroup(parser,
-"""
-""")
-#########################################################   CODE   #########################################################################
 
-parser.add_option("--source", dest="source", help="The source CSV with the names of the sample information.")
-parser.add_option("--layers", dest="layers", help="The list of layers to get data from.")
+def trans4mEPSG(InputCRS,OutputCRS,y,x):
+    src_crs = InputCRS
+    src_srs = osr.SpatialReference()
+    src_srs.SetFromUserInput(src_crs)
+    tgt_crs = OutputCRS
+    tgt_srs = osr.SpatialReference()
+    tgt_srs.SetFromUserInput(tgt_crs)
+    transform = osr.CoordinateTransformation(src_srs, tgt_srs)
+    x_t, y_t, z_t = transform.TransformPoint(x, y, 0)
+    return x_t, y_t
 
-parser.add_option_group(group)
-(options, args) = parser.parse_args()
+######
+##OPTIONS
+#usage="python %prog --source input.csv "
+#parser = OptionParser(usage=usage)
+#group=OptionGroup(parser,
+#"""
+#""")
+##########################################################   CODE   #########################################################################
+#
+#parser.add_option("--source", dest="source", help="The source CSV with the names of the sample information.")
+#parser.add_option("--layers", dest="layers", help="The list of layers to get data from.")
+#
+#parser.add_option_group(group)
+#(options, args) = parser.parse_args()
 
 #####
 env_vars = dotenv_values()
@@ -41,6 +53,17 @@ fully_covered=[]
 covered_spatially=[]
 dropout=[]
 layerlist=["sampleID"]
+
+with open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/layer_info_WCS.csv", newline='') as layercsv:
+    reader = csv.DictReader(layercsv)
+    #next(reader) 
+    for row in reader:
+        if any(value == "NA" for value in row.values()):
+            continue
+        layer=row["CoverageID"]
+        layerlist.append(layer)
+
+
 with open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/coveredsamples_wcs.csv", newline='') as csvfile:
     sample_reader = csv.DictReader(csvfile)
     for s_row in sample_reader:
@@ -68,14 +91,14 @@ with open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPi
         #print(lat)
         #print(date)
         #print(converted_date)
-        with open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/layer_info_WCS.csv", newline='') as csvfile:
-            reader = csv.DictReader(csvfile)
+        with open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/layer_info_WCS.csv", newline='') as layercsv:
+            reader = csv.DictReader(layercsv)
             #next(reader) 
             for row in reader:
                 if any(value == "NA" for value in row.values()):
                     continue
                 layer=row["CoverageID"]
-                layerlist.append(layer)
+                #layerlist.append(layer)
                 #print(layer)
                 crs=row["CRS"]
                 resolution=0
@@ -156,6 +179,8 @@ with open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPi
     writer = csv.writer(csvfile)
     writer.writerow(layerlist)
     writer.writerows(end_result)
+
+###NOW append it to "coveredsamples.csv"
 
 
                 ##add metadata link for description of the layer data
