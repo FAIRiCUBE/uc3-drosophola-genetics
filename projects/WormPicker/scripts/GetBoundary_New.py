@@ -7,7 +7,8 @@ import os
 import argparse
 import ast
 import math
-from module_crs_converter import trans4mfromwgs84
+from module_crs_converter import trans4mEPSG
+import re
 
 #########################################################   HELP   #########################################################################
 usage="python %prog --source input.csv "
@@ -49,37 +50,45 @@ max_y_values = []
 
 #print(layer_names)
 
-with open(options.INFO, newline='') as csvfile:
+with open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/new_layer_info_WCS.csv", newline='') as csvfile:
+#with open(options.INFO, newline='') as csvfile:
     reader = csv.DictReader(csvfile)
     #next(reader) 
     for row in reader:
         layer=row["CoverageID"]
         crs=row['CRS']
-        layer_names.append(layer)
         min_x=float(row['minlat'])
         max_x=(float(row['maxlat']))
         min_y=(float(row['minlong']))
         max_y=(float(row['maxlong']))
+        match= re.search("EPSG",crs)
         if crs=="EPSG/0/4326":
-            min_y, min_x = trans4mfromwgs84("EPSG:3035", min_y, min_x)
-            max_y, max_x = trans4mfromwgs84("EPSG:3035",max_y, max_x)
+            min_y,min_x=trans4mEPSG("EPSG:4326","EPSG:3035", min_y, min_x)
+            max_y,max_x=trans4mEPSG("EPSG:4326","EPSG:3035",max_y, max_x)
             min_x_values.append(min_x)
             max_x_values.append(max_x)
             min_y_values.append(min_y)
             max_y_values.append(max_y)
-        else:
+            layer_names.append(layer)
+        elif match:
+            crs_indic = crs.replace("EPSG/0/", "EPSG:")
+            min_y, min_x = trans4mEPSG(crs_indic,"EPSG:3035", min_y, min_x)
+            max_y, max_x = trans4mEPSG(crs_indic,"EPSG:3035",max_y, max_x)
             min_x_values.append(float(row['minlat']))
             max_x_values.append(float(row['maxlat']))
             min_y_values.append(float(row['minlong']))
             max_y_values.append(float(row['maxlong']))
+            layer_names.append(layer)
+        else:
+            next
     #print(layer_names)
     #print(min_x_values)
 
 # Calculate the common boundary box
-common_min_x = max(min_x_values)
-common_max_x = min(max_x_values)
-common_min_y = max(min_y_values)
-common_max_y = min(max_y_values)
+common_min_x = min([x for x in min_x_values if x != float('inf')])
+common_max_x = max([x for x in max_x_values if x != float('inf')])
+common_min_y = min([x for x in min_y_values if x != float('inf')])
+common_max_y = max([x for x in max_y_values if x != float('inf')])
 
 # Print the common boundary box
 print(f"{common_min_x}:{common_max_x}:{common_min_y}:{common_max_y}")

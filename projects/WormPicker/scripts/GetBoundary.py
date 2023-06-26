@@ -51,10 +51,10 @@ for layer_name in layer_names:
         max_y_values.append(max(layer_max_y_values))
 
 # Calculate the common boundary box
-common_min_x = max(min_x_values)
-common_max_x = min(max_x_values)
-common_min_y = max(min_y_values)
-common_max_y = min(max_y_values)
+common_min_x = min(min_x_values)
+common_max_x = max(max_x_values)
+common_min_y = min(min_y_values)
+common_max_y = max(max_y_values)
 
 # Print the common boundary box
 print(f"{common_min_x}:{common_max_x}:{common_min_y}:{common_max_y}")

@@ -100,9 +100,6 @@ for ID in range(1,len(layer_info)):
     except KeyError:
         pass
 
-
-        
-
 os.chdir("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output")
 with open("layer_info_WCS.csv", "w", newline="") as csvfile:
     writer = csv.writer(csvfile)

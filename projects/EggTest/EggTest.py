@@ -14,6 +14,8 @@ import math
 from osgeo import gdal, osr
 
 from module_crs_converter import trans4m2wgs84, trans4mfromwgs84
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
 
 #####
 #OPTIONS
@@ -70,7 +72,7 @@ coords=(900000,900000)
 coords=(5500000,7400000)
 
 ##lower ccorner +1
-coords=(901125,901175)
+coords=(901150,901150)
 
 
 
