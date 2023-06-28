@@ -23,6 +23,7 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
+import seaborn as sns
 
 
 plt.close('all')
@@ -75,13 +76,20 @@ kmeans.fit(X_t)
 
 X_t.insert(0, "Class", kmeans.labels_, True)
 
-# print("start kmeans with elbow")
-# cs = []
-# max = 10
-# for i in range(1, max):
-#     kmeans = KMeans(n_clusters = i, init = 'k-means++', max_iter = 300, n_init = 10, random_state = 0)
-#     kmeans.fit(X)
-#     cs.append(kmeans.inertia_)
+plt.figure(figsize=(16,7))
+plt.hist(kmeans.labels_, bins=5, rwidth=0.8)
+plt.xlabel('cluster number')
+plt.ylabel('Frequency')
+plt.show()
+plt.savefig(out_base_name_pic+'NA_kmeans_class_dist.png')
+
+print("start kmeans with elbow")
+cs = []
+max = 10
+for i in range(1, max):
+    kmeans = KMeans(n_clusters = i, init = 'k-means++', max_iter = 300, n_init = 10, random_state = 0)
+    kmeans.fit(X)
+    cs.append(kmeans.inertia_)
 
 # plt.figure(figsize=(16,7))
 # plt.plot(range(1, max), cs)
@@ -91,15 +99,15 @@ X_t.insert(0, "Class", kmeans.labels_, True)
 # plt.show()
 # plt.savefig(out_base_name_pic+'NA_kmeans_elbow_method.png')
 
-# print("start kmeans with silhouette")
-# sil = []
-# max = 10
+print("start kmeans with silhouette")
+sil = []
+max = 10
 
-# # dissimilarity would not be defined for a single cluster, thus, minimum number of clusters should be 2
-# for k in range(2, max+1):
-#   kmeans = KMeans(n_clusters = k).fit(X)
-#   labels = kmeans.labels_
-#   sil.append(silhouette_score(X, labels, metric = 'euclidean'))
+# dissimilarity would not be defined for a single cluster, thus, minimum number of clusters should be 2
+for k in range(2, max+1):
+  kmeans = KMeans(n_clusters = k).fit(X)
+  labels = kmeans.labels_
+  sil.append(silhouette_score(X, labels, metric = 'euclidean'))
 
 # plt.figure(figsize=(16,7))
 # plt.plot(range(1, max), sil)

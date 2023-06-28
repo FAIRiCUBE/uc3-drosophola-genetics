@@ -37,7 +37,7 @@ write_file=False
 
 in_base_name="/home/sjet/repos/uc3-drosophola-genetics/data/raw/"
 
-# in_file_name="Europe_50kMutations_0.05missing.tsv"
+
 # in_file_name_true       ="Europe_50kMutations.tsv"
 # in_file_name_gap        ="Europe_50kMutations_5perc_missing.csv"
 # in_file_name_gapfill    ="Europe_50kMutations_5perc_missing_kmeansfill5.csv"
