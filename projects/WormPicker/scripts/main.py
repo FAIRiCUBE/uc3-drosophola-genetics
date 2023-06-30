@@ -6,13 +6,15 @@ from scripts import module_crs_converter
 os.chdir("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker")
 subprocess.call(['python3', '/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/scripts/GetLayers.py'])
 
+
+############ ---- FILTER STEP REMOVED ----- ############
 #output=$(python3 scripts/GetBoundary_New.py --LayerInfoFile output/layer_info_WCS.csv )
-
 command = 'python3 scripts/GetBoundary_New.py --LayerInfoFile output/layer_info_WCS.csv'
-
 # Run the command and capture the output
 result = subprocess.check_output(command, shell=True)
+########################################################
 
+############# ------- REDO REQUIRED -------- ###########
 # Decode the byte string result to a UTF-8 string
 output = result.decode('utf-8')[:-1]
 
