@@ -7,14 +7,16 @@ os.chdir("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPic
 subprocess.call(['python3', '/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/scripts/GetLayers.py'])
 
 
-############ ---- FILTER STEP REMOVED ----- ############
+############ ---- FILTER STEP CHANGED ----- ############
+#This part of the script is getting the biggest bounding box covered by all layers to fitler samples
+#based on the "would there be any data at all" approach 
+
 #output=$(python3 scripts/GetBoundary_New.py --LayerInfoFile output/layer_info_WCS.csv )
 command = 'python3 scripts/GetBoundary_New.py --LayerInfoFile output/layer_info_WCS.csv'
 # Run the command and capture the output
 result = subprocess.check_output(command, shell=True)
 ########################################################
 
-############# ------- REDO REQUIRED -------- ###########
 # Decode the byte string result to a UTF-8 string
 output = result.decode('utf-8')[:-1]
 
