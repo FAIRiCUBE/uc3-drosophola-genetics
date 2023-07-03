@@ -33,28 +33,35 @@ btn_submit.pack(pady=10)
 
 window.mainloop()
 
+#RASDAMAN_CRED_USERNAME=username_1
+#RASDAMAN_CRED_PASSWORD=password_1 
+
 print("Username:", username_1)
 print("Password:", password_1)
 
+with open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/.env3", "w") as file:
+    # Convert variables to strings and write them to the file
+    file.write("RASDAMAN_CRED_USERNAME='" + username_1 + "'\n")
+    file.write("RASDAMAN_CRED_PASSWORD='" + password_1 + "'\n")
 
-def show_selected_option():
-    selected_option = ""
-    selected_option1 = ""
-    selected_option2 = ""
-    selected_option3 = ""
+
+def show_selected_options():
+    selected_option1 = 0
+    selected_option2 = 0
+    selected_option3 = 0
     if var_option_a.get() == 1:
         selected_option1 = layer1
-    else:
-        selected_option1 = ""
     if var_option_b.get() == 1:
         selected_option2 = layer2
     if var_option_c.get() == 1:
         selected_option3 = layer3
-    for x in {selected_option1,selected_option2,selected_option3}: 
-        if x:
+    options=[selected_option1, selected_option2, selected_option3]
+    selection=[element for element in options if element != 0]
+    if any(options):
+        for x in (selection):
             messagebox.showinfo("Selected Option", f"You chose {x}")
-        else:
-            messagebox.showinfo("Selected Option", "Please select an option.")
+    else:
+        messagebox.showinfo("Selected Option", "Please select an option.")
 
 window = Tk()
 window.title("Select an Option")
@@ -83,6 +90,5 @@ btn_finished = Button(window, text="Finished", command=show_selected_option)
 btn_finished.pack(pady=10)
 
 window.mainloop()
-
 
 

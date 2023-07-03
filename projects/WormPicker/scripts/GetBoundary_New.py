@@ -49,7 +49,6 @@ max_y_values = []
 
 
 #print(layer_names)
-
 with open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/new_layer_info_WCS.csv", newline='') as csvfile:
 #with open(options.INFO, newline='') as csvfile:
     reader = csv.DictReader(csvfile)

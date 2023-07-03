@@ -25,7 +25,6 @@ wcs_capabilities = xmltodict.parse(response.content)
 wcs_coverage_summary = wcs_capabilities['wcs:Capabilities']['wcs:Contents']['wcs:CoverageSummary']
 #print(json.dumps(wcs_coverage_summary, indent=2))
 type(wcs_coverage_summary)
-
 cov_id_list=[]
 
 #extract all coverage_ids and informations from the service endpoint (working on getCapabilities results)
