@@ -1,38 +1,33 @@
+import requests
+from dotenv import dotenv_values
+import xmltodict
+import os
+import csv
+#
+#class Coverage:
+#    def __init__(self,coverage_data):
+#        self.coverage = coverage_data
+#
+#class Layers:
+#    def __init__(self, data):
+#        self.data = data
+#        self.header = data[0]
+#        self.layers = [row[0] for row in data[1:]]
+#    def getCoverage(self):
+#        for coverage_num in range(1,len(self.layers)):
+#            cov=(self.data[coverage_num])
+#                       
+#xxx=Layers()
+#xxx.getCoverage()
+#
+## Example usage
+#data = [['Layer', 'Size'], ['Layer 1', 'Small'], ['Layer 2', 'Medium'], ['Layer 3', 'Large']]
+#layers = Layers(data)
+#
+#print("Header:", layers.header)
+#print("Layers:", layers.layers)
 
-class Coverage:
-    def __init__(self,coverage_data):
-        self.coverage = coverage_data
-
-
-class Layers:
-    def __init__(self, data):
-        self.data = data
-        self.header = data[0]
-        self.layers = [row[0] for row in data[1:]]
-    def getCoverage(self):
-        for coverage_num in range(1,len(self.layers)):
-            cov=(self.data[coverage_num])
-            
-            
-            
-xxx=getLayers()
-xxx.getCoverage()
-
-
-
-# Example usage
-data = [['Layer', 'Size'], ['Layer 1', 'Small'], ['Layer 2', 'Medium'], ['Layer 3', 'Large']]
-layers = Layers(data)
-
-print("Header:", layers.header)
-print("Layers:", layers.layers)
-
-def getLayers():
-    import requests
-    from dotenv import dotenv_values
-    import xmltodict
-    import os
-    import csv
+def getLayers(savepath="NONE"):
     #create an empty array and add headers
     layer_info = []
     layer_info.append(("CoverageID", "CRS", "minlat","maxlat", "minlong", "maxlong","f","t", "resolution_dim1", "resolution_dim2", "resolution_dim3/time"))
@@ -48,7 +43,7 @@ def getLayers():
     wcs_coverage_summary = wcs_capabilities['wcs:Capabilities']['wcs:Contents']['wcs:CoverageSummary']
     #print(json.dumps(wcs_coverage_summary, indent=2))
     type(wcs_coverage_summary)
-    cov_id_list=[]
+    #cov_id_list=[]
     #extract all coverage_ids and informations from the service endpoint (working on getCapabilities results)
     for i in range(0,len(wcs_coverage_summary)):
         coverage_id= wcs_coverage_summary[i]['wcs:CoverageId']
@@ -119,11 +114,15 @@ def getLayers():
         except KeyError:
             pass
         data=layer_info
-        layers = Layers(data)
-        return layers
+        if savepath!="NONE":
+            os.chdir(savepath)
+            with open(savepath, "w", newline="") as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerows(layer_info)
+        else:
+            return data
 
     #os.chdir(savepath)
     #with open("layer_info_WCS.csv", "w", newline="") as csvfile:
     #    writer = csv.writer(csvfile)
     #    writer.writerows(layer_info)
-
