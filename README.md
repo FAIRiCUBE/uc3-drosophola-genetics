@@ -3,6 +3,9 @@ fairicube
 
 A short description of the project.
 
+# Details on the planned process:
+https://github.com/capoony/ImPoolation
+
 Project Organization
 ------------
 
