@@ -1,10 +1,14 @@
 ## GapFilling project
 
+### Link to ImPoolation Repository for heuristic gap filling
+
+https://github.com/capoony/ImPoolation
+
 ### Important files
 
 Metadata file: `projects/gap_filling/MartinData/data/METADATA_dest_v2.samps_25Feb2023.csv`
 
-### provide full dataset as gzipped file in the structure
+### provide full AF dataser
 
 
 ```
