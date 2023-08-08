@@ -35,27 +35,34 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 write_file=False
 
-in_base_name="/home/sjet/repos/uc3-drosophola-genetics/data/raw/"
+in_base_name="/home/sjet/repos/uc3-drosophola-genetics/projects/gap_filling/data/raw/"
 
 
-# in_file_name_true       ="Europe_50kMutations.tsv"
-# in_file_name_gap        ="Europe_50kMutations_5perc_missing.csv"
-# in_file_name_gapfill    ="Europe_50kMutations_5perc_missing_kmeansfill5.csv"
-in_file_name_true       ="North_America_50kMutations.tsv"
-in_file_name_gap        ="North_America_50kMutations_5perc_missing.csv"
-in_file_name_gapfill    ="North_America_50kMutations_5perc_missing_kmeansfill5.csv"
-
+in_file_name_true       ="Europe_50kMutations.tsv"
+in_file_name_gap        ="Europe_50kMutations_5perc_missing.csv"
+in_file_name_gapfill    ="Europe_50kMutations_5perc_missing_kmeansfill5.csv"
+# in_file_name_gapfill    ="Europe_50kMutations_5perc_missing_empiricalbase.csv"
+# in_file_name_true       ="North_America_50kMutations.tsv"
+# in_file_name_gap        ="North_America_50kMutations_5perc_missing.csv"
+# in_file_name_gapfill    ="North_America_50kMutations_5perc_missing_kmeansfill5.csv"
+# in_file_name_gapfill    ="North_America_50kMutations_5perc_missing_lstmfilled.csv"
+# in_file_name_gapfill    ="North_America_50kMutations_5perc_missing_empiricalbase.csv"
 
 
 df_true = pd.read_csv(in_base_name+in_file_name_true,sep='\t')
 df_gap = pd.read_csv(in_base_name+in_file_name_gap,sep=',')
 df_gapfill = pd.read_csv(in_base_name+in_file_name_gapfill,sep=',')
+# df_gapfill = pd.read_csv(in_base_name+in_file_name_gapfill,sep='\t')
+
+# df_true=df_true.iloc[1::,:]
+# df_gap=df_gap.iloc[1::,:]
 
 print("Number of NaN in GAP input file : ", df_gap.isna().sum().sum())
 print("Number of NaN in GAPFILL input file : ", df_gapfill.isna().sum().sum())
 print("Percentage of NaN in GAP file : ", df_gap.isna().sum().sum()/df_gap.size*100)
 print("Percentage of NaN in GAPFILL file : ", df_gapfill.isna().sum().sum()/df_gapfill.size*100)
 
+df_gap_index=np.asarray(df_gap.isnull()).nonzero()
 df_gap=df_gap.fillna(0)
 
 print("Sum of error in GAP file : ", (df_true.iloc[:,2:]-df_gap.iloc[:,2:]).abs().sum().sum())
@@ -66,9 +73,53 @@ MSE_gapfill = np.square((df_true.iloc[:,2:]-df_gapfill.iloc[:,2:])).mean()
 rsme_gap = np.sqrt(MSE_gap)
 rsme_gapfill = np.sqrt(MSE_gapfill)
 
+# MSE_gaponly = np.square((df_true.iloc[df_gap_index[0],df_gap_index[1]]-df_gap.iloc[df_gap_index[0], df_gap_index[1]])).mean()   
 
 print("Root Mean Square Error in GAP file : ", rsme_gap.mean())  
 print("Root Mean Square Error in GAPFILL file : ", rsme_gapfill.mean())  
-print(f"Reduction in RMS error by {(rsme_gapfill.mean()/rsme_gap.mean())*100:.2f} %")
+print(f"Reduction in RMS error by {(rsme_gap.mean()-rsme_gapfill.mean())/rsme_gap.mean()*100:.2f} %")
 # if write_file:
 #     df.to_csv(in_base_name+out_file_name)
+
+
+###########################################
+#############plot all grids, panel of all
+print("#### Plotting file")
+
+# fig, axs = plt.subplots(2, 2, figsize=(15, 12))
+
+axs = plt.figure(figsize=(15, 12))
+# plt.rcParams['axes.grid'] = False
+
+bin_levels=np.linspace(0.01,1,50)
+
+# im1=axs[0,0].hist(np.array(df_true.iloc[0::,2::]).flatten(order='C'), bins=bin_levels,histtype="step")
+# im1=axs[0,1].hist(np.array(df_gap.iloc[0::,2::]).flatten(order='C'), bins=bin_levels,histtype="step")
+# im1=axs[1,0].hist(np.array(df_true.iloc[0::,2::]).flatten(order='C')-
+#                   np.array(df_gap.iloc[0::,2::]).flatten(order='C'), bins=bin_levels,histtype="step")
+# im1=axs[1,1].hist(np.array(df_gapfill.iloc[0::,2::]).flatten(order='C'), bins=bin_levels,histtype="step")
+
+im1=plt.hist(np.array(df_true.iloc[0::,2::]).flatten(order='C'), bins=bin_levels,histtype="step")
+im2=plt.hist(np.array(df_gap.iloc[0::,2::]).flatten(order='C'), bins=bin_levels,histtype="step")
+im3=plt.hist(np.array(df_true.iloc[0::,2::]).flatten(order='C')-
+                  np.array(df_gap.iloc[0::,2::]).flatten(order='C'), bins=bin_levels,histtype="step")
+im4=plt.hist(np.array(df_gapfill.iloc[0::,2::]).flatten(order='C'), bins=bin_levels,histtype="step")
+
+plt.legend(["True Data","GAP Data", "True-GAP Data", "GAP filled Data"])
+# axs[1,0].set_title("True-GAP Dat   
+# axs[0,0].set_title("True Data")
+# axs[0,1].set_title("GAP Data")
+# axs[1,0].set_title("True-GAP Data")
+# axs[1,1].set_title("GAP filled Data")
+# axs[1,0].set_title(city_string_in5)
+# axs[1,1].set_title(city_string_in6)
+# axs[1,2].set_title(city_string_in7)
+# axs[1,3].set_title(city_string_in8)
+
+
+
+plt.show()
+# plt.savefig(base_out_folder+city_string_in+"/"+city_string_out+out_file+".png")
+
+
+print("#### Plotting file done \n")
