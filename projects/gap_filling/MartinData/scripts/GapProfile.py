@@ -66,5 +66,5 @@ for Chrom,v in Cont.items():
 for Length,v in sorted(Counts.items()):
     PL=[]
     for i in range(len(pops)):
-        PL.append(v[i])
+        PL.append(v[i]/C)
     print(str(Length)+"\t"+"\t".join([str(x) for x in PL]))
