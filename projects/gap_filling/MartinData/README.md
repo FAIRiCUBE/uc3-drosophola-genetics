@@ -13,6 +13,8 @@ Metadata file: `projects/gap_filling/MartinData/data/METADATA_dest_v2.samps_25Fe
 ```
 #### 1) convert VCF to AF file format, now retaining the information on read depths 
 
+cd /media/inter/mkapun/projects/uc3-drosophola-genetics/projects/gap_filling/MartinData/
+
 jobs=100
 input=/media/inter/ssteindl/DEST/DEST2_NHM/collapsed/PoolSNP/dest.all.PoolSNP.001.50.8Jun2023.norep.AT_EScorrect.ann.vcf.gz
 
@@ -21,19 +23,40 @@ gunzip -c $input | parallel \
     --pipe \
     -j $jobs \
     --no-notice \
-    --cat python3 /media/inter/mkapun/projects/uc3-drosophola-genetics/projects/gap_filling/MartinData/scripts/VCF2AF.py \
+    --cat python3 scripts/VCF2AF.py \
         --input {} \
-        | gzip > /media/inter/mkapun/projects/uc3-drosophola-genetics/projects/gap_filling/MartinData/data/dest.all.PoolSNP.001.50.8Jun2023.norep.AT_EScorrect.af.gz
+        | gzip > data/dest.all.PoolSNP.001.50.8Jun2023.norep.AT_EScorrect.af.gz
 ```
 
-### subset North American dataset
+### subset North American and European datasets
 
 ```bash
 
-python /media/inter/mkapun/projects/uc3-drosophola-genetics/projects/gap_filling/MartinData/scripts/SubsetDataByMeta.py \
-    --input /media/inter/mkapun/projects/uc3-drosophola-genetics/projects/gap_filling/MartinData/data/dest.all.PoolSNP.001.50.8Jun2023.norep.AT_EScorrect.af.gz \
-    --meta D:\GitHub\uc3-drosophola-genetics\projects\gap_filling\MartinData\data\dest_v2.samps_8Jun2023.csv \
-    --criteria continent=North_America \
-    --out
-    
+cd /media/inter/mkapun/projects/uc3-drosophola-genetics/projects/gap_filling/MartinData/
+
+for continent in North_America Europe; do
+
+    python scripts/SubsetDataByMeta.py \
+        --input data/dest.all.PoolSNP.001.50.8Jun2023.norep.AT_EScorrect.af.gz \
+        --meta data/dest_v2.samps_8Jun2023.csv \
+        --criteria continent=${continent} \
+        --out data/${continent}_PoolSNP.001.50.8Jun2023.norep
+
+done
+```
+
+### Gap profiles for all populations
+
+```bash
+
+cd /media/inter/mkapun/projects/uc3-drosophola-genetics/projects/gap_filling/MartinData/
+
+for continent in North_America Europe; do
+
+    python scripts/GapProfile.py \
+        --input data/${continent}_PoolSNP.001.50.8Jun2023.norep.af.gz \
+        --meta data/${continent}_PoolSNP.001.50.8Jun2023.norep.meta \
+        > data/${continent}_PoolSNP.001.50.8Jun2023.norep.gapprofile.txt
+
+done
 ```
