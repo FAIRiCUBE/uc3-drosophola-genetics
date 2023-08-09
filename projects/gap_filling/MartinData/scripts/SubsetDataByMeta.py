@@ -1,4 +1,5 @@
 import sys
+import gzip
 from collections import defaultdict as d
 from optparse import OptionParser, OptionGroup
 
@@ -47,7 +48,7 @@ for l in load_data(options.meta):
         O1.write(l)
     C+=1
 
-O2 = open(options.out+".meta", "wt")
+O2 = gzip.open(options.out+".af.gz", "wt")
 for l in load_data(options.IN):
     a=l.rstrip().split()
     PL=a[:3]

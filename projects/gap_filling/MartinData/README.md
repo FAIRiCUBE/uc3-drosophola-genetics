@@ -32,5 +32,8 @@ gunzip -c $input | parallel \
 
 python /media/inter/mkapun/projects/uc3-drosophola-genetics/projects/gap_filling/MartinData/scripts/SubsetDataByMeta.py \
     --input /media/inter/mkapun/projects/uc3-drosophola-genetics/projects/gap_filling/MartinData/data/dest.all.PoolSNP.001.50.8Jun2023.norep.AT_EScorrect.af.gz \
+    --meta D:\GitHub\uc3-drosophola-genetics\projects\gap_filling\MartinData\data\dest_v2.samps_8Jun2023.csv \
+    --criteria continent=North_America \
+    --out
     
 ```
