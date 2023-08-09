@@ -5,5 +5,5 @@ projects/WormPicker/scripts/GetBoundary.py
 projects/WormPicker/scripts/GetWCSlayerInfo.py
 projects/WormPicker/scripts/try.py
 projects/WormPicker/output/fc_layer_info_WCS.csv
-projects/gap_filling/MartinData/data/dest.all.PoolSNP.001.50.8Jun2023.norep.AT_EScorrect.af.gz
+projects/gap_filling/MartinData/data/*.af.gz
 .env

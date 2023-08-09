@@ -31,18 +31,23 @@ def load_data(x):
       y=open(x,"r", encoding="latin-1")
   return y
 
-
+## Define criteria and arguments for filtering
 Criteria=options.cri.split("=")[0]
 Arguments = options.cri.split("=")[1].split(",")
 
 C=0
 Keep=[]
+## open META file
 O1=open(options.out+".meta","wt")
 for l in load_data(options.meta):
     if l.startswith("sample"):
-        header=l.rstrip().split()
+        ## get header
+        header=l.rstrip().split(",")
         continue
-    DATA = dict(zip(header, l.rstrip().split()))
+    ## Make dictionary based on header for every entry
+    DATA = dict(zip(header, l.rstrip().split(",")))
+
+    ## only retain entries, i.e., Row IDs, if criteria == arguments
     if DATA[Criteria] in Arguments:
         Keep.append(C)
         O1.write(l)
@@ -51,14 +56,22 @@ for l in load_data(options.meta):
 O2 = gzip.open(options.out+".af.gz", "wt")
 for l in load_data(options.IN):
     a=l.rstrip().split()
+
+    ## keep Chrom, Pos and Alleles
     PL=a[:3]
+
+    ## get columns with allele Counts
     pops=a[3:]
+
+    ## only keep columns to keep based on criteria matching arguments in metadata
     KL=[pops[x] for x in Keep]
-    TEST=[sum([int(z) for z in x]) for x in zip(*[y.split(",") for y in KL])]
+
+    ## sum up the counts for each allele across all pops- YEAH, list comprehensions
+    TEST=[sum([int(z) for z in x if z!="."]) for x in zip(*[y.split(",") for y in KL])]
+
+    ## test if SNP is polymorphic across all kept populations, i.e. all alleles with counts > 0, otherwise continue
     if 0 in TEST:
         continue
-    print("\t".join(PL)+"\t"+"\t".join(KL))
 
-
-
-        
+    ## write alleles counts to new file
+    O2.write("\t".join(PL)+"\t"+"\t".join(KL)+"\n")
