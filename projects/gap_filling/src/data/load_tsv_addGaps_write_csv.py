@@ -33,18 +33,19 @@ plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
-write_file=True
+write_switch=True
+plot_switch=True
 
-in_base_name="/home/sjet/repos/uc3-drosophola-genetics/data/raw/"
+in_base_name="/home/sjet/repos/uc3-drosophola-genetics/projects/gap_filling/data/raw/"
 
 out_base_name_pic="/home/sjet/repos/uc3-drosophola-genetics/Documentation/"
 
 # in_file_name="Europe_50kMutations_0.05missing.tsv"
-# in_file_name="Europe_50kMutations.tsv"
+in_file_name="Europe_50kMutations.tsv"
 # out_file_name="Europe_50kMutations_5perc_missing.csv"
-in_file_name="North_America_50kMutations.tsv"
-out_file_name="North_America_50kMutations_5perc_missing.csv"
-
+# in_file_name="North_America_50kMutations.tsv"
+# out_file_name="North_America_50kMutations_5perc_missing.csv"
+# 
 
 
 df = pd.read_csv(in_base_name+in_file_name,sep='\t')
@@ -55,8 +56,8 @@ df_gap=df.copy()
 # seed random number generator
 seed(1)
 # generate some integers
-# number_of_gaps=3400 #Europe
-number_of_gaps=1250 #North America
+number_of_gaps=3400 #Europe
+# number_of_gaps=1250 #North America
 values_pop = randint(2, dim_y, number_of_gaps)
 values_locus = randint(0, dim_x, number_of_gaps)
 values_locus_length=randint(1, 500, number_of_gaps)
@@ -68,5 +69,10 @@ print("Number of NaN in input file : ", df.isna().sum().sum())
 print("Number of NaN in output file : ", df_gap.isna().sum().sum())
 print("Percentage of NaN in ouput file : ", df_gap.isna().sum().sum()/df_gap.size*100)
 
-if write_file:
-    df_gap.to_csv(in_base_name+out_file_name, index=False)
+# if write_switch:
+    # df_gap.to_csv(in_base_name+out_file_name, index=False)
+    
+if plot_switch:
+    print("#### Plotting file")
+    fig = plt.figure(figsize=(12, 6))
+    plt.hist(values_locus_length,bins=50)
