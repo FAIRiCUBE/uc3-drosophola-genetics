@@ -57,6 +57,8 @@ Here, I am counting the proportion of missing positions in the dataset for each 
 
 cd /media/inter/mkapun/projects/uc3-drosophola-genetics/projects/gap_filling/MartinData/
 
+### first create GapProfile based on "real" positions
+
 for continent in North_America Europe; do
 
     python scripts/GapProfile.py \
@@ -65,4 +67,17 @@ for continent in North_America Europe; do
         > data/${continent}_PoolSNP.001.50.8Jun2023.norep.gapprofile.txt &
 
 done
+
+### then create GapProfile based on row indices
+
+for continent in North_America Europe; do
+
+    python scripts/GapProfile_byrows.py \
+        --input data/${continent}_PoolSNP.001.50.8Jun2023.norep.af.gz \
+        --meta data/${continent}_PoolSNP.001.50.8Jun2023.norep.meta \
+        > data/${continent}_PoolSNP.001.50.8Jun2023.norep.gapprofile_byrows.txt &
+
+done
+
+
 ```
