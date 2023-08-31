@@ -35,17 +35,19 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 write_file=True
 
-in_base_name="/home/sjet/repos/uc3-drosophola-genetics/data/raw/"
+in_base_name="/home/sjet/repos/uc3-drosophola-genetics/projects/gap_filling/data/raw/"
 
-out_base_name_pic="/home/sjet/repos/uc3-drosophola-genetics/Documentation/"
+out_base_name_pic="/home/sjet/repos/uc3-drosophola-genetics/projects/gap_filling/Documentation/"
 
 # in_file_name="Europe_50kMutations_5perc_missing.csv"
-# in_class_name="Europe_50kMutations_t_class5.csv"
-# out_file_name="Europe_50kMutations_5perc_missing_kmeansfill5.csv"
+in_file_name="Europe_50kMutations_gap5perc_expdist.csv"
+in_class_name="Europe_50kMutations_t_class5.csv"
+out_file_name="Europe_50kMutations_gap5perc_expdist_kmeansfill5.csv"
 
-in_file_name="North_America_50kMutations_5perc_missing.csv"
-in_class_name="North_America_50kMutations_t_class5.csv"
-out_file_name="North_America_50kMutations_5perc_missing_kmeansfill5.csv"
+# in_file_name="North_America_50kMutations_5perc_missing.csv"
+# in_file_name="North_America_50kMutations_gap5perc_expdist.csv"
+# in_class_name="North_America_50kMutations_t_class5.csv"
+# out_file_name="North_America_50kMutations_gap5perc_expdist_kmeansfill5.csv"
 
 
 df = pd.read_csv(in_base_name+in_file_name,sep=',')
