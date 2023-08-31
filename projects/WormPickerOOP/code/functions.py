@@ -1,10 +1,25 @@
-import os
+import sys
+import os 
 import csv
 import requests
 from dotenv import dotenv_values
 from dateutil import parser     
 from datetime import datetime
-from module_crs_converter import trans4mEPSG
+#from module_crs_converter import trans4mEPSG
+import math
+from osgeo import gdal, osr
+
+
+def trans4mEPSG(InputCRS,OutputCRS,y,x):
+    src_crs = InputCRS
+    src_srs = osr.SpatialReference()
+    src_srs.SetFromUserInput(src_crs)
+    tgt_crs = OutputCRS
+    tgt_srs = osr.SpatialReference()
+    tgt_srs.SetFromUserInput(tgt_crs)
+    transform = osr.CoordinateTransformation(src_srs, tgt_srs)
+    x_t, y_t, z_t = transform.TransformPoint(x, y, 0)
+    return x_t, y_t
 
 #env_vars = dotenv_values()
 ## Access specific environment variables
@@ -199,6 +214,12 @@ def requestData(layerlist,samples, filepath):
     base_wcs_url = rasdaman_endpoint + "?service=WCS&version=2.1.0"
     result=[]
     header=[]
+    header.append('Sample')
+    for data_entry in range(0,len(layerlist)):
+        layer=layerlist[data_entry][0]
+        header.append(layer)
+    log = open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/WormpickerRequest.log", "a")
+    sys.stdout = log
     for key, value in samples.items():
         sample_result=[]
         latitude_sample = value[0] 
@@ -207,18 +228,19 @@ def requestData(layerlist,samples, filepath):
         date = str(name_date[-10:])
         time_asked= date + 'T00:00:00Z'
         sample_result.append(name_date)
+        print(sample_result)
         #layer=None
         #converted_date=None
         try:
             converted_date = datetime.strptime(date, "%Y-%m-%d").isoformat() + "Z"
             search_time=parser.isoparse(converted_date)
-            #print(search_time)
+            print(search_time)
         except ValueError:
             converted_date = date
             continue
         for data_entry in range(0,len(layerlist)):
             layer=layerlist[data_entry][0]
-            header.append(layer) 
+           #header.append(layer) 
             crs=layerlist[data_entry][1] 
             resolution=layerlist[data_entry][8] 
             latitude_request = latitude_sample
@@ -237,7 +259,7 @@ def requestData(layerlist,samples, filepath):
                 ansi_val=converted_date
                 subset_ansi=ansi_str.format(ansi_val)
             else:
-                print(time_asked, "# NOT COVERED TEMPORALLY, only:", time_min)
+                print(time_asked, "# NOT COVERED TEMPORALLY, only retrieving data for:", time_min)
                 #set timestamp here a general one, the one were coverage is there
                 ansi_val=time_min
                 subset_ansi=ansi_str.format(ansi_val)
@@ -252,7 +274,7 @@ def requestData(layerlist,samples, filepath):
                 x1= float(latitude_request)
                 #x2= x1 + resolution
                 x2=x1
-                print(x1,x2, resolution)
+                #print(x1,x2, resolution)
                 #strlat="&subset=Lat({},{})"
                 subset_lat = strlat.format(x1,x2)
                 y1= float(longitude_request)
@@ -263,7 +285,7 @@ def requestData(layerlist,samples, filepath):
                 #print("CRS:",crs, "RESOLUTION:", resolution, subset_long, subset_lat)
             request_cov_id = "&COVERAGEID=" + layer
             request_encode_format = "&FORMAT=text/csv"
-            print(name_date, request_cov_id, request_encode_format, layer)
+            #print(name_date, request_cov_id, request_encode_format, layer)
             if float(latitude_request) < float(layerlist[data_entry][3]) and float(latitude_request) > float(layerlist[data_entry][2]) and float(longitude_request) > float(layerlist[data_entry][4]) and float(longitude_request) < float(layerlist[data_entry][5]):
                 response = requests.get(base_wcs_url + "&request=GetCoverage" + request_cov_id + subset_ansi + subset_lat + subset_long + request_encode_format,auth=(rasdaman_username, rasdaman_password), verify=False)
                 valls=(str(response.text)[1:-1])
@@ -273,6 +295,8 @@ def requestData(layerlist,samples, filepath):
                 valls=("NA")
                 sample_result.append(valls)
         result.append(sample_result)
+    sys.stdout = sys.__stdout__
+    print("DONE")
     if filepath!="NONE":
         with open(filepath, "w", newline="") as csvfile:
             writer = csv.writer(csvfile)
@@ -281,4 +305,37 @@ def requestData(layerlist,samples, filepath):
     else:
         return result
 
-#x= requestData(data_use,cos.samples,"/adada")
+#
+# x= requestData(data_use,cos.samples,"/adada")
+
+
+#def getBoundary(data):
+#    minlats=[]
+#    maxlats=[]
+#    minlongs=[]
+#    maxlongs=[]  
+#    for minl in range(1,len(data)):
+#        crs=data[minl][1]
+#        #print(minl)
+#        if crs=="EPSG/0/4326":
+#            min_y, min_x = trans4mEPSG("EPSG:4326","EPSG:3035", float(data[minl][4]), float(data[minl][2]))
+#            max_y, max_x = trans4mEPSG("EPSG:4326","EPSG:3035",float(data[minl][5]), float(data[minl][3]))
+#            minlats.append(min_x)
+#            maxlats.append(max_x)
+#            minlongs.append(min_y)
+#            maxlongs.append(max_y)
+#        else:
+#            minlats.append(float(data[minl][2]))
+#            #print(minlats)
+#            maxlats.append(float(data[minl][3]))
+#            #print(maxlats)
+#            minlongs.append(float(data[minl][4]))
+#            maxlongs.append(float(data[minl][5]))
+#        minlat=min([x for x in minlats if x != float('inf')])
+#        maxlat= max([x for x in maxlats if x != float('inf')])
+#        minlong=min([x for x in minlongs if x != float('inf')])
+#        maxlong=max([x for x in maxlongs if x != float('inf')])
+#    return(minlat,maxlat,minlong,maxlong)
+#
+#s=getBoundary(layer_info)
+
