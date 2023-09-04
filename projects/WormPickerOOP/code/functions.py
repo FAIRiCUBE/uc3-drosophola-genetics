@@ -272,14 +272,14 @@ def requestData(layerlist,samples, filepath):
                 crs_indicator= crs.replace("EPSG/0/", "EPSG:")
                 longitude_request,latitude_request= trans4mEPSG("EPSG:4326",crs_indicator,float(longitude_request), float(latitude_request))
                 x1= float(latitude_request)
-                #x2= x1 + resolution
-                x2=x1
+                x2= x1 + float(resolution)
+                #x2=x1
                 #print(x1,x2, resolution)
                 #strlat="&subset=Lat({},{})"
                 subset_lat = strlat.format(x1,x2)
                 y1= float(longitude_request)
-                y2=y1
-                #y2= y1 + resolution
+                #y2=y1
+                y2= y1 + float(resolution)
                 #strlon = "&subset=Long({},{})"
                 subset_long= strlon.format(y1,y2)
                 #print("CRS:",crs, "RESOLUTION:", resolution, subset_long, subset_lat)
