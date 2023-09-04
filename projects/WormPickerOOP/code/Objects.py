@@ -1,5 +1,6 @@
 import csv
-from module_crs_converter import trans4mEPSG
+#from code.module_crs_converter import trans4mEPSG
+from code.functions import trans4mEPSG
 
 
 class Coverage(object):

@@ -72,7 +72,7 @@ def getLayers(savepath="NONE"):
             date_min="NA"
             date_max="NA"
             #print(coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_min)
-            layer_info.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_min))
+            layer_info.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max))
     ##add resolution via describe coverage
     for ID in range(1,len(layer_info)):
     #for ID in range(3,4):
@@ -114,13 +114,13 @@ def getLayers(savepath="NONE"):
         except KeyError:
             pass
         data=layer_info
-        if savepath!="NONE":
-            os.chdir(savepath)
-            with open(savepath, "w", newline="") as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerows(layer_info)
-        else:
-            return data
+    if savepath!="NONE":
+        os.chdir(savepath)
+        with open(savepath, "w", newline="") as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(layer_info)
+    else:
+        return layer_info
 
     #os.chdir(savepath)
     #with open("layer_info_WCS.csv", "w", newline="") as csvfile:
