@@ -82,6 +82,42 @@ In rasdaman, grid index starts with 0 and a trimming with grid indices:
 S: We wanted to query the given subsets, why does a subset of size 5x5 or 15x15 provide two values/indices, while a subset of 10x10 only provides one?
 Maybe I oversaw and you already wrote, but just to be sure what’s going on: Where does the 0.000000000000000222 in the tmp=… formula come from?
 
+Output of cal()-functions:
+>>> cal(15,15,15,15)
+grid indices for X: 20 19 
+grid indices for Y: 8 7
+>>> cal(10,10,15,15)
+grid indices for X: 19 19 
+grid indices for Y: 8 7
+>>> cal(10,10,20,20)
+grid indices for X: 19 19 
+grid indices for Y: 7 7
+>>> cal(10,10,25,25)
+grid indices for X: 19 20 
+grid indices for Y: 7 7
+
+def shiftToInteger_print(float_number):
+     print("Your input is:", float_number)
+     rounded_number = math.ceil(float_number)
+     print("I have rounded to:", rounded_number)
+     if float_number < 0:
+         rounded_number = math.floor(float_number)
+         print("Input Number is less than 0, now rounded number is", rounded_number)
+     tmp = abs(float_number) + 0.000000000000000222
+     print("Tmp is:", tmp)
+     if tmp >= abs(rounded_number):
+         print("Tmp >= abs(rn)", rounded_number)
+         return rounded_number
+     print(int(float_number))
+ 
+>>> shiftToInteger_print(0.5)
+Your input is: 0.5
+I have rounded to: 1
+Tmp is: 0.5000000000000002
+0
+
+
+
 B:
 Transform from spatial geo extents to grid extents are not easy because people has different perspectives about the output grid domains (+ or - 1 grid pixel).
 This constant value 0.000000000000000222 comes from my tests in R language for rounding float number to integer. I tried to resemble R trunc() function:
@@ -233,3 +269,5 @@ print("----------------")
 
 cal(155, 180, 46, 90)
 print("----------------")
+
+
