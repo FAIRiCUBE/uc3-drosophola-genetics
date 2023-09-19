@@ -153,8 +153,6 @@ def boundary_function():
     else:
         print("Coverage instance not available.")
 
-
-
 # Create the main application window
 root = tk.Tk()
 root.title("Function Executor")
