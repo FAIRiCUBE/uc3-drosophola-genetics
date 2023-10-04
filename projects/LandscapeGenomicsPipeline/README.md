@@ -1,6 +1,6 @@
 # Landscape Genomics Pipeline 
 
-This repository is supposed to hold documentation on the DEST_Pipeline derivate used for the UC3 Project of FAIRiCUBE.
+This repository is supposed to hold documentation on the DEST_Pipeline derivative used for the UC3 Project of FAIRiCUBE.
 This is a standalone repository, as well as a directory within the FAIRiCUBE uc3-drosophila-genetics.
 All the scripts used in the workflow are provided via the scripts directory.
 
@@ -122,7 +122,7 @@ If you want to work with customly aquired environmental data, make sure you put 
 metadata="results/metadata.csv"
 ```
 
-Be aware, that ALL the following steps are all performed in a for-loop that is based on chromosomal regions. The Loop continues after this section (see main.sh).
+Be aware, that ALL the following steps are all performed in a for-loop that is based on chromosomal regions. The Loop continues after this section [see main.sh](main.sh).
 
 ```bash
 #Get all chromosomal regions in your data and set as input what you want to analyze. In the case of the provided VCF file by DEST.bio, regions are provided as chromosomal arms and analysis will be performed according to these arms.
@@ -186,7 +186,7 @@ This is a simple regression statistics performed in R.
 ### Baypass Analysis
 
 **`Attention when creating geno file:`**  Keep in mind, for this pipeline only a few samples are used therefore there are more likely "monomorphic" sites, if there are no monomorphic sites all will be kept and all positions are represented in the keep-file.
-In this analysis, a .geno and a .poolsize file are needed and created. Also, a file that analyses possible covariates based on values being numeric is created and this infomration is used to parse possible covariates to the LFMM statistics.
+In this analysis, a *.geno* and a *.poolsize* file are needed and created. Also, a file that analyses possible covariates based on values being numeric is created and this infomration is used to parse possible covariates to the LFMM statistics.
 
 ```bash
     bayin="${output}.k10.gz"
