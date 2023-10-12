@@ -13,7 +13,7 @@ This pipeline is designed to perform genetic data analysis on a dataset that inc
   - http://vcftools.github.io/license.html
 
 - Baypass2.3 
-  - http://www1.montpellier.inra.fr/CBGP/software/baypass/index.html
+  - https://forgemia.inra.fr/mathieu.gautier/baypass_public 
 
 - LEA R-Package (Citation)
   - https://www.bioconductor.org/packages/release/bioc/html/LEA.html
