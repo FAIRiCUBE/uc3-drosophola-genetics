@@ -1,10 +1,4 @@
-projects/WormPicker/output/MetaForCoveredSamples.csv
-projects/WormPicker/scripts/getData2.py
-projects/WormPicker/scripts/getData.py
-projects/WormPicker/scripts/GetBoundary.py
-projects/WormPicker/scripts/GetWCSlayerInfo.py
-projects/WormPicker/scripts/try.py
-projects/WormPicker/output/fc_layer_info_WCS.csv
+projects/wormpicker
 projects/gap_filling/MartinData/data/*.af.gz
 projects/LandscapeGenomicsPipeline/data/PoolSeq2023.vcf.gz
 projects/LandscapeGenomicsPipeline/results/2R
