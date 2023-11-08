@@ -42,28 +42,31 @@ out_base_name="/home/sjet/repos/uc3-drosophola-genetics/projects/gap_filling/doc
 in_file_name_true       ="Europe_50kMutations.tsv"
 # in_file_name_gap        ="Europe_50kMutations_5perc_missing.csv"
 in_file_name_gap        ="Europe_50kMutations_gap5perc_expdist.csv"
-in_file_name_gapfill    ="Europe_50kMutations_gap5perc_expdist_kmeansfill5.csv"
+# in_file_name_gapfill    ="Europe_50kMutations_gap5perc_expdist_kmeansfill5.csv"
+# in_file_name_gapfill    ="Europe_50kMutations_gap5perc_expdist_vaefilled.csv"
+in_file_name_gapfill    ="Europe_50kMutations_gap5perc_expdist_empbase.csv"
 # in_file_name_gapfill    ="Europe_50kMutations_5perc_missing_empiricalbase.csv"
 # in_file_name_gapfill    ="Europe_50kMutations_5perc_missing_maefilled.csv"
 
 
 # in_file_name_true       ="North_America_50kMutations.tsv"
 # in_file_name_gap        ="North_America_50kMutations_gap5perc_expdist.csv"
-
-# # in_file_name_gapfill    ="North_America_50kMutations_5perc_missing_kmeansfill5.csv"
-# # in_file_name_gapfill    ="North_America_50kMutations_5perc_missing_maefilled.csv"
+# # in_file_name_gapfill    ="North_America_50kMutations_gap5perc_expdist_kmeansfill5.csv"
+# # in_file_name_gapfill    ="North_America_50kMutations_gap5perc_expdist_vaefilled.csv"
+# in_file_name_gapfill    ="North_America_50kMutations_gap5perc_expdist_empbase.csv"
+# in_file_name_gapfill    ="North_America_50kMutations_5perc_missing_kmeansfill5.csv"
+# in_file_name_gapfill    ="North_America_50kMutations_5perc_missing_maefilled.csv"
 # in_file_name_gapfill    ="North_America_50kMutations_5perc_missing_empiricalbase.csv"
 # in_file_name_gapfill    ="North_America_50kMutations_gap5perc_expdist_kmeansfill5.csv"
 
 
-
 df_true = pd.read_csv(in_base_name+in_file_name_true,sep='\t')
 df_gap = pd.read_csv(in_base_name+in_file_name_gap,sep=',')
-df_gapfill = pd.read_csv(in_base_name+in_file_name_gapfill,sep=',')
-# df_gapfill = pd.read_csv(in_base_name+in_file_name_gapfill,sep='\t')
+# df_gapfill = pd.read_csv(in_base_name+in_file_name_gapfill,sep=',')
+df_gapfill = pd.read_csv(in_base_name+in_file_name_gapfill,sep='\t')
 
-# df_true=df_true.iloc[1::,:]
-# df_gap=df_gap.iloc[1::,:]
+df_true=df_true.iloc[1::,:]
+df_gap=df_gap.iloc[1::,:]
 # df_gapfill=df_gapfill.drop(columns="Unnamed: 0")
 
 print("Number of NaN in GAP input file : ", df_gap.isna().sum().sum())

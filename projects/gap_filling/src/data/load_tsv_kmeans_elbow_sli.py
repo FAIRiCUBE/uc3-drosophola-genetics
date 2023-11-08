@@ -13,6 +13,7 @@ except:
     pass
 
 import sys
+import os
 from collections import defaultdict as d
 from optparse import OptionParser, OptionGroup
 import random
@@ -24,7 +25,16 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 import seaborn as sns
+from measurer import Measurer
+from types import ModuleType
 
+##### start monitoring of compute resources
+data_path = '/'
+measurer = Measurer()
+tracker = measurer.start(data_path=data_path)
+# example -> shape = [5490, 2170]
+shape = []
+filename_mon=os.path.basename(sys.argv[0])
 
 plt.close('all')
 SMALL_SIZE = 10
@@ -39,10 +49,11 @@ plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
-write_file=True
+write_file=False
 
-in_base_name="/home/sjet/repos/uc3-drosophola-genetics/data/raw/"
-out_base_name_pic="/home/sjet/repos/uc3-drosophola-genetics/Documentation/"
+in_base_name="/home/sjet/repos/uc3-drosophola-genetics/projects/gap_filling/data/raw/"
+out_base_name="/home/sjet/repos/uc3-drosophola-genetics/projects/gap_filling/documentation/"
+
 
 # in_file_name="Europe_50kMutations_0.05missing.tsv"
 # in_file_name="Europe_50kMutations.tsv"
@@ -81,7 +92,7 @@ plt.hist(kmeans.labels_, bins=5, rwidth=0.8)
 plt.xlabel('cluster number')
 plt.ylabel('Frequency')
 plt.show()
-plt.savefig(out_base_name_pic+'NA_kmeans_class_dist.png')
+plt.savefig(out_base_name+'NA_kmeans_class_dist.png')
 
 print("start kmeans with elbow")
 cs = []
@@ -91,23 +102,23 @@ for i in range(1, max):
     kmeans.fit(X)
     cs.append(kmeans.inertia_)
 
-# plt.figure(figsize=(16,7))
-# plt.plot(range(1, max), cs)
-# plt.title('The Elbow Method')
-# plt.xlabel('Number of clusters')
-# plt.ylabel('CS')
-# plt.show()
-# plt.savefig(out_base_name_pic+'NA_kmeans_elbow_method.png')
+plt.figure(figsize=(16,7))
+plt.plot(range(1, max), cs)
+plt.title('The Elbow Method')
+plt.xlabel('Number of clusters')
+plt.ylabel('CS')
+plt.show()
+plt.savefig(out_base_name+'NA_kmeans_elbow_method.png')
 
-print("start kmeans with silhouette")
-sil = []
-max = 10
+# print("start kmeans with silhouette")
+# sil = []
+# max = 10
 
 # dissimilarity would not be defined for a single cluster, thus, minimum number of clusters should be 2
-for k in range(2, max+1):
-  kmeans = KMeans(n_clusters = k).fit(X)
-  labels = kmeans.labels_
-  sil.append(silhouette_score(X, labels, metric = 'euclidean'))
+# for k in range(2, max+1):
+#   kmeans = KMeans(n_clusters = k).fit(X)
+#   labels = kmeans.labels_
+#   sil.append(silhouette_score(X, labels, metric = 'euclidean'))
 
 # plt.figure(figsize=(16,7))
 # plt.plot(range(1, max), sil)
@@ -120,3 +131,12 @@ for k in range(2, max+1):
 if write_file:
     print("Write Class CSV output file ",in_base_name+out_file_name)
     X_t['Class'].to_csv(in_base_name+out_file_name, index=True)
+
+##### stop monitoring of compute resources
+# it is very important to use program_path = __file__
+measurer.end(tracker=tracker,
+              shape=shape,
+              libraries=[v.__name__ for k, v in globals().items() if type(v) is ModuleType and not k.startswith('__')],
+              data_path=data_path,
+              program_path=__file__,
+              csv_file=out_base_name+filename_mon+'.csv')
