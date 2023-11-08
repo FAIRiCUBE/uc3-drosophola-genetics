@@ -1,0 +1,9 @@
+sampleId,lat,long,continent,country,min_month,nFlies,collector
+AT_Kar_See_1_2014-08-17,46.8136889,13.50794792,Europe,Austria,8,40,Martin_Kapun
+AT_Kar_See_1_2016-08-01,46.8136889,13.50794792,Europe,Austria,8,40,Martin_Kapun
+AT_Nie_Mau_1_2014-07-20,48.375,15.56,Europe,Austria,7,40,Andrea_J._Betancourt
+AT_Nie_Mau_1_2014-10-19,48.375,15.56,Europe,Austria,10,40,Andrea_J.Betancourt
+AT_Nie_Mau_1_2015-07-20,48.375,15.56,Europe,Austria,7,40,Andrea_Betancourt
+AT_Nie_Mau_1_2015-10-19,48.375,15.56,Europe,Austria,10,40,Andrea_Betancourt
+AT_Wie_Gro_1_2012-08-03,48.2,16.37,Europe,Austria,8,62,Fabian/Flatt
+AT_Wie_Gro_1_2012-10-20,48.2,16.37,Europe,Austria,10,44,Fabian/Flatt
