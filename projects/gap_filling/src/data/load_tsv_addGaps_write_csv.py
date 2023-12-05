@@ -13,13 +13,23 @@ except:
     pass
 
 import sys
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from numpy.random import randint
 from numpy.random import exponential
 from numpy.random import seed
+from measurer import Measurer
+from types import ModuleType
 
+##### start monitoring of compute resources
+data_path = '/'
+measurer = Measurer()
+tracker = measurer.start(data_path=data_path)
+# example -> shape = [5490, 2170]
+shape = []
+filename_mon=os.path.basename(sys.argv[0])
 
 plt.close('all')
 SMALL_SIZE = 10
@@ -34,12 +44,12 @@ plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
-    write_switch=False
+write_switch=False
 plot_switch=True
 
 in_base_name="/home/sjet/repos/uc3-drosophola-genetics/projects/gap_filling/data/raw/"
 
-out_base_name_pic="/home/sjet/repos/uc3-drosophola-genetics/Documentation/"
+out_base_name="/home/sjet/repos/uc3-drosophola-genetics/projects/gap_filling/documentation/"
 
 # in_file_name="Europe_50kMutations_0.05missing.tsv"
 in_file_name="Europe_50kMutations.tsv"
@@ -77,3 +87,12 @@ if plot_switch:
     print("#### Plotting file")
     fig = plt.figure(figsize=(12, 6))
     plt.hist(values_locus_length,bins=np.linspace(1, 15,15),histtype=u'step')
+
+##### stop monitoring of compute resources
+# it is very important to use program_path = __file__
+measurer.end(tracker=tracker,
+              shape=shape,
+              libraries=[v.__name__ for k, v in globals().items() if type(v) is ModuleType and not k.startswith('__')],
+              data_path=data_path,
+              program_path=__file__,
+              csv_file=out_base_name+filename_mon+'.csv')

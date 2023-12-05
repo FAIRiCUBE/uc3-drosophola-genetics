@@ -13,12 +13,22 @@ except:
     pass
 
 import sys
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from numpy.random import randint
 from numpy.random import seed
+from measurer import Measurer
+from types import ModuleType
 
+##### start monitoring of compute resources
+data_path = '/'
+measurer = Measurer()
+tracker = measurer.start(data_path=data_path)
+# example -> shape = [5490, 2170]
+shape = []
+filename_mon=os.path.basename(sys.argv[0])
 
 plt.close('all')
 SMALL_SIZE = 10
@@ -37,7 +47,7 @@ write_file=True
 
 in_base_name="/home/sjet/repos/uc3-drosophola-genetics/projects/gap_filling/data/raw/"
 
-out_base_name_pic="/home/sjet/repos/uc3-drosophola-genetics/projects/gap_filling/Documentation/"
+out_base_name="/home/sjet/repos/uc3-drosophola-genetics/projects/gap_filling/documentation/"
 
 # in_file_name="Europe_50kMutations_5perc_missing.csv"
 in_file_name="Europe_50kMutations_gap5perc_expdist.csv"
@@ -85,3 +95,15 @@ print("Number of NaN in output file : ", df_gf.isna().sum().sum())
 if write_file:
     print("Write CSV output file ",in_base_name+out_file_name)
     df_gf.to_csv(in_base_name+out_file_name,index=False)
+    
+    
+##### stop monitoring of compute resources
+# it is very important to use program_path = __file__
+shape = df.shape
+measurer.end(tracker=tracker,
+              shape=shape,
+              libraries=[v.__name__ for k, v in globals().items() if type(v) is ModuleType and not k.startswith('__')],
+              data_path=data_path,
+              program_path=__file__,
+              variables=locals(),
+              csv_file=out_base_name+filename_mon+'.csv')
