@@ -9,7 +9,7 @@ cov_info <- read.table(args[3])
 for (cov in 1:max(file$COVARIABLE)){
   print(cov)
   file[file$COVARIABLE==cov,]$eBPis -> CovP
-  plotdf <- data.frame(x=c(1:10000), y=CovP)
+  plotdf <- data.frame(x=c(1:500), y=CovP)
   pod.thresh=quantile(CovP,probs=0.95)
   PLOT <- ggplot(plotdf, aes(x=x, y=CovP)) + geom_point(alpha=0.3) + 
     geom_hline(yintercept=pod.thresh,col="blue",lty=2)+

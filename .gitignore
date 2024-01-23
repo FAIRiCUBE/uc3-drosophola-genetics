@@ -1,9 +1,8 @@
 projects/wormpicker
 projects/gap_filling/MartinData/data/*.af.gz
 projects/LandscapeGenomicsPipeline/data/PoolSeq2023.vcf.gz
-projects/LandscapeGenomicsPipeline/results/2R
-projects/LandscapeGenomicsPipeline/results/3L
-projects/LandscapeGenomicsPipeline/results/2L/Subsampled*
-projects/LandscapeGenomicsPipeline/results/2L/LEA/long_run1
-projects/LandscapeGenomicsPipeline/results/2L/LEA/long_run2
-.env
+projects/LandscapeGenomicsPipeline/results/2L
+projects/LandscapeGenomicsPipeline/results/NSATvsBIO1/results/fullgenome/Subsampled_fullgenome.recode.vcf.gz
+projects/LandscapeGenomicsPipeline/results/NSATvsBIO1/results/fullgenome/Subsampled_fullgenome.recode.vcf.h5.gz
+projects/LandscapeGenomicsPipeline/scripts/analysersults.R
+projects/LandscapeGenomicsPipeline/scripts/test_opts.sh

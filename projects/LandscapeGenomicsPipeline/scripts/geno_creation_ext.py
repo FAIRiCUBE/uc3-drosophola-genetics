@@ -36,7 +36,7 @@ parser.add_option("--metadata", dest="META", help="metadata file")
 parser.add_option_group(group)
 
 vcf = gzip.open(options.IN, "rt", encoding="utf-8").readlines()[1:]
-
+#vcf=gzip.open("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/NSATvsBIO1_4/results/2L/Subsampled_2L.recode.vcf.h5.gz", "rt", encoding="utf-8").readlines()[1:]
 geno_file = []
 #columns=[*range(9,(n+8),1)]
 
@@ -50,12 +50,21 @@ with open(options.SAMPLES, 'r') as f:
     print(matching_pops)
     #print(columns)
 
+#with open("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/testNSAT/data/european.csv", 'r') as f:
+#    matching_pops = [line.strip() for line in f]
+#    columns=[i for i, x in enumerate(popcol) if x in matching_pops ]
+#    print(matching_pops)
+#    #print(columns)
+
 meta = open(options.META, 'r').readlines()
+#meta= open("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/NSATvsBIO1/data/metadata.csv", 'r').readlines()
+nFlies=meta[0].split(",").index("nFlies")
 popsize=[]
 for line in meta:
     for pop in matching_pops:
         if line.startswith(pop):
-            popsize.append(line.split(",")[6])
+            print(line)
+            popsize.append(line.split(",")[nFlies])
 
 output_file_path = os.path.join(os.path.dirname(options.OUT), "size.poolsize")
 
@@ -68,6 +77,19 @@ except Exception as e:
     print(f"Error writing to '{output_file_path}': {e}")
 
 
+poolsize_double = os.path.join(os.path.dirname(options.OUT), "size_double.poolsize")
+
+for i in range(len(popsize)):
+    popsize[i] = int(popsize[i])*2
+
+try:
+    with open(poolsize_double, 'w') as file:
+        file.write(' '.join(map(str, popsize)))
+    print(f"File '{poolsize_double}' created successfully.")
+except Exception as e:
+    print(f"Error writing to '{poolsize_double}': {e}")
+
+
 #with open("results/BAYPASS/size.poolsize",'w') as file:
 #    file.write(' '.join(map(str, popsize)))
 
@@ -75,7 +97,7 @@ except Exception as e:
 #columns = [9,11,13,15,16,17,18,21,23,25,29,31,32,33,36,37,41,42,44,47,49,50,56] # Selction only of populations we are going to use for spring
 #columns = [10,12,14,19,20,22,28,34,35,38,39,40,46,48,51,52,53,54,55] # Selction only of populations we are going to use for autum
 #columns = [*range(9,246+9,1)] # Selection of 246 populations
-
+#columns=[0]
 flag = 0
 geno_output = open(options.OUT, 'w')
 
@@ -87,7 +109,7 @@ for line in vcf:
     position = line.split("\t")[1]
     #geno_file_line.append(chromosome)
     #geno_file_line.append(position)
-    for x in columns:
+    for x in list(range(9,len(line.split("\t")))):
         population = line.split("\t")[x]
         alternative = population.split(":")[2]
         original = population.split(":")[1]
@@ -118,7 +140,6 @@ geno_output = open(options.OUT, 'w')
 for geno in geno_file:
     geno_output.write("\t".join(geno))
     geno_output.write("\n")
-
 
 ##write the poolsize file as well
 #meta = open(options.META, "rt").readlines()

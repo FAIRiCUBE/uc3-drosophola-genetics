@@ -10,6 +10,15 @@ import math
 from osgeo import gdal, osr
 
 
+
+env_path = '/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/WormPickerOOP'
+
+# Load environment variables from the file
+with open(env_path) as f:
+    for line in f:
+        key, value = line.strip().split('=', 1)
+        os.environ[key] = value
+
 def trans4mEPSG(InputCRS,OutputCRS,y,x):
     src_crs = InputCRS
     src_srs = osr.SpatialReference()

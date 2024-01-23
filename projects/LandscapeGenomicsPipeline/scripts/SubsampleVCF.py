@@ -22,7 +22,7 @@ parser.add_option_group(group)
 def load_data(x):
     """ import data either from a gzipped or or uncrompessed file or from STDIN"""
     import gzip
-
+    
     if x == "-":
         y = sys.stdin
     elif x.endswith(".gz"):

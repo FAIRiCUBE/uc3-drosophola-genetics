@@ -14,20 +14,25 @@ parser = OptionParser(usage=usage)
 group = OptionGroup(parser, "< put description here >")
 
 #########################################################   CODE   #########################################################################
-parser.add_option("--input", dest="IN", help="Input file")
+parser.add_option("--input", dest="IN", help="Input file for variable reading")
 parser.add_option("--output", dest="OUT", help="Output file")
-parser.add_option("--samples", dest="SAMP", help="samplename file")
+parser.add_option("--samples", dest="SAMP", help="samplename file where all the samplenames are listed")
 
 (options, args) = parser.parse_args()
 parser.add_option_group(group)
 
 samples=[]
-with open("/media/inter/ssteindl/FC/NewLandscapeGenomics/LandscapeGenomicsPipeline_newTest/data/samplenames.csv", 'r') as f:
+with open(options.IN, 'r') as f:
     reader = csv.reader(f)
     for line in reader:
         #print(line)
         samples.extend(line)
 
+#with open("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/testNSAT/data/metadata.csv", 'r') as f:
+#    reader = csv.reader(f)
+#    for line in reader:
+#        #print(line)
+#        samples.extend(line)
 
 ##with open(options.IN, 'r', encoding='latin-1') as f:
 ##    reader = csv.reader(f, delimiter=',')
@@ -72,6 +77,8 @@ def get_numeric_columns(x):
         return numeric_cols
 
 indices_to_select= get_numeric_columns(options.IN)
+#indices_to_select= get_numeric_columns("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/testNSAT/data/metadata.csv")
+
 
 #with open("/media/inter/ssteindl/FC/NewLandscapeGenomics/LandscapeGenomicsPipeline_newTest/results/2L/Subsampled_2L.recode.af.k10", 'r', encoding='latin-1') as f:
 #    reader = csv.reader(f, delimiter=',')
@@ -89,11 +96,12 @@ def filter_samples(meta, samples):
 
 print(samples)
 samps = filter_samples(options.IN, samples)
+#samps=filter_samples("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/testNSAT/data/metadata.csv", samples)
 print(samps)
-data = [list(itemgetter(*indices_to_select)(row)) for i, row in enumerate(samps)]
+#data = [list(itemgetter(*indices_to_select)(row)) for i, row in enumerate(samps)]
+data = [list(itemgetter(*indices_to_select)(row)) for i, row in enumerate(samps) if i > 0]
 
 data_transposed = np.transpose(data)
-
 
 with open(options.OUT, 'w', newline='') as f:
     writer = csv.writer(f, delimiter=' ')

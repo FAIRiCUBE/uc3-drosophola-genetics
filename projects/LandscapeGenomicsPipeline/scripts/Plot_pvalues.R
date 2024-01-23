@@ -4,7 +4,7 @@ library(tidyverse)
 library(gridExtra)
 library(ggplot2)
 library(readr)
-
+library(maps)
 args <- commandArgs(TRUE)
 
 ## set working directory
@@ -16,17 +16,32 @@ dir.create(directory_path, recursive = TRUE)
 DATA=read.table(args[2],
   header=3)
 AF=DATA[,3:ncol(DATA)]
-
+meta <- read.table(args[3], header=1, sep=",",  dec = ".")
+pvalcsv <- data.frame(DATA$Chr, DATA$Pos)
 ## read Metadata
 #meta=read.csv(args[3],header=T)
+#DATA=read.table("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/testNSAT/results/2L/Subsampled_2L.af.h5",header=3)
+cleaned_row_names <- gsub("\\.", "-", colnames(AF))
+cleaned_row_names_DATA <- gsub("\\.", "-", colnames(DATA))
 
-meta <- read.table(args[3], header=1, sep=",",  dec = ".")
+colnames(AF) <- cleaned_row_names
+colnames(DATA) <- cleaned_row_names_DATA
+
+
+actsamp<-intersect(cleaned_row_names, meta$sampleId)
+actsamp2<-intersect(cleaned_row_names_DATA, meta$sampleId)
+actsamp2 <- c("Chr", "Pos", actsamp2)
+                    
+
 #meta <- read_csv(file = commandArgs(trailingOnly = TRUE)[3])
-#meta <- read.table("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/results/metadata_v2.csv", header=1, sep=",",  dec = ".")
-#colnames(AF) <- samplenamesnew$V1
+#meta <- read.table("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/testNSAT/data/NSAT.csv", header=1, sep=",",  dec = ".")
 
-## make sure that order of AF data and Meta data match
-#meta<-meta[match(colnames(AF),meta$sampleId),]
+
+
+AF <- AF[, actsamp, drop = FALSE]
+DATA <- DATA[, actsamp2, drop = FALSE]
+#AF2 <- AF[meta$sampleId %in% unlist(colnames(AF)),]
+meta <- meta[meta$sampleId %in% colnames(AF),]
 
 setwd(directory_path)
 
@@ -36,10 +51,11 @@ lm.func <- function(x) {
 }
 
 #print(meta)
-pvalcsv <- data.frame(DATA$Chr, DATA$Pos)
+#pvalcsv <- data.frame(DATA$Chr, DATA$Pos)
 facs <- c()
 for ( i in colnames(meta)){
   y=meta[[i]]
+  print(y)
   if (is.numeric(y) && length(table(y)) > 2){
     p.val<-apply(AF,1,lm.func)
     ID=paste0(i,".pval")
@@ -77,29 +93,62 @@ hist(Test.p,breaks=100)
 Bonf=-log10(0.05/nrow(DATA))
 
 
-#### plot with ggplot
-PLOT<-facs %>%
-  map(function(z){
-    PLOT.df<-data.frame(Pos = DATA$Pos/1000000, P.val = -log10(DATA[[z]]))
-    pl <- ggplot(PLOT.df, aes(x = Pos, y = P.val)) +
-      geom_point(alpha=0.3) +
-      xlab("Genomic Position on 3R [Mbp]") +
-      ylab("-log10(P.value)")+
-      geom_hline(yintercept=Bonf,
-                 col="blue",
-                 lty=2)+
-      geom_hline(yintercept=-log10(0.05),
-                 col="red",
-                 lty=2)+
-      ggtitle(z)+
-      theme_bw()
-    return(pl)
-  }) %>%
-  arrangeGrob(grobs = ., nrow=3) %>% #add ncol/nrow argument here
-  grid.arrange()
+##### plot with ggplot
+#PLOT<-facs %>%
+#  map(function(z){
+#    PLOT.df<-data.frame(Pos = DATA$Pos/1000000, P.val = -log10(DATA[[z]]))
+#    pl <- ggplot(PLOT.df, aes(x = Pos, y = P.val)) +
+#      geom_point(alpha=0.3) +
+#      xlab("Genomic Position on 3R [Mbp]") +
+#      ylab("-log10(P.value)")+
+#      geom_hline(yintercept=Bonf,
+#                 col="blue",
+#                 lty=2)+
+#      geom_hline(yintercept=-log10(0.05),
+#                 col="red",
+#                 lty=2)+
+#      ggtitle(z)+
+#      theme_bw()
+#    return(pl)
+#  }) %>%
+#  arrangeGrob(grobs = ., nrow=3) %>% #add ncol/nrow argument here
+#  grid.arrange()
+#
+#ggsave("3R_Pvalues.png",
+#       PLOT,
+#       width=15,
+#       height=7)
 
-ggsave("3R_Pvalues.png",
-       PLOT,
-       width=15,
-       height=7)
+# Create a ggplot function for mapping
+ggplot_func <- function(PLOT.df, Bonf, title) {
+  ggplot(PLOT.df, aes(x = Pos, y = P.val)) +
+    geom_point(alpha = 0.3) +
+    xlab("Genomic Position on 3R [Mbp]") +
+    ylab("-log10(P.value)") +
+    geom_hline(yintercept = Bonf, col = "blue", lty = 2) +
+    geom_hline(yintercept = -log10(0.05), col = "red", lty = 2) +
+    ggtitle(title) +
+    theme_bw()
+}
 
+## Apply ggplot function to each factor
+#PLOT_list <- lapply(facs, function(z) {
+#  PLOT.df <- data.frame(Pos = DATA$Pos / 1000000, P.val = -log10(DATA[[z]]))
+#  ggplot_func(PLOT.df, Bonf, z)
+#})
+#
+## Arrange and save the plots
+#pdf("3R_Pvalues.pdf", width = 12, height = 7)
+#grid.arrange(grobs = PLOT_list, nrow = 3)
+#dev.off()
+
+for (i in seq_along(facs)) {
+  z <- facs[i]
+  PLOT.df <- data.frame(Pos = DATA$Pos / 1000000, P.val = -log10(DATA[[z]]))
+  pl <- ggplot_func(PLOT.df, Bonf, z)
+  
+  # Export as PNG
+  png(filename = paste0(z, "_Pvalues.png"), width = 800, height = 600)
+  print(pl)
+  dev.off()
+}

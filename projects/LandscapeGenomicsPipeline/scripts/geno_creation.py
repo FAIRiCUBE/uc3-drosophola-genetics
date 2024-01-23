@@ -63,7 +63,7 @@ for line in vcf:
     flag = flag + 1
     print(flag)
 
-print("longitud: " + str(len(geno_file)))
+print("longitude: " + str(len(geno_file)))
 #geno_output = open("/media/inter/ssteindl/DEST/LanGen/BAYPASS/dummy/Biallelic.geno", 'w')
 
 #for geno in geno_file:
