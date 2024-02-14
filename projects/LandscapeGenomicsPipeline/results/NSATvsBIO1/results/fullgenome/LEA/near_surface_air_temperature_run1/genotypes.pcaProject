@@ -1,0 +1,6 @@
+new("pcaProject", projDir = "/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/NSATvsBIO1_9/results/fullgenome/LEA/near_surface_air_temperature_run1\n2\n3/", 
+    pcaDir = "genotypes.pca/", n = 3L, L = 5638L, K = 3L, center = TRUE, 
+    scale = FALSE, pcaProject.file = "genotypes.pcaProject", 
+    input.file = "genotypes.lfmm", eigenvalue.file = "genotypes.eigenvalues", 
+    eigenvector.file = "genotypes.eigenvectors", sdev.file = "genotypes.sdev", 
+    projection.file = "genotypes.projections")

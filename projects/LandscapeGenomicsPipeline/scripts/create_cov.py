@@ -139,4 +139,3 @@ get_colnames_write(options.IN, info_base_name, )
 with open(options.OUT, 'w') as f:
     print(*colnames, file=f)
 
-

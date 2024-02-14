@@ -37,8 +37,7 @@ parser.add_option("--metadata", dest="META", help="metadata file")
 parser.add_option_group(group)
 
 vcf = gzip.open(options.IN, "rt", encoding="utf-8").readlines()[1:]
-#vcf = gzip.open("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/data/Subsample3.vcf.gz", "rt").readlines()[1:]
-#vcf=gzip.open("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/NSATvsBIO1_4/results/2L/Subsampled_2L.recode.vcf.h5.gz", "rt", encoding="utf-8").readlines()[1:]
+
 geno_file = []
 #columns=[*range(9,(n+8),1)]
 
@@ -59,16 +58,11 @@ with open(options.SAMPLES, 'r') as f:
 #    #print(columns)
 
 meta = open(options.META, 'r').readlines()
-header = meta[0]
-meta_lines = meta[1:]
-#meta= open("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/data/northamerica_meta.csv", 'r').readlines()
-nFliesIndex=header.split(",").index("nFlies")
 popsize=[]
 for line in meta_lines:
     for pop in matching_pops:
         if line.startswith(pop):
-            print(line)
-    popsize.append(line.split(",")[nFliesIndex])
+            popsize.append(line.split(",")[6])
 
 output_file_path = os.path.join(os.path.dirname(options.OUT), "size.poolsize")
 

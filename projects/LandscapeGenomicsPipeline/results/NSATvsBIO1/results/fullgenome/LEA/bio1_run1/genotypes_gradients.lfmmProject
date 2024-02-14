@@ -1,0 +1,7 @@
+new("lfmmProject", lfmmProject.file = "genotypes_gradients.lfmmProject", 
+    projDir = "/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/NSATvsBIO1_9/results/fullgenome/LEA/bio1_run1\n2\n3/", 
+    lfmmDir = "genotypes_gradients.lfmm/", input.file = "genotypes.lfmm", 
+    environment.file = "gradients.env", runs = list(), K = 7L, 
+    d = 1L, all = FALSE, lfmmClass.files = "K7/run1/genotypes_r1_s1.7.lfmmClass", 
+    n = 3L, L = 5638L, D = 1L, creationTime = structure(1705313170.3868, class = c("POSIXct", 
+    "POSIXt")))

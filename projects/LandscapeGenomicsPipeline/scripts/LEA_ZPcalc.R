@@ -29,9 +29,7 @@ markerpos<- data.frame(DATA$Chr, DATA$Pos)
 for (i in 1:args[3]){
   #fol<-paste("run",i,"/")
   #folder <- paste(fol,"genotypes_gradients.lfmm")
-  file.name <- paste(args[1],"/",var,".run",i,"/genotypes_gradients.lfmm/K",j, "/run1/genotypes_r1_s1.",j,".zscore", sep="")
-  print(paste("print statement working dir",args[1]))
-  print(file.name)
+  file.name <- paste(var,"_run",i,"/genotypes_gradients.lfmm/K",j, "/run1/genotypes_r1_s1.",j,".zscore", sep="")
   z.table = cbind(z.table, read.table(file.name)[,1])
   }
 z.score = apply(z.table, MARGIN = 1, median) #combines z-scores
