@@ -6,10 +6,11 @@ arm=args[2]
 #file <- read.table(\"/media/inter/ssteindl/FC/LandscapeGenomicsPipeline/results/BAYPASS/BayPass_summary_betai_reg.out\",h=T)
 cov_info <- read.table(args[3])
 
+
 for (cov in 1:max(file$COVARIABLE)){
   print(cov)
   file[file$COVARIABLE==cov,]$eBPis -> CovP
-  plotdf <- data.frame(x=c(1:10000), y=CovP)
+  plotdf <- data.frame(x=c(1:length(CovP)), y=CovP)
   pod.thresh=quantile(CovP,probs=0.95)
   PLOT <- ggplot(plotdf, aes(x=x, y=CovP)) + geom_point(alpha=0.3) + 
     geom_hline(yintercept=pod.thresh,col="blue",lty=2)+

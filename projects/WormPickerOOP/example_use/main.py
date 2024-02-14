@@ -20,7 +20,7 @@ x.getBoundary()
 # 4- Filter out the samples that are covered by >1  of your selected layers 
 #x.getSamples("path/to/samplefile/with/geoinformation/file.csv")
 
-x.getSamples("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/data/dest_v2.samps_25Feb2023.csv")
+x.getSamples(samplesEurope="/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/Europe50k/data/samplesEurope.csv")
 samplescovered=x.samples
 
 # 5- Create a list of layers by selecting them 

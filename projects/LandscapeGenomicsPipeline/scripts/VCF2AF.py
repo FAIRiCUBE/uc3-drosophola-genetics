@@ -20,7 +20,6 @@ parser.add_option_group(group)
 def load_data(x):
     """ import data either from a gzipped or or uncrompessed file or from STDIN"""
     import gzip
-
     if x == "-":
         y = sys.stdin
     elif x.endswith(".gz"):
@@ -48,7 +47,7 @@ for l in load_data(options.IN):
             AFs.append("NA")
             continue
         P = dict(zip(format, i.split(":")))
-        AFs.append(str(round(float(P["AD"]) / float(P["DP"]), 3)))
+        AFs.append(str(round(float(P["AD"]) / float(P["DP"]), 9)))
     if sum([float(x) for x in AFs if x != "NA"]) == 0:
         continue
     print(a[0] + "\t" + a[1] + "\t" + "\t".join(AFs))

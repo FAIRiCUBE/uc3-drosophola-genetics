@@ -299,3 +299,12 @@ Some covariates seem to create very high -log10 p-values for multiple SNPs, whic
 
 **XtX**
 Another file that is created is the *summary_pi_xtx.out* file [XtX file](results/2L/BAYPASS/BayPass_summary_pi_xtx.out). This stores the values of the calulated XtX statistics (Günther and Coop (2013)) to identify outlier loci.
+
+
+## Results FULLGENOME  for 50k SNPS 
+
+### Results for  Linear Model
+
+![nFlies](Europe50k_1/comparison/Report_Europe_PlotsAlog.png)
+
+### Results for LEA

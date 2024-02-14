@@ -1,5 +1,4 @@
 args <- commandArgs(TRUE)
-setwd(args[1])
 library(readr)
 library(ggplot2)
 
@@ -16,6 +15,7 @@ if("--help" %in% args){
 #project = load.lfmmProject("genotypes_gradients.lfmmProject")
 #folder <- paste(fol,"genotypes_gradients.lfmm")
 #folder <- "/media/inter/ssteindl/FC/test/genotypes_gradients.lfmm/"
+setwd(args[1])
 
 DATA<-read_table(args[4])
 
@@ -29,7 +29,9 @@ markerpos<- data.frame(DATA$Chr, DATA$Pos)
 for (i in 1:args[3]){
   #fol<-paste("run",i,"/")
   #folder <- paste(fol,"genotypes_gradients.lfmm")
-  file.name <- paste(var,"_run",i,"/genotypes_gradients.lfmm/K",j, "/run1/genotypes_r1_s1.",j,".zscore", sep="")
+  file.name <- paste(args[1],"/",var,".run",i,"/genotypes_gradients.lfmm/K",j, "/run1/genotypes_r1_s1.",j,".zscore", sep="")
+  print(paste("print statement working dir",args[1]))
+  print(file.name)
   z.table = cbind(z.table, read.table(file.name)[,1])
   }
 z.score = apply(z.table, MARGIN = 1, median) #combines z-scores
@@ -44,7 +46,7 @@ dev.off()
 getwd()
 
 #outfile <- paste(var,"_adjusted_pvals.csv")
-write.csv(markerpos, paste(var,"_adjusted_pvals.csv"))
+write.csv(markerpos, paste(var,"_adjusted_pvals.csv", sep=""))
 
 ##plot the p values as mp
 
@@ -54,7 +56,7 @@ PLOT.df<-data.frame(Pos = DATA$Pos/1000000, P.val = -log10(adjusted.p.values))
 
 pl <- ggplot(PLOT.df, aes(x = Pos, y = P.val)) +
 geom_point(alpha=0.3) +
-  xlab(paste("Genomic Position on 3R")) +
+  xlab(paste("Genomic Position on 2L")) +
   geom_hline(yintercept=Bonf,
              col="blue",
              lty=2)+
