@@ -14,14 +14,13 @@ The FAIRiCUBE Worm Picker aims to fill this gap, enabling users with little expe
 The Worm Picker is being developed utilizing the OGC Web Coverage Service (WCS), enabling dynamic access to the data being stored on the FAIRiCUBE rasdaman instance. This software will be made available in different forms:
 - Web GUI: enables the user to interactively specify both the spatial location and the relevant gridded resources for which to return data;
 - Python Library: enables integration of the Worm Picker functionality within python scripts;
-- R Library: enables integration of the Worm Picker functionality within R scripts.
 
 This code has been developed within UC3 of FAIRiCUBE the Project. 
 
 Currently the OGC WCS Service used is provided by rasdaman (https://ows.rasdaman.org/rasdaman/ows#/services).
 The FAIRiCUBE specific WCS is accessable via: https://fairicube.rasdaman.com/rasdaman/ows#/services 
 
-The main workflow established is executed by several python scripts manually, documented compact in a [main file](main.sh) with execution code, further explanation and backround can be read under [Workflow](#workflow). 
+The main workflow established is executed by several python scripts manually, documented compact in a [main file](example_use/main.py) with execution code, further explanation and backround can be read under [Workflow](#workflow). 
 
 
 
@@ -36,21 +35,23 @@ The main workflow established is executed by several python scripts manually, do
 
 
 ## Example use
-How to use the package best is demonstrated in the example_use and a main.py.
-
-1. 
-2. 
+How to use the package best is demonstrated in the directory [example_use](example_use/) and a [main file](example_use/main.py).
 
 # Functions
 
-## Asks for UserCredentials 
-That are required for fairicube.rasdaman.org, will be written to an env file (path manually).
+All the functions necessary can be found in the [code](projects/WormPickerOOP/code) directory. 
 
-## Request Data
+
+## 1) Ask for UserCredentials
+[UserCred.py](code/UserCred.py)
+The credentials that are required for fairicube.rasdaman.org, will be written to an customly created env file.
+
+## 2) Get Layer Information and Request Data
+[GetLayers_Window.py](projects/WormPickerOOP/code/GetLayers_Window.py)
 Please take into consideration, that at this time rasdaman layers do not provide a big variety of data in terms of time axis and therefore are not selected in time.
 
 
-# Unterstanding The Output
+# Output
 The desired output when using this package is a .csv file, that is comprised of the grid cell data for each desired layer (columns) for all the geo referenced samples (rows).
 Please provide the path to you desired output folder in the "RequestData" step. 
 
