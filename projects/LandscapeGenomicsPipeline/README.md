@@ -103,7 +103,7 @@ If you want to work with customly aquired environmental data, make sure you put 
 
 #### Suggested Tool FAIRiCUBE WORMPICKER 
 
-[FAIRiCUBE Wormpicker GitHub R](https://github.com/FAIRiCUBE/uc3-drosophola-genetics/tree/NHM/projects/WormPicker)
+[FAIRiCUBE Wormpicker GitHub Repository](https://github.com/FAIRiCUBE/uc3-drosophola-genetics/tree/main/projects/WormPickerOOP)
 
 
 
