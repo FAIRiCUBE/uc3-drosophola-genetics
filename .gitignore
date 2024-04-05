@@ -16,3 +16,4 @@ projects/LandscapeGenomicsPipeline/Europe50k_1/results/fullgenome/GM/*.pdf
 projects/LandscapeGenomicsPipeline/NSATvsBIO1_NorthAmerica50k
 projects/LandscapeGenomicsPipeline/Europe50k_1/results/fullgenome/LEA/qsub*.sh
 projects/LandscapeGenomicsPipeline/data/*.vcf*
+projects/uc3-drosophola-genetics/projects/PlotRaster/wc2-5

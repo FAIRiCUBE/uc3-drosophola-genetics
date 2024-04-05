@@ -11,7 +11,7 @@ biod <- getData("worldclim", var = "bio", res = 2.5)
 bio1 <- as.data.frame(biod$bio1 / 10, xy = TRUE, na.rm = TRUE)
 rownames(bio1) <- c()
 
-setwd("/home/mkapun/github/UsefullStuff/UsefulScripts/PlotRaster")
+setwd("/media/inter/mkapun/projects/uc3-drosophola-genetics/projects/PlotRaster")
 
 META <- read.table("dest_v2.samps_8Jun2023.csv", header = T, sep = ",")
 Europe.meta <- META %>%
@@ -221,4 +221,39 @@ ggsave("Map_NSAT.png",
     PLOT,
     width = 12,
     height = 10
+)
+
+##
+bio <- raster::extract(brick("NSAT20150909_timeless.nc"), Europe.meta[, c(2, 1)])
+Europe.bio <- cbind(Europe.meta, bio[, 1] / 10)
+colnames(Europe.bio) <- c("Lat", "Long", "Count", "Temp")
+
+Europe_plot <- ggplot(Europe.bio, aes(x = Long, y = Lat, fill = Temp)) +
+    geom_polygon(
+        data = world,
+        aes(x = long, y = lat, group = group),
+        colour = "black",
+        fill = "grey95"
+    ) +
+    geom_point(
+        aes(
+            size = Count
+        ),
+        pch = 21, colour = "black"
+    ) +
+    theme_bw() +
+    xlab("Longitude") +
+    ylab("Latitude") +
+    scale_fill_gradientn(
+        name = "Temp (°C)",
+        colours = c("#0094D1", "#7ec9a5", "#FEED99", "#AF3301"),
+    ) +
+    coord_fixed(xlim = c(-30, 60), ylim = c(30, 80)) +
+    ggtitle("Europe")
+Europe_plot
+
+ggsave("Europe.png",
+    Europe_plot,
+    width = 5.5,
+    height = 4
 )
