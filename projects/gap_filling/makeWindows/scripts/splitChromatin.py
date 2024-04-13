@@ -2,6 +2,7 @@ import sys
 from collections import defaultdict as d
 from optparse import OptionParser, OptionGroup
 import operator
+import gzip
 
 # Author: Martin Kapun
 
@@ -67,21 +68,21 @@ for l in load_data(options.IN):
     Chromosome[a[0]].append(int(a[1]))
     Window[a[0]+"_"+str(int(round(float(a[1])/WI, 0)*WI))][a[0]].append(a[1])
 
-OUT1 = open(options.OUT+"_windows.csv", "w")
+OUT1 = gzip.open(options.OUT+"_windows.csv.gz", "wt")
 OUT1.write("Type,Chrom,Pos\n")
 for Type, v in sorted(Window.items()):
     for Chrom, v1 in sorted(v.items()):
         for Pos in sorted(v1):
             OUT1.write(Type+","+Chrom+","+str(Pos)+"\n")
 OUT1.close()
-OUT2 = open(options.OUT+"_chromatin.csv", "w")
+OUT2 = gzip.open(options.OUT+"_chromatin.csv.gz", "wt")
 OUT2.write("Type,Chrom,Pos\n")
 for Type, v in sorted(ChromatinL.items()):
     for Chrom, v1 in sorted(v.items()):
         for Pos in sorted(v1):
             OUT2.write(Type+","+Chrom+","+str(Pos)+"\n")
 OUT2.close()
-OUT3 = open(options.OUT+"_chromosomes.csv", "w")
+OUT3 = gzip.open(options.OUT+"_chromosomes.csv.gz", "wt")
 OUT3.write("Type,Chrom,Pos\n")
 for Chrom, v1 in sorted(Chromosome.items()):
     for Pos in sorted(v1):
