@@ -1,0 +1,13 @@
+Chrom Pos Type
+2L <1 Telomer
+2L >22.5 Centromer
+2R <2.5 Centromer
+2R >24.5 Telomer
+3L <1 Telomer
+3L >25 Centromer
+3R <5 Centromer
+3R >32 Telomer
+X <1 Centromer
+X >21 Telomer
+Y >0 Centromer
+4 >0 Centromer
