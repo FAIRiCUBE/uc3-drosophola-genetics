@@ -17,3 +17,4 @@ projects/LandscapeGenomicsPipeline/NSATvsBIO1_NorthAmerica50k
 projects/LandscapeGenomicsPipeline/Europe50k_1/results/fullgenome/LEA/qsub*.sh
 projects/LandscapeGenomicsPipeline/data/*.vcf*
 projects/uc3-drosophola-genetics/projects/PlotRaster/wc2-5
+projects/gap_filling/makeWindows/data/Europe_genomewide_weight.csv.gz
