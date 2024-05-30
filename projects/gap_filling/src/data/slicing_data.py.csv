@@ -1,0 +1,26 @@
+Measure,Value
+Data size in grid points ,
+Largest allocated array in grid points ,"[483217, 226]"
+Data size (MB),-53.66015625
+Main memory available (GB),30.974971771240234
+Main memory consumed (GB),2.4423894602805376
+Sum of allocated variable sizes (GB),1.7298487210646272
+Description of CPU/GPU,"Machine type: x86_64
+Processor type: x86_64
+Number of physical cores: 6
+Number of logical cores: 12
+Min CPU frequency: 800.0 GHz
+Max CPU frequency: 5100.0 GHz
+No GPU available
+"
+Wall time in seconds,3483.23264336586
+Energy consumed (kw),0.032916080377079
+CO₂-equivalents [CO₂eq] (kg),0.0009068380143885284
+Network traffic (MB),71.14130878448486
+Programming language,Python
+Essential libraries,"sys
+numpy
+matplotlib.pyplot
+pandas
+os
+"
