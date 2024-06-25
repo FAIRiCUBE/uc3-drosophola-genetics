@@ -64,7 +64,8 @@ meta2024<-args[2]
 outdir<-args[4]
 region<-args[6]
 dir.create(outdir)
-meta <- get_meta_data("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/data/samps_25Feb2023.csv")
+#meta <- get_meta_data("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/data/samps_25Feb2023.csv")
+meta <- get_meta_data(meta2024)
 #meta$sampleId <- gsub("\\.", "-", meta$sampleId)
 #meta2024="/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData/dest_v2.samps_3May2024.csv"
 #get_meta_data(meta2024)

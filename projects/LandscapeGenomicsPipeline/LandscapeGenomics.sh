@@ -51,14 +51,15 @@ echo $input
 ##
 samplelist="${wd}/data/EuropeSamples_Pass.csv"
 #samplelist="/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData/data/EuropeSamples_Pass.csv"
-#WorldClim="${LGAdir}/data/dest.worldclim.csv
-#metadata="${wd}/dest_v2.samps_3May2024.csv"
-#metadata_new="${wd}/data/metadata_new_nsat.csv"
+WorldClim="${wd}/data/WorldclimData.csv"
+metadata="${wd}/dest_v2.samps_3May2024.csv"
+metadata_new="${wd}/data/metadata_new_nsat.csv"
 #
 #
 ############################### MERGE BIOCLIM VARIABLES (e.g. bio1) WITH OTHER ENV DATA (e.g. NSAT) ###############################################################################
-##echo("Merging enviornmental data sources")
-##python $scriptdir/MergeData.py --biovariable bio1 --output $metadata_new --samplenames $samplelist --metadata $metadata --worldclim $WorldClim --climate_extra /home/sonjastndl/s3/ClimateData/TESTMARIA_5.csv --climate_var NSAT
+echo "Merging enviornmental data sources"
+#python ${scriptdir}/MergeData.py --biovariable bio1 bio2 --output $metadata_new --samplenames $samplelist --metadata $metadata --worldclim $WorldClim --climate_extra /home/sonjastndl/s3/ClimateData/TESTMARIA_5.csv --climate_var NSAT
+#python3 ${scriptdir}/MergeData.py --biovariable bio1 bio2 bio3 bio4 bio5 bio6 bio7 bio8 bio9 bio10 bio11 bio12 bio13 bio14 bio15 bio16 bio17 bio18 bio19 --output $metadata_new --samplenames $samplelist --metadata $metadata --worldclim $WorldClim 
 #
 #################################### Remove polyploidies,subsample population samples and exlcude all sites with missing data #################################################
 #
@@ -70,13 +71,13 @@ samplelist="${wd}/data/EuropeSamples_Pass.csv"
 echo $input 
 echo $samplelist
 echo $arm
-echo "START FILTERING"
-
-echo "WD"
-echo $wd
-
-#vcftools --gzvcf $input --keep $samplelist  --minDP 15 --stdout --recode-INFO-all --recode | grep -v "\./\." > ${wd}/results/$arm/Subsampled_$arm.recode2_DP15.vcf.gz
-
+#echo "START FILTERING"
+#
+#echo "WD"
+#echo $wd
+#
+##vcftools --gzvcf $input --keep $samplelist  --minDP 15 --stdout --recode-INFO-all --recode | grep -v "\./\." > ${wd}/results/$arm/Subsampled_$arm.recode2_DP15.vcf.gz
+#
 #pigz -dc $input | awk '$0~/^#/ || length($5)==1' | vcftools --vcf - \
 #        --keep $samplelist \
 #        --remove ${wd}/data/REMOVE.ids \
@@ -96,61 +97,76 @@ Sub4="${wd}/results/${arm}/Subsampled_${arm}.final_DP15.vcf.gz"
 #################################################### RANDOMLY PICK n LINES FROM VCF ###########################################################
 ##
 ##
-python3 ${scriptdir}/SubsampleVCF.py \
-    --input ${Sub2} \
-    --snps all \
-    --output ${Sub3}
 
-module load Tools/bcftools-1.16 
-##
-###################################################    RUN BCFTOOLS    #######################################################################
-bcftools view -e 'COUNT(GT="AA")=N_SAMPLES || COUNT(GT="RR")=N_SAMPLES' $Sub3 | gzip > $Sub4
+#echo "SUBSAMPLING WITH PYTHON"
+#echo $Sub2
+#
+#
+#
+#python3 ${scriptdir}/SubsampleVCF.py \
+#    --input ${Sub2} \
+#    --snps all \
+#    --output ${Sub3}
+#
+#module load Tools/bcftools-1.16 
+###
+####################################################    RUN BCFTOOLS    #######################################################################
+#bcftools view -e 'COUNT(GT="AA")=N_SAMPLES || COUNT(GT="RR")=N_SAMPLES' $Sub3 | gzip > $Sub4
 
+
+
+#echo "GETTING INTRONIC SNPs"
 #get intronic SNPS
-gff_file="${wd}/data/dmel-all-r6.57.gff.gz"
+#gff_file="${wd}/data/dmel-all-r6.57.gff.gz"
 
-neutralSNPs="${wd}/results/${arm}/Subsampled_${arm}_NeutralSNPS_80.tsv"
+#neutralSNPs="${wd}/results/${arm}/Subsampled_${arm}_NeutralSNPS_80.tsv"
 
-python3 ${scriptdir}/IntronicSNPS.py \
- --gff $gff_file \
- --vcf ${Sub4} \
- --target-length 80 \
- --output $neutralSNPs
-
-
-vcftools --gzvcf $Sub4 \
-    --positions $neutralSNPs \
-    --recode --stdout | gzip > ${wd}/results/${arm}/Subsampled_neutral.vcf.gz
-
+#echo "FILTERING INTRONIC SNPs"
+#
+#python3 ${scriptdir}/IntronicSNPS.py \
+# --gff $gff_file \
+# --vcf ${Sub4} \
+# --target-length 80 \
+# --output $neutralSNPs
+#
+#
+#vcftools --gzvcf $Sub4 \
+#    --positions $neutralSNPs \
+#    --recode --stdout | gzip > ${wd}/results/${arm}/Subsampled_neutral.vcf.gz
+#
 #################################################### CONVERT TO ALLELE FREQUENCIES ############################################################
 
-python3 ${scriptdir}/VCF2AF.py --input ${Sub4} > ${wd}/results/${arm}/Subsampled_${arm}.final_DP15.af
-python3 ${scriptdir}/VCF2AF.py --input ${wd}/results/${arm}/Subsampled_neutral.vcf.gz > ${wd}/results/${arm}/Neutral.final.af
-
-
-###annotate SNPs
-snpEff="/opt/bioinformatics/snpEff/snpEff.jar"
-java -jar /media/inter/ssteindl/DEST/DESTv1_Pipeline/shell/snpEff/snpEff.jar
-
-#/usr/lib/jvm/java-11-openjdk-11.0.22.0.7-2.el8.x86_64/bin/java -jar /media/inter/ssteindl/DEST/DESTv1_Pipeline/shell/snpEff/snpEff.jar
-
-module load Tools/snpEff        
-
-annotated="${wd}/results/${arm}/Subsampled_${arm}.final_DP15.ann.vcf.gz"
-/usr/lib/jvm/java-11-openjdk-11.0.22.0.7-2.el8.x86_64/bin/java -jar $snpEff ann BDGP6.28.99 $Sub4 | gzip >> $annotated
-
-more $annotated | gunzip | awk ' !/^#/ {split($8,a,"|"); print $1 " " $2 " " a[4]}' > ${wd}/results/annotations.txt
-awk 'NR==FNR{a[$1,$2]; next} ($1,$2) in a' ${wd}/results/${arm}/Subsampled_${arm}.final_DP15.af ${wd}/results/annotations.txt > ${wd}/results/annotated_used_frqs.txt
-##
-AF="${wd}/results/${arm}/Subsampled_${arm}.final.af"
-
-##conda deactivate 
+#echo "CONVERTING VCF FILE TO ALLELE FREQUENCY FILE"
+#
+#python3 ${scriptdir}/VCF2AF.py --input ${Sub4} > ${wd}/results/${arm}/Subsampled_${arm}.final_DP15.af
+#python3 ${scriptdir}/VCF2AF.py --input ${wd}/results/${arm}/Subsampled_neutral.vcf.gz > ${wd}/results/${arm}/Neutral.final.af
+#
+#
+####annotate SNPs#
+#
+#echo "ANNOTATING SNPs"
+#snpEff="/opt/bioinformatics/snpEff/snpEff.jar"
+#java -jar /media/inter/ssteindl/DEST/DESTv1_Pipeline/shell/snpEff/snpEff.jar
+#
+##/usr/lib/jvm/java-11-openjdk-11.0.22.0.7-2.el8.x86_64/bin/java -jar /media/inter/ssteindl/DEST/DESTv1_Pipeline/shell/snpEff/snpEff.jar
+#
+#module load Tools/snpEff        
+#
+#annotated="${wd}/results/${arm}/Subsampled_${arm}.final_DP15.ann.vcf.gz"
+#/usr/lib/jvm/java-11-openjdk-11.0.22.0.7-2.el8.x86_64/bin/java -jar $snpEff ann BDGP6.28.99 $Sub4 | gzip >> $annotated
+#
+#more $annotated | gunzip | awk ' !/^#/ {split($8,a,"|"); print $1 " " $2 " " a[4]}' > ${wd}/results/annotations.txt
+#awk 'NR==FNR{a[$1,$2]; next} ($1,$2) in a' ${wd}/results/${arm}/Subsampled_${arm}.final_DP15.af ${wd}/results/annotations.txt > ${wd}/results/annotated_used_frqs.txt
+###
+AF="${wd}/results/${arm}/Subsampled_${arm}.final_DP15.af"
+#
+###conda deactivate 
 
 ################################################## PERFORM LINEAR REGRESSION #################################################################
+echo "PERFORMING LINEAR REGRESSION"
 
-conda activate nhm_r
 
-Rscript ${scriptdir}/Plot_pvalues.R $wd $AF $metadata_new $arm $FinalOut
+Rscript ${scriptdir}/Plot_pvalues.R ${wd} $AF $metadata_new $arm $FinalOut
 
 ##
 ##bash ${scriptdir}/transpose_and_split.sh $metadata_new 
@@ -177,7 +193,6 @@ for ((i = 1; i < ${#header_elements[@]}; i++)); do
       echo ${wd}
       echo $rep
       echo $element
-      echo "NOW R print statements"
         Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $metadata_new $element $rep
     done
     #If needed average the Repetitions
@@ -195,14 +210,14 @@ Rscript ${scriptdir}/ComparePValues.R $AF ${wd}/results/${arm}/GM $LeaOut $Final
 
 #cd .. 
 
-d="/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData"
-##RDA
-F_file="${wd}/results/fullgenome2/Subsampled_fullgenome2.final_DP15.af"
-etadata="${wd}/dest_v2.samps_3May2024.csv"
-eutral_af="${wd}/results/fullgenome2/Neutral.final.af"
-DA_out="${wd}/results/fullgenome2/RDA_annotations"
-c_folder="" ##needs to be included in script
-nv_data="/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RDA-landscape-genomics/wc2.5"
-
-Rscript /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/UC3_Landscape_RDA.R $AF_file $metadata $neutral_af $RDA_out $env_data "Europe" ${wd}/results/annotations.txt
-#Rscript /media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/RDA.R $AF_file $metadata $neutral_af $RDA_out $nc_folder
+#wd="/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData"
+####RDA
+#AF_file="${wd}/results/fullgenome2/Subsampled_fullgenome2.final_DP15.af"
+#metadata="${wd}/dest_v2.samps_3May2024.csv"
+#neutral_af="${wd}/results/fullgenome2/Neutral.final.af"
+#RDA_out="${wd}/results/fullgenome2/RDA_annotations"
+#wc_folder="" ##needs to be included in script
+#env_data="/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RDA-landscape-genomics/wc2.5"
+##
+#Rscript /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/UC3_Landscape_RDA.R $AF_file $metadata $neutral_af $RDA_out $env_data "Europe" ${wd}/results/annotations.txt
+###Rscript /media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/RDA.R $AF_file $metadata $neutral_af $RDA_out $nc_folder

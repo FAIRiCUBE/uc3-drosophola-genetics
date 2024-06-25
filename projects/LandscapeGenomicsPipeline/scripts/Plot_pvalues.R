@@ -70,7 +70,7 @@ for ( i in colnames(meta)){
     facs2 <- append(facs2,ID2)
     write.csv(pvalcsv, paste(i,"_pvalues.csv", sep=""))
     write.csv(pvalcsv2, paste(i,"_pvalues.arcsin.csv", sep=""))
-    pdf("Histograms_P_Values.pdf",
+    pdf(paste0("Histograms_P_Values_",i,".pdf"),
     width=15,
     height=5)
     hist(as.numeric(p.val),breaks=100, main=paste0("Histogram of p-values", i), xlab="p-value")
@@ -104,6 +104,10 @@ pdf("Multtest_control.pdf",
     height=5)
 hist(Test.p,breaks=100, main="Histogram of p-values overall", xlab="p-value")
 #dev.off()
+
+outliersBonf <- pvalcsv2[which(pvalcsv2$lat.pval.arcsin < Bonf),]
+OlBonf <- as.data.frame(paste0(outliersBonf$DATA.Chr,".", outliersBonf$DATA.Pos))
+write.csv(OlBonf, "LinearOutliers_ArcSin.csv")
 
 ## Boferroni-correctd p-value threshold
 #Bonf=-log10(0.05/nrow(DATA))
