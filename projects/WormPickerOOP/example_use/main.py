@@ -8,7 +8,7 @@ import code.functions
 
 # 1- Provide your user Credentials for fairicube.rasdaman.org
 saveCredentials("/path/to/your/envfile/.env")
-saveCredentials("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/.env4")
+saveCredentials("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/.env")
 
 # 2- Request some info about alyers available to select layers useful for your analysis, when providing a filepath, you can save this information as .csv
 layer_info=getLayers(savepath="NONE")

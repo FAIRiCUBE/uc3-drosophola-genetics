@@ -166,7 +166,7 @@ AF="${wd}/results/${arm}/Subsampled_${arm}.final_DP15.af"
 echo "PERFORMING LINEAR REGRESSION"
 
 
-Rscript ${scriptdir}/Plot_pvalues.R ${wd} $AF $metadata_new $arm $FinalOut
+#Rscript ${scriptdir}/Plot_pvalues.R ${wd} $AF $metadata_new $arm $FinalOut
 
 ##
 ##bash ${scriptdir}/transpose_and_split.sh $metadata_new 
@@ -185,23 +185,18 @@ IFS=',' read -ra header_elements <<< "$variables"
 for ((i = 1; i < ${#header_elements[@]}; i++)); do
     element="${header_elements[i]}"
     echo "$element"
-    covfile=${wd}/data/${element}.csv
-    echo $covfile
+    echo $LeaOut
+    rep=1
+    echo $rep
     # Add your processing here
-    for rep in $(seq 1 3)
-    do
-      echo ${wd}
-      echo $rep
-      echo $element
-        Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $metadata_new $element $rep
-    done
+    Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $metadata_new $element $rep
     #If needed average the Repetitions
     #Rscript Rscript ${scriptdir}/LEA_ZPcalc.R $LeaOut $nK $nR $AF $var
 done
 
-Rscript ${scriptdir}/PlotLEAPValues.r $wd $AF $metadata_new $arm $FinalOut
+#Rscript ${scriptdir}/PlotLEAPValues.r $wd $AF $metadata_new $arm $FinalOut
 
-Rscript ${scriptdir}/ComparePValues.R $AF ${wd}/results/${arm}/GM $LeaOut $FinalOut
+#Rscript ${scriptdir}/ComparePValues.R $AF ${wd}/results/${arm}/GM $LeaOut $FinalOut
 
 ### RDA
 # Get Intronic SNPs

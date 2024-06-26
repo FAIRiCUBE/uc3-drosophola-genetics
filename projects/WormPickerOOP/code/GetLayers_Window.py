@@ -16,16 +16,16 @@ def getLayers(savepath="NONE"):
     rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT')
     rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
     rasdaman_password = env_vars.get('RASDAMAN_CRED_PASSWORD')
-    base_wcs_url = rasdaman_endpoint + "?service=WCS&version=2.1.0"
-    response = requests.get(base_wcs_url + "&request=GetCapabilities", auth=(rasdaman_username, rasdaman_password))
+    base_wcs_url = rasdaman_endpoint + "?&SERVICE=WCS&ACCEPTVERSIONS=2.1.0"
+    response = requests.get(base_wcs_url + "&REQUEST=GetCapabilities", auth=(rasdaman_username, rasdaman_password))
     wcs_capabilities = xmltodict.parse(response.content)
-    wcs_coverage_summary = wcs_capabilities['wcs:Capabilities']['wcs:Contents']['wcs:CoverageSummary']
+    wcs_coverage_summary = wcs_capabilities['wcs20:Capabilities']['wcs20:Contents']['wcs20:CoverageSummary']
     #print(json.dumps(wcs_coverage_summary, indent=2))
     type(wcs_coverage_summary)
     #cov_id_list=[]
     #extract all coverage_ids and informations from the service endpoint (working on getCapabilities results)
     for i in range(0,len(wcs_coverage_summary)):
-        coverage_id= wcs_coverage_summary[i]['wcs:CoverageId']
+        coverage_id= wcs_coverage_summary[i]['wcs20:CoverageId']
         dim=int(wcs_coverage_summary[i]['ows:BoundingBox']['@dimensions'])
         #crs_str = wcs_coverage_summary[i]['ows:BoundingBox']['@crs'][-11:]
         crs_str = wcs_coverage_summary[i]['ows:BoundingBox']['@crs']
@@ -57,7 +57,7 @@ def getLayers(savepath="NONE"):
     #for ID in range(3,4):
         coverage=layer_info_2[ID][0]
         #print(coverage)
-        response = requests.get(base_wcs_url + "&request=DescribeCoverage&coverageId=" + coverage,
+        response = requests.get(base_wcs_url + "&REQUEST=DescribeCoverage&COVERAGEID=" + coverage,
                             auth=(rasdaman_username, rasdaman_password)
                             )
         wcs_coverage_description = xmltodict.parse(response.content)
