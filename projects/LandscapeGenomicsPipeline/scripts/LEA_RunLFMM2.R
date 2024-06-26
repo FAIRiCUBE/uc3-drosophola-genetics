@@ -27,6 +27,8 @@ dir.create(repdir)
 fol <- paste(args[1])
 #print(SUB[,1])
 metadata <- read.csv(args[3])
+#metadata <- read.csv("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/data/metadata_new_nsat.csv")
+
 #DATA_full <- read.table(args[2], h=T)
 
 DATA_full <- read.table(args[2], h=T, sep="\t")
@@ -38,8 +40,8 @@ samples <- gsub("\\.", "-", samples)
 colnames(SUB) <- gsub("\\.", "-", colnames(SUB))
 
 #metadata2 <- read.csv("/media/inter/ssteindl/FC/DEST_freeze1/populationInfo/worldClim/dest.worldclim.csv")
-s_data <- metadata[metadata$sampleId %in% samples,]
-s_data <- s_data[s_data$V5!="",]
+ss_data <- metadata[metadata$sampleId %in% samples,]
+s_data <- na.exclude(ss_data)
 SUB2 <- SUB[colnames(SUB) %in% s_data$sampleId]
 ####intersection of samples and metadata needs to be checked!
 
@@ -56,9 +58,10 @@ print("TEST")
 ### one #
 
 geno_object <- paste0(args[1],"/genotypes.lfmm")
+#geno_object <- "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/LEA/genotypes.lfmm"
 if (file.exists(geno_object)) {
   # If the file exists, read it
-  lfmm_geno <- read.lfmm(geno_object)
+  #lfmm_geno <- read.lfmm(geno_object)
   print("File exists and has been opened.")
 
 } else {
@@ -111,28 +114,35 @@ run_lfmm <- function(data, env, K_range = 1:10) {
 
 print('CALCULATING LFMM2')
 #mod2 <- lfmm2("genotypes.lfmm", "gradients.env", K = nK)
+#env_path="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/LEA/lat/gradients.env"
 mod.lfmm2 <- run_lfmm(geno_object, env_path)
                
 pv <- lfmm2.test(object = mod.lfmm2, input = geno_object, env = env_path, linear = TRUE)
-print(pv$pvalues)
+#print(pv$pvalues)
 #print(tr)
 #mod2 <- lfmm2(input = tr, env = f, K = 5)
 #print(mod2)
 #pv <- lfmm2.test(object = mod2, input = tr, env = f, linear = TRUE)
 
-plot(-log10(pv$pvalues), col = "grey", cex = .4, pch = 19)
+#plot(-log10(pv$pvalues), col = "grey", cex = .4, pch = 19)
 #points(target, -log10(pv$pvalues[target]), col = "red")
 
 markerpos <- as.data.frame(cbind(DATA_full$Chr, DATA_full$Pos))
 markerpos <- cbind(markerpos,pv$pvalues)
+colnames(markerpos) <- c("Chr", "Pos", "Pval")
 
-write.csv(markerpos, paste(varname,"_LEA_pvals.csv", sep=""))
+write.csv(markerpos, paste(repdir,"/",varname,"_LEA_pvals.csv", sep=""))
+
+Bonf=0.05/(nrow(markerpos)+1)
+outliers <- markerpos[markerpos$Pval < Bonf,]
+write.csv(outliers, paste(repdir,"/",varname,"_LEA_pvals_outliers.csv", sep=""))
+
                  
 print("PLOT MANHATTAN")
 print(facs)
 plot_list <- list()
 
-markerpos$DATA.Chr <- as.factor(markerpos$V1)
+
 
 #print(pvalcsv$DATA.Chr)
 #PLOT.df <- data.frame(Chr = DATA$Chr, Pos = DATA$Pos / 1000000, P.val = -log10(DATA[[z]]))
@@ -147,7 +157,7 @@ pl <- ggplot(pvalcsv, aes(x = DATA.Pos, y = -log10(.data[[z]]))) +
   theme(legend.position = "none")
 plot_list.append(pl)
 
-print(plot_list)
+#print(plot_list)
 
 # Arrange the plots in a grid
 PLOT_grid <- do.call(grid.arrange, c(plot_list, ncol = 1)) # Adjust nrow and ncol as needed

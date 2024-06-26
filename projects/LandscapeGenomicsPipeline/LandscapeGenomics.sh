@@ -186,6 +186,7 @@ for ((i = 1; i < ${#header_elements[@]}; i++)); do
     element="${header_elements[i]}"
     echo "$element"
     echo $LeaOut
+    echo $AF
     rep=1
     echo $rep
     # Add your processing here
