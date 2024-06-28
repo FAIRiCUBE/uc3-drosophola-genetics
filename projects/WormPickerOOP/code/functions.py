@@ -215,7 +215,7 @@ def select_objects(mode, object):
 #        except:
 #            continue
 
-def requestData(layerlist,samples, filepath):
+def requestData(layerlist,samples,filepath):
     env_vars = dotenv_values()
     rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT')
     rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
@@ -227,8 +227,8 @@ def requestData(layerlist,samples, filepath):
     for data_entry in range(0,len(layerlist)):
         layer=layerlist[data_entry][0]
         header.append(layer)
-    log = open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/WormpickerRequest.log", "a")
-    #sys.stdout = log
+    log = open("WormpickerRequest.log", "a")
+    sys.stdout = log
     for key, value in samples.items():
         sample_result=[]
         latitude_sample = value[0] 
@@ -306,8 +306,9 @@ def requestData(layerlist,samples, filepath):
         result.append(sample_result)
     #sys.stdout = sys.__stdout__
     print("DONE")
-    if filepath!="NONE":
-        with open(filepath, "w", newline="") as csvfile:
+    if filepath !="NONE":
+        f=filepath
+        with open(f, "w", newline="") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(header)
             writer.writerows(result)
@@ -366,6 +367,24 @@ def requestData(layerlist,samples, filepath):
 ## (e.g. Lat axis, then pixel 0th is at 90 degree and pixel 89th at 0 degree with yres = -1)
 #yres = -1
 
+def is_valid_iso_date(date_string):
+    try:
+        # Attempt to parse the string as an ISO-formatted date
+        datetime.fromisoformat(date_string)
+        return True
+    except ValueError:
+        return False
+
+def process_date_string(date_string):
+    if is_valid_iso_date(date_string):
+        print(f"{date_string} is already in ISO format. Doing nothing.")
+        return date_string
+    else:
+        # Add your processing logic here if the date_string is not in ISO format
+        print(f"Processing {date_string}...")
+        # For now, just returning the input date_string as an example
+        return date_string
+
 def get_grid_indices_for_axis_X(geo_lower_bound, geo_upper_bound, xmin, xmax, xres):       
     print("geo_lower_bound_X: {}, geo_upper_bound_X: {}".format(geo_lower_bound, geo_upper_bound))
     lower_grid_index = math.floor( (geo_lower_bound - xmin) / xres )
@@ -382,107 +401,172 @@ def get_grid_indices_for_axis_Y(geo_lower_bound, geo_upper_bound, ymin, ymax, yr
         upper_grid_index = upper_grid_index - 1   
     return "({}:{})".format(lower_grid_index, upper_grid_index)
 
-def requestDataProcess(layerlist,samples, filepath):
+
+def round_down_to_day(date_str):
+    # Parse the date string
+    try:
+        date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+    except ValueError:
+        try:
+            date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M")
+        except ValueError:
+            date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H")
+    rounded_down_date = date_obj.replace(hour=0, minute=0, second=0)
+    rounded_down_date_str = rounded_down_date.strftime("%Y-%m-%dT%H:%M:%S")
+    return rounded_down_date_str
+
+def requestDataProcess(infoheader,layerlist,samples, filepath):
     env_vars = dotenv_values()
     rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT')
     rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
     rasdaman_password = env_vars.get('RASDAMAN_CRED_PASSWORD')
-    base_wcs_url = rasdaman_endpoint + "?service=WCS&version=2.1.0"
+    base_wcs_url = rasdaman_endpoint + "?SERVICE=WCS&VERSION=2.0.1"
     result=[]
     header=[]
     header.append('Sample')
-    for data_entry in range(0,len(layerlist)):
-        layer=layerlist[data_entry][0]
-        header.append(layer)
-    log = open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/WormpickerRequest.log", "a")
-    #sys.stdout = log
+    if len(layerlist) > 1:
+        for data_entry in range(0,len(layerlist)):
+            layer=layerlist[data_entry][0]
+            header.append(layer)
+    else:
+        for data_entry in range(0,len(layerlist)):
+            layer=layerlist[data_entry]
+            header.append(layer)
+    log=open("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/WormpickerRequest.log", "a")
+    sys.stdout = log
+    all_results=[] 
     for key, value in samples.items():
         sample_result=[]
-        latitude_sample = value[0] 
-        longitude_sample = value[1]
+        latitude_sample=value[0] 
+        longitude_sample=value[1]
         name_date = key
-        date = str(name_date[-10:])
-        time_asked= date + 'T00:00:00Z'
+        #print("COORDINATES:", latitude_request, longitude_request)
+        print("COORDINATES:", latitude_sample, longitude_sample)
+        try:
+            date = value[2]
+            print("DATE ASKED:",date)
+            type(date)
+        except IndexError:
+            date = str(name_date[-10:])
+            print("DATE ASKED:",date)
+        try:
+            daydate=round_down_to_day(date)
+            converted_date=datetime.strptime(daydate, "%Y-%m-%dT%H:%M:%S").isoformat() + "Z"
+            time_asked=converted_date
+            #print("correct format")
+        except ValueError:
+            date = process_date_string(date + 'T00:00:00Z')
+            time_asked=str(date)
+            print(time_asked, name_date)
+            #print(sample_result)
         sample_result.append(name_date)
-        print(sample_result)
-        #layer=None
-        #converted_date=None
+        sample_result.append(time_asked)
+        all_results.append(sample_result)
+        #print(sample_result)
+        print("QUERYING:", time_asked)
         try:
             converted_date = datetime.strptime(date, "%Y-%m-%d").isoformat() + "Z"
             search_time=parser.isoparse(converted_date)
             print(search_time)
         except ValueError:
-            converted_date = date
-            continue
+            print("converted_cate=date")
+            search_time=parser.isoparse(time_asked)
         for data_entry in range(0,len(layerlist)):
-            layer=layerlist[data_entry][0]
-           #header.append(layer) 
-            crs=layerlist[data_entry][1] 
+            i_header=infoheader
+            print(i_header)
             latitude_request = latitude_sample
             longitude_request = longitude_sample
-            time_min= layerlist[data_entry][6] 
-            time_max= layerlist[data_entry][7]
+            layer=layerlist[data_entry][i_header.index("CoverageID")]
+            crs=layerlist[data_entry][i_header.index("CRS")]
+            time_min= layerlist[data_entry][i_header.index("f")]
+            time_max= layerlist[data_entry][i_header.index("t")]
+            time_min=time_min.replace('"','')
+            time_max=time_max.replace('"','')
             datetime1 = parser.isoparse(time_min)
             datetime2 = parser.isoparse(time_max)
-            ymin = float(layerlist[data_entry][2]) 
-            ymax = float(layerlist[data_entry][3]) 
-            xmin = float(layerlist[data_entry][4]) 
-            xmax = float(layerlist[data_entry][5]) 
-            xres=float(layerlist[data_entry][8])
-            yres=float(layerlist[data_entry][9])
+            AxisLabels=layerlist[data_entry][i_header.index("axislabels")]
+            TimeLabel=AxisLabels.split(",")[0]
+            YLabel=AxisLabels.split(",")[1]
+            XLabel=AxisLabels.split(",")[2]
+            print(TimeLabel,YLabel, XLabel)
+            ymin= float(layerlist[data_entry][i_header.index("minlat")])
+            ymax = float(layerlist[data_entry][i_header.index("maxlat")])
+            xmin= float(layerlist[data_entry][i_header.index("minlong")])
+            xmax = float(layerlist[data_entry][i_header.index("maxlong")])
+            xres=float(layerlist[data_entry][i_header.index("resolution_dim2")])
+            yres=float(layerlist[data_entry][i_header.index("resolution_dim1")])
             #strlat="&subset=Y({},{})"
             #strlon = "&subset=X({},{})"
-            ansi_str="&subset=ansi(\"{}\")"    
-            #print(latitude_request)
+            ansi_str_o="&subset=ansi(\"{}\")"
+            ansi_str_n=ansi_str_o.replace("ansi",TimeLabel)
             if search_time > datetime1 and search_time < datetime2:
-                print("YES")  #make this to acommand which produces a file, saying which samples and layers REALLYY overlap (also in time)
+                print(search_time, "- COVERED TEMPROALLY")  #make this to acommand which produces a file, saying which samples and layers REALLYY overlap (also in time)
                 ##produce timestamp here
-                ansi_val=converted_date
-                #subset_ansi=ansi_str.format(ansi_val)
+                ansi_val=time_asked
             else:
-                print(time_asked, "# NOT COVERED TEMPORALLY, only retrieving data for:", time_min)
+                min_date = datetime1 if abs((datetime1 - search_time).days) < abs((datetime2 - search_time).days) else datetime2
+                dist=abs(min_date-search_time).days
+                print(time_asked, "NOT COVERED TEMPORALLY, querying:", min_date, ". This is", dist, "days apart!")
                 #set timestamp here a general one, the one were coverage is there
                 ansi_val=time_min
-                #subset_ansi=ansi_str.format(ansi_val)
             if crs=="EPSG/0/4326":
-                print("CRS IS 4326")
-                y1=latitude_request
-                x1=longitude_request
+                print("CRS:", crs)
+                y1=float(latitude_request)
+                x1=float(longitude_request)
                 #strlat="&subset=Lat({},{})"
                 #strlon = "&subset=Long({},{})"
             else:
-                print("CRS IS NOT WGS84")
+                print(layer)
                 crs_indicator= crs.replace("EPSG/0/", "EPSG:")
+                #print("CRS IS NOT WGS84. It is:", crs_indicator)
                 longitude_request,latitude_request= trans4mEPSG("EPSG:4326",crs_indicator,float(longitude_request), float(latitude_request))
                 y1= float(latitude_request)
-                #x2= x1 + float(resolution)
-                #x2=x1
-                #print(x1,x2, resolution)
-                #strlat="&subset=Lat({},{})"
-                #subset_lat = strlat.format(x1,x2)
                 x1= float(longitude_request)
-                #y2=y1
-                #y2= y1 + float(resolution)
-                #strlon = "&subset=Long({},{})"
-                #subset_long= strlon.format(y1,y2)
-                #print("CRS:",crs, "RESOLUTION:", resolution, subset_long, subset_lat)
-                print(x1)
-                grid_indices_axis_X = get_grid_indices_for_axis_X(x1, x1, xmin, xmax, xres)
-                grid_indices_axis_Y = get_grid_indices_for_axis_Y(y1, y1, ymin, ymax, yres)
-                output_format = "text/csv"
+            grid_indices_axis_X = get_grid_indices_for_axis_X(x1, x1, xmin, xmax, xres)
+            grid_indices_axis_Y = get_grid_indices_for_axis_Y(y1, y1, ymin, ymax, yres)
+            print("Calulculating Grid Indices from Coordinates:", x1, y1)
+            print(grid_indices_axis_X, xres)
+            print(grid_indices_axis_Y, yres)
+            #corX= abs(int(grid_indices_axis_X[:-1][1:].split(":")[0]))
+            #corY= abs(int(grid_indices_axis_Y[:-1][1:].split(":")[0]))
+            #print(corX,corX)
+            #print(corY,corY)
+            grIx=("("+str(abs(int(grid_indices_axis_X[:-1][1:].split(":")[0]))) + ":" + str(abs(int(grid_indices_axis_X[:-1][1:].split(":")[0]))))+")"
+            grIy=("("+str(abs(int(grid_indices_axis_Y[:-1][1:].split(":")[0]))) + ":" + str(abs(int(grid_indices_axis_Y[:-1][1:].split(":")[0]))))+")"
+            output_format = "text/csv"
+            print("Corrected Grid Indices:", grIx, grIy)
             #print(name_date, request_cov_id, request_encode_format, layer)
-            if x1 < xmax and x1 > xmin and y1 > ymin and y1 < ymax:
-                print("YES CONDITIONS ARE MET")
-                query = f"for $c in ({layer}) return encode($c[ ansi(\"{ansi_val}\"), X:\"CRS:1\"{grid_indices_axis_X}, Y:\"CRS:1\"{grid_indices_axis_Y} ], \"{output_format}\")"
+            if x1 <= xmax and x1 >= xmin and y1 >= ymin and y1 <= ymax and ansi_val != time_min and ansi_val != time_max:
+                print("The Layer:", layer, " is within temporal coverage. Querying for", time_asked, ansi_val)
+                #TimeLabel="date"
+                #XLabel="Lon"
+                #YLabel="Lat"
+                query = f"for $c in ({layer}) return encode($c[{TimeLabel}(\"{ansi_val}\"),{XLabel} :\"CRS:1\"{grIx},{YLabel} :\"CRS:1\"{grIy} ], \"{output_format}\")"
+                #query = f"for $c in ({layer}) return encode($c[date:(\"{ansi_val}\"),Lon :\"CRS:1\"{grid_indices_axis_X},Lat :\"CRS:1\"{grid_indices_axis_Y} ], \"{output_format}\")"
                 # Construct the URL with variables
                 url = f"{base_wcs_url}&REQUEST=ProcessCoverages&QUERY={query}"
+                print("                        ")
+                print("                        ")
+                print(url)
+                print("                        ")
+                print("                        ")
                 response = requests.get(url, auth=(rasdaman_username, rasdaman_password))
                 valls=(str(response.text)[1:-1])
-                sample_result.append(valls)
-                print(query)
+                #sample_result.append(ansi_val)
+                if response.status_code == 200:
+                    sample_result.append(valls)
+                    print("RESULT:", valls)
+                    print("   ")
+                    print("_______________________________________")
+                else:
+                    sample_result.append(response.status_code)
             else:
-                print("NAY")
-                valls=("NA")
+                print("NOT COVERED GEOGRAPHICALLY:")
+                print("_______________________________________")
+                #print("Xmax=", xmax, "YMAX=", ymax, "Xmin", xmin, "Ymin", ymin)
+                #print("Xquery=", x1, "Yquery=", y1)
+                #print(ansi_val, time_min, time_max)
+                valls=("NOT COVERED")
                 sample_result.append(valls)
         result.append(sample_result)
     #sys.stdout = sys.__stdout__

@@ -23,8 +23,29 @@ x.getBoundary()
 x.getSamples("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/dest_v2.samps_3May2024.csv")
 samplescovered=x.samples
 
+import re
+#####
+def remove_partial_dates(data_dict):
+    # Regular expression pattern for "MM-DDTT00"
+    invalid_data_pattern = re.compile(r"\d{4}-\d{2}-\d{2}$")
+    # List to store keys to remove
+    keys_to_remove = []
+    # # Identify keys with partial dates
+    for key in data_dict.keys():
+        date_part= key.split('_')[-1]
+        if not invalid_data_pattern.match(date_part):
+            keys_to_remove.append(key)
+            # Remove identified keys 
+    for key in keys_to_remove:
+        del data_dict[key]
+    return data_dict
+
+samplescorr=remove_partial_dates(samplescovered)
+    #####
+
 # 5- Create a list of layers by selecting them 
 layers_to_analyze=select_objects("manual",x)
+info=layer_info[0]
 
 layerlist=[]
 for layer in layers_to_analyze:
@@ -35,9 +56,11 @@ for layer in layers_to_analyze:
             layerlist.append(entries_list)
         except:
             continue
+    
+out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/IndexBasedResult.csv"
 
 # 6- Request the data for the SAMPLES for all chosen layers and save them as .csv
-requestDataProcess(layerlist,samplescovered, "/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/IndexBasedResult.csv")
+requestDataProcess(info,layerlist,samplescorr,out)
 
 
 

@@ -9,7 +9,7 @@ from dotenv import dotenv_values
 def getLayers(savepath="NONE"):
     #create an empty array and add headers
     layer_info_2 = []
-    layer_info_2.append(("CoverageID", "CRS", "minlat","maxlat", "minlong", "maxlong","f","t", "resolution_dim1", "resolution_dim2", "resolution_dim3/time"))
+    layer_info_2.append(("CoverageID", "CRS", "minlat","maxlat", "minlong", "maxlong","f","t", "axislabels","resolution_dim1", "resolution_dim2", "resolution_dim3/time"))
     #Load environment variables from the .env file
     env_vars = dotenv_values()
     # Access specific environment variables (useful when declared in a unix environment already)
@@ -24,12 +24,15 @@ def getLayers(savepath="NONE"):
     type(wcs_coverage_summary)
     #cov_id_list=[]
     #extract all coverage_ids and informations from the service endpoint (working on getCapabilities results)
+    describe_url='https://fairicube.rasdaman.com/rasdaman/ows?&SERVICE=WCS&VERSION=2.1.0'
     for i in range(0,len(wcs_coverage_summary)):
         coverage_id= wcs_coverage_summary[i]['wcs20:CoverageId']
+        coverageSubtype=wcs_coverage_summary[i]['wcs20:CoverageSubtype']
         dim=int(wcs_coverage_summary[i]['ows:BoundingBox']['@dimensions'])
         #crs_str = wcs_coverage_summary[i]['ows:BoundingBox']['@crs'][-11:]
         crs_str = wcs_coverage_summary[i]['ows:BoundingBox']['@crs']
         crs = '/'.join(crs_str.split('/')[-3:])
+        print("DIM IS 3", coverage_id)
         if dim==3:
             bb_low=wcs_coverage_summary[i]['ows:BoundingBox']['ows:LowerCorner']
             bb_upp=wcs_coverage_summary[i]['ows:BoundingBox']['ows:UpperCorner']
@@ -39,8 +42,30 @@ def getLayers(savepath="NONE"):
             date_max=bb_upp.strip().split(" ")[0][1:-1]
             x_max=bb_upp.split(" ")[1] 
             y_max=bb_upp.split(" ")[2]
+            try:
+                axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][2]['ows:Value']
+            except IndexError:
+                axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][1]['ows:Value']
             #print(coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_min)
-            layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max))
+            layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max,axislabels))
+            try:
+                for ID in range(1,len(layer_info_2)):
+                    coverage=layer_info_2[ID][0]
+                    response = requests.get(describe_url + "&REQUEST=DescribeCoverage&COVERAGEID=" + coverage,
+                            auth=(rasdaman_username, rasdaman_password)
+                            )
+                    wcs_coverage_description = xmltodict.parse(response.content)
+        #print(json.dumps(wcs_coverage_description, indent=2))
+                    rr=[]
+                    l=len(wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:domainSet']['gmlrgrid:ReferenceableGridByVectors']['gmlrgrid:generalGridAxis'][0]['gmlrgrid:GeneralGridAxis']['gmlrgrid:offsetVector']['#text'].split(" "))
+                    for i in reversed(range(0,l)):
+                        resi=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:domainSet']['gmlrgrid:ReferenceableGridByVectors']['gmlrgrid:generalGridAxis'][i]['gmlrgrid:GeneralGridAxis']['gmlrgrid:offsetVector']['#text'] 
+                        resolution=resi.split(" ")[i]
+                        rr.append(resolution)
+            except KeyError:
+                pass
+            #x=tuple([resolution])
+        #print(layer_info_2[ID])
         else:
             bb_low=wcs_coverage_summary[i]['ows:BoundingBox']['ows:LowerCorner']
             bb_upp=wcs_coverage_summary[i]['ows:BoundingBox']['ows:UpperCorner']
@@ -51,48 +76,8 @@ def getLayers(savepath="NONE"):
             date_min="NA"
             date_max="NA"
             #print(coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_min)
-            layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_min))
-    ##add resolution via describe coverage
-    for ID in range(1,len(layer_info_2)):
-    #for ID in range(3,4):
-        coverage=layer_info_2[ID][0]
-        #print(coverage)
-        response = requests.get(base_wcs_url + "&REQUEST=DescribeCoverage&COVERAGEID=" + coverage,
-                            auth=(rasdaman_username, rasdaman_password)
-                            )
-        wcs_coverage_description = xmltodict.parse(response.content)
-        #print(json.dumps(wcs_coverage_description, indent=2))
-        rr=[]
-        try:
-            l=len(wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:domainSet']['gml:RectifiedGrid']['gml:offsetVector'])
-            for i in reversed(range(0,l)):
-                resi=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:domainSet']['gml:RectifiedGrid']['gml:offsetVector'][i]['#text']
-                resolution=resi.split(" ")[i]
-                rr.append(resolution)
-                #x=tuple([resolution])
-            layer_info_2[ID]=layer_info_2[ID]+tuple(rr)
-            #print(layer_info_2[ID])
-        except KeyError:
-            pass
-        try:
-            l=len(wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:domainSet']['gmlrgrid:ReferenceableGridByVectors']['gmlrgrid:generalGridAxis'][0]['gmlrgrid:GeneralGridAxis']['gmlrgrid:offsetVector']['#text'].split(" "))
-            for i in reversed(range(0,l)):
-                resi=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:domainSet']['gmlrgrid:ReferenceableGridByVectors']['gmlrgrid:generalGridAxis'][i]['gmlrgrid:GeneralGridAxis']['gmlrgrid:offsetVector']['#text'] 
-                resolution=resi.split(" ")[i]
-                rr.append(resolution)
-                #x=tuple([resolution])
-                #print(x)
-            layer_info_2[ID]=layer_info_2[ID]+tuple(rr)
-            #print(layer_info_2[ID])
-        except KeyError:
-            pass
-        try:
-            wcs_coverage_description['ows:ExceptionReport']
-            rr=["NA", "NA", "NA"]
-            layer_info_2[ID]=layer_info_2[ID]+tuple(rr)
-        except KeyError:
-            pass
-        data=layer_info_2
+            #layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_min))
+        layer_info_2[ID]=layer_info_2[ID]+tuple(rr)
     if savepath!="NONE":
         os.chdir(savepath)
         with open(savepath, "w", newline="") as csvfile:
