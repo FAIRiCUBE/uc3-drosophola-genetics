@@ -173,30 +173,58 @@ mode="manual"
 #            chosen_layers.append(x)
 #        window.destroy()
 
-def select_objects(mode, object):
-    cos=object
+def select_objects(mode, object, items_per_page=15):
+    cos = object
     if mode == "manual":
         def show_selected_options():
-            global chosen_layers
+            nonlocal chosen_layers
             chosen_layers = [option_names[i] for i, var in enumerate(option_vars) if var.get() == 1]
             window.destroy()
+        def next_page():
+            nonlocal current_page
+            current_page += 1
+            show_page()
+        def prev_page():
+            nonlocal current_page
+            if current_page > 0:
+                current_page -= 1
+                show_page()
+        def show_page():
+            nonlocal next_button, prev_button, btn_submit
+            for widget in window.winfo_children():
+                widget.grid_forget()
+            start = current_page * items_per_page
+            end = (current_page + 1) * items_per_page
+            for index, option in enumerate(objects_list[start:end]):
+                var = tk.IntVar(value=0)
+                check_button = ttk.Checkbutton(window, text=option, variable=var)
+                check_button.grid(row=index, column=0, sticky="w")
+                option_vars.append(var)
+                option_names.append(option)
+            if start > 0:
+                prev_button.grid(row=items_per_page + 1, column=0, pady=10, padx=5, sticky="ew")
+            if end < len(objects_list):
+                next_button.grid(row=items_per_page + 1, column=1, pady=10, padx=5, sticky="ew")
+            btn_submit.grid(row=items_per_page + 2, column=0, pady=10, sticky="ew")
         objects_list = cos.layers
+        chosen_layers = []
+        current_page = 0
         window = tk.Tk()
         window.title("Select Layers")
+        window.geometry("800x400")  # Set the size of the window
+        window.resizable(False, False)  # Make the window non-resizable
         option_vars = []
         option_names = []
-        for index, option in enumerate(objects_list):
-            var = tk.IntVar(window)
-            check_button = ttk.Checkbutton(window, text=option, variable=var)
-            check_button.grid(row=index, column=0, sticky="w")
-            option_vars.append(var)
-            option_names.append(option)
+        next_button = ttk.Button(window, text="Next", command=next_page)
+        prev_button = ttk.Button(window, text="Previous", command=prev_page)
         btn_submit = ttk.Button(window, text="Submit", command=show_selected_options)
-        btn_submit.grid(row=len(objects_list), column=0, pady=10)
+        show_page()
         window.mainloop()
         use_layers = chosen_layers
-    if mode == "automatic":
+    elif mode == "automatic":
         use_layers = cos.layers
+    else:
+        raise ValueError("Invalid mode provided.")
     return use_layers
 
 ###README USAGE

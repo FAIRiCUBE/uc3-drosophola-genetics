@@ -55,13 +55,14 @@ for layer in layers_to_analyze:
             index=entries_list.index(layer)
             layerlist.append(entries_list)
         except:
-            continue
+            continue 
     
-out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/WGSBasedResult.csv"
+out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/EPSG4326BasedResult.csv"
 
 # 6- Request the data for the SAMPLES for all chosen layers and save them as .csv
 requestDataWGS(info,layerlist,samplescorr,out)
 
+sys.stdout = sys.__stdout__
 
 
 
