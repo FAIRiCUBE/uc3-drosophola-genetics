@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter as ttk
 from tkinter import simpledialog
 import requests
 import xmltodict
@@ -9,7 +10,7 @@ from dotenv import dotenv_values
 def getLayers(savepath="NONE"):
     #create an empty array and add headers
     layer_info_2 = []
-    layer_info_2.append(("CoverageID", "CRS", "minlat","maxlat", "minlong", "maxlong","f","t", "axislabels","resolution_dim1", "resolution_dim2", "resolution_dim3/time"))
+    layer_info_2.append(("CoverageID", "CRS", "minlong","maxlong", "minlat", "maxlat","f","t", "axislabels","resolution_dim1", "resolution_dim2", "resolution_dim3/time"))
     #Load environment variables from the .env file
     env_vars = dotenv_values()
     # Access specific environment variables (useful when declared in a unix environment already)
@@ -32,16 +33,20 @@ def getLayers(savepath="NONE"):
         #crs_str = wcs_coverage_summary[i]['ows:BoundingBox']['@crs'][-11:]
         crs_str = wcs_coverage_summary[i]['ows:BoundingBox']['@crs']
         crs = '/'.join(crs_str.split('/')[-3:])
-        print("DIM IS 3", coverage_id)
         if dim==3:
+            print("DIM IS 3", coverage_id)
+            x_min=wcs_coverage_summary[i]['ows:WGS84BoundingBox']['ows:LowerCorner'].split(" ")[0]
+            y_min=wcs_coverage_summary[i]['ows:WGS84BoundingBox']['ows:LowerCorner'].split(" ")[1]
+            x_max=wcs_coverage_summary[i]['ows:WGS84BoundingBox']['ows:UpperCorner'].split(" ")[0]
+            y_max=wcs_coverage_summary[i]['ows:WGS84BoundingBox']['ows:UpperCorner'].split(" ")[1]
             bb_low=wcs_coverage_summary[i]['ows:BoundingBox']['ows:LowerCorner']
             bb_upp=wcs_coverage_summary[i]['ows:BoundingBox']['ows:UpperCorner']
-            x_min=bb_low.split(" ")[1] 
-            y_min=bb_low.split(" ")[2]
+            #x_min=bb_low.split(" ")[1] 
+            #y_min=bb_low.split(" ")[2]
             date_min=bb_low.strip().split(" ")[0][1:-1]
             date_max=bb_upp.strip().split(" ")[0][1:-1]
-            x_max=bb_upp.split(" ")[1] 
-            y_max=bb_upp.split(" ")[2]
+            #x_max=bb_upp.split(" ")[1] 
+            #y_max=bb_upp.split(" ")[2]
             try:
                 axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][2]['ows:Value']
             except IndexError:
@@ -67,16 +72,15 @@ def getLayers(savepath="NONE"):
             #x=tuple([resolution])
         #print(layer_info_2[ID])
         else:
-            bb_low=wcs_coverage_summary[i]['ows:BoundingBox']['ows:LowerCorner']
-            bb_upp=wcs_coverage_summary[i]['ows:BoundingBox']['ows:UpperCorner']
-            x_min=bb_low.split(" ")[0] 
-            y_min=bb_low.split(" ")[-1+dim]
-            x_max=bb_upp.split(" ")[0] 
-            y_max=bb_upp.split(" ")[-1+dim]
-            date_min="NA"
-            date_max="NA"
-            #print(coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_min)
-            #layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_min))
+            print("NOT ALL DIMENSIONS AVAILABLE")
+            #x_min=wcs_coverage_summary[i]['ows:BoundingBox']['ows:LowerCorner'].split(" ")[0]
+            #y_min=wcs_coverage_summary[i]['ows:BoundingBox']['ows:LowerCorner'].split(" ")[1]
+            #x_max=wcs_coverage_summary[i]['ows:BoundingBox']['ows:UpperCorner'].split(" ")[0]
+            #y_max=wcs_coverage_summary[i]['ows:BoundingBox']['ows:UpperCorner'].split(" ")[1]
+            #date_min="NA"
+            #date_max="NA"
+            ##print(coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_min)
+            ##layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_min))
         layer_info_2[ID]=layer_info_2[ID]+tuple(rr)
     if savepath!="NONE":
         os.chdir(savepath)

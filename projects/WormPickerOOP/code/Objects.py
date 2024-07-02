@@ -9,7 +9,7 @@ class Coverage(object):
         self._ID= data[0]
         self._CRS=data[1]
         self._minlat=data[2]
-        self._maxlar= data[3]
+        self._maxlat= data[3]
         self._minlong=data[4]
         self._maxlong=data[5]
         self._fromtime=data[6] 
@@ -26,12 +26,12 @@ class Coverage(object):
         for minl in range(1,len(self._data)):
             crs=self._data[minl][1]
             if crs=="EPSG/0/4326":
-                min_y, min_x = trans4mEPSG("EPSG:4326","EPSG:3035", float(self._data[minl][4]), float(self._data[minl][2]))
-                max_y, max_x = trans4mEPSG("EPSG:4326","EPSG:3035",float(self._data[minl][5]), float(self._data[minl][3]))
-                minlats.append(min_x)
-                maxlats.append(max_x)
-                minlongs.append(min_y)
-                maxlongs.append(max_y)
+                #min_y, min_x = trans4mEPSG("EPSG:4326","EPSG:3035", float(self._data[minl][4]), float(self._data[minl][2]))
+                #max_y, max_x = trans4mEPSG("EPSG:4326","EPSG:3035",float(self._data[minl][5]), float(self._data[minl][3]))
+                minlats.append(float(self._data[minl][2]))
+                maxlats.append(float(self._data[minl][3]))
+                minlongs.append(float(self._data[minl][4]))
+                maxlongs.append(float(self._data[minl][5]))
             else:
                 minlats.append(float(self._data[minl][2]))
                 maxlats.append(float(self._data[minl][3]))

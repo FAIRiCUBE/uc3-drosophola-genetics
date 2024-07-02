@@ -719,11 +719,11 @@ def requestDataWGS(infoheader,layerlist,samples, filepath):
             crs_indicator= crs.replace("EPSG/0/", "EPSG:")
             output_format = "text/csv"
             #print(name_date, request_cov_id, request_encode_format, layer)
-            min_y, min_x = trans4mEPSG("EPSG:3035","EPSG:4326", float(ymin), float(xmin))
-            max_y, max_x = trans4mEPSG("EPSG:3035","EPSG:4326",float(ymax), float(xmax))
-            print("Geobounds LAT:", min_y, "-", max_y)
-            print("Geobounds LONG:", min_x, "-", max_x)
-            if x1 <= max_x and x1 >= min_x and y1 >= min_y and y1 <= max_y and ansi_val != time_min and ansi_val != time_max:
+            #min_y, min_x = trans4mEPSG("EPSG:3035","EPSG:4326", float(ymin), float(xmin))
+            #max_y, max_x = trans4mEPSG("EPSG:3035","EPSG:4326",float(ymax), float(xmax))
+            print("Geobounds LAT:", ymin, "-", ymax)
+            print("Geobounds LONG:", xmin, "-", xmax)
+            if x1 <= xmax and x1 >= xmin and y1 >= ymin and y1 <= ymax and ansi_val != time_min and ansi_val != time_max:
                 print("The Layer:", layer, " is within temporal coverage. Querying for", time_asked, "as", ansi_val)
                 #TimeLabel="date"
                 #XLabel="Lon"
