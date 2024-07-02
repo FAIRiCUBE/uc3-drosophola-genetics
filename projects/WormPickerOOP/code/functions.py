@@ -440,7 +440,9 @@ def requestDataProcess(infoheader,layerlist,samples, filepath):
         latitude_sample=value[0] 
         longitude_sample=value[1]
         name_date = key
-        #print("COORDINATES:", latitude_request, longitude_request)
+        print(" ")
+        print(" ")
+        print("NEW SAMPLE")
         print("COORDINATES:", latitude_sample, longitude_sample)
         try:
             date = value[2]
@@ -493,8 +495,8 @@ def requestDataProcess(infoheader,layerlist,samples, filepath):
             ymax = float(layerlist[data_entry][i_header.index("maxlat")])
             xmin= float(layerlist[data_entry][i_header.index("minlong")])
             xmax = float(layerlist[data_entry][i_header.index("maxlong")])
-            xres=float(layerlist[data_entry][i_header.index("resolution_dim2")])
-            yres=float(layerlist[data_entry][i_header.index("resolution_dim1")])
+            xres=float(layerlist[data_entry][i_header.index("resolution_dim1")])
+            yres=float(layerlist[data_entry][i_header.index("resolution_dim2")])
             #strlat="&subset=Y({},{})"
             #strlon = "&subset=X({},{})"
             ansi_str_o="&subset=ansi(\"{}\")"
@@ -551,7 +553,164 @@ def requestDataProcess(infoheader,layerlist,samples, filepath):
                 print("                        ")
                 print("                        ")
                 response = requests.get(url, auth=(rasdaman_username, rasdaman_password))
-                valls=(str(response.text)[1:-1])
+                #valls=(str(response.text)[1:-1])
+                #sample_result.append(ansi_val)
+                if response.status_code == 200:
+                    sample_result.append(valls)
+                    print("RESULT:", valls)
+                    print("   ")
+                    print("_______________________________________")
+                else:
+                    sample_result.append(response.status_code)
+            else:
+                print("NOT COVERED GEOGRAPHICALLY:")
+                print("_______________________________________")
+                #print("Xmax=", xmax, "YMAX=", ymax, "Xmin", xmin, "Ymin", ymin)
+                #print("Xquery=", x1, "Yquery=", y1)
+                #print(ansi_val, time_min, time_max)
+                valls=("NOT COVERED")
+                sample_result.append(valls)
+        result.append(sample_result)
+    #sys.stdout = sys.__stdout__
+    print("----------------------")
+    print("                      ")
+    if filepath!="NONE":
+        with open(filepath, "w", newline="") as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(header)
+            writer.writerows(result)
+    else:
+        return result
+
+
+
+
+def requestDataWGS(infoheader,layerlist,samples, filepath):
+    env_vars = dotenv_values()
+    rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT')
+    rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
+    rasdaman_password = env_vars.get('RASDAMAN_CRED_PASSWORD')
+    base_wcs_url = rasdaman_endpoint + "?SERVICE=WCS&VERSION=2.0.1"
+    result=[]
+    header=[]
+    header.append('Sample')
+    if len(layerlist) > 1:
+        for data_entry in range(0,len(layerlist)):
+            layer=layerlist[data_entry][0]
+            header.append(layer)
+    else:
+        for data_entry in range(0,len(layerlist)):
+            layer=layerlist[data_entry]
+            header.append(layer)
+    log=open("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/WormpickerRequestWGS.log", "a")
+    sys.stdout = log
+    all_results=[] 
+    for key, value in samples.items():
+        sample_result=[]
+        latitude_sample=value[0] 
+        longitude_sample=value[1]
+        name_date = key
+        print(" ")
+        print(" ")
+        print("NEW SAMPLE")
+        print("COORDINATES:", latitude_sample, longitude_sample)
+        try:
+            date = value[2]
+            print("DATE ASKED:",date)
+            type(date)
+        except IndexError:
+            date = str(name_date[-10:])
+            print("DATE ASKED:",date)
+        try:
+            daydate=round_down_to_day(date)
+            converted_date=datetime.strptime(daydate, "%Y-%m-%dT%H:%M:%S").isoformat() + "Z"
+            time_asked=converted_date
+            #print("correct format")
+        except ValueError:
+            date = process_date_string(date + 'T00:00:00Z')
+            time_asked=str(date)
+            print(time_asked, name_date)
+            #print(sample_result)
+        sample_result.append(name_date)
+        sample_result.append(time_asked)
+        all_results.append(sample_result)
+        #print(sample_result)
+        print("QUERYING:", time_asked)
+        try:
+            converted_date = datetime.strptime(date, "%Y-%m-%d").isoformat() + "Z"
+            search_time=parser.isoparse(converted_date)
+            print(search_time)
+        except ValueError:
+            print("converted_cate=date")
+            search_time=parser.isoparse(time_asked)
+        for data_entry in range(0,len(layerlist)):
+            i_header=infoheader
+            print(i_header)
+            latitude_request = latitude_sample
+            longitude_request = longitude_sample
+            layer=layerlist[data_entry][i_header.index("CoverageID")]
+            crs=layerlist[data_entry][i_header.index("CRS")]
+            time_min= layerlist[data_entry][i_header.index("f")]
+            time_max= layerlist[data_entry][i_header.index("t")]
+            time_min=time_min.replace('"','')
+            time_max=time_max.replace('"','')
+            datetime1 = parser.isoparse(time_min)
+            datetime2 = parser.isoparse(time_max)
+            AxisLabels=layerlist[data_entry][i_header.index("axislabels")]
+            TimeLabel=AxisLabels.split(",")[0]
+            YLabel=AxisLabels.split(",")[1]
+            XLabel=AxisLabels.split(",")[2]
+            print(TimeLabel,YLabel, XLabel)
+            ymin= float(layerlist[data_entry][i_header.index("minlat")])
+            ymax = float(layerlist[data_entry][i_header.index("maxlat")])
+            xmin= float(layerlist[data_entry][i_header.index("minlong")])
+            xmax = float(layerlist[data_entry][i_header.index("maxlong")])
+            xres=float(layerlist[data_entry][i_header.index("resolution_dim1")])
+            yres=float(layerlist[data_entry][i_header.index("resolution_dim2")])
+            #strlat="&subset=Y({},{})"
+            #strlon = "&subset=X({},{})"
+            ansi_str_o="&subset=ansi(\"{}\")"
+            ansi_str_n=ansi_str_o.replace("ansi",TimeLabel)
+            if search_time > datetime1 and search_time < datetime2:
+                print(search_time, "- COVERED TEMPROALLY")  #make this to acommand which produces a file, saying which samples and layers REALLYY overlap (also in time)
+                ##produce timestamp here
+                ansi_val=time_asked
+            else:
+                min_date = datetime1 if abs((datetime1 - search_time).days) < abs((datetime2 - search_time).days) else datetime2
+                dist=abs(min_date-search_time).days
+                print(time_asked, "NOT COVERED TEMPORALLY, querying:", min_date, ". This is", dist, "days apart!")
+                #set timestamp here a general one, the one were coverage is there
+                ansi_val=time_min
+            print("CRS of layer:", crs)
+            print("Calculating Boudns of Layer for EPSG:4326:")
+            y1=float(latitude_request)
+            x1=float(longitude_request)
+            #strlat="&subset=Lat({},{})"
+            #strlon = "&subset=Long({},{})"
+            print(layer)
+            crs_indicator= crs.replace("EPSG/0/", "EPSG:")
+            output_format = "text/csv"
+            #print(name_date, request_cov_id, request_encode_format, layer)
+            min_y, min_x = trans4mEPSG("EPSG:3035","EPSG:4326", float(ymin), float(xmin))
+            max_y, max_x = trans4mEPSG("EPSG:3035","EPSG:4326",float(ymax), float(xmax))
+            print("Geobounds LAT:", min_y, "-", max_y)
+            print("Geobounds LONG:", min_x, "-", max_x)
+            if x1 <= max_x and x1 >= min_x and y1 >= min_y and y1 <= max_y and ansi_val != time_min and ansi_val != time_max:
+                print("The Layer:", layer, " is within temporal coverage. Querying for", time_asked, "as", ansi_val)
+                #TimeLabel="date"
+                #XLabel="Lon"
+                #YLabel="Lat"
+                query = f"for $c in ({layer}) return encode($c[{TimeLabel}(\"{ansi_val}\"),{XLabel} :\"EPSG:4326\"( {longitude_sample} ), {YLabel}:\"EPSG:4326\"( {latitude_sample}) ], \"{output_format}\")"
+                #query = f"for $c in ({layer}) return encode($c[date:(\"{ansi_val}\"),Lon :\"CRS:1\"{grid_indices_axis_X},Lat :\"CRS:1\"{grid_indices_axis_Y} ], \"{output_format}\")"
+                # Construct the URL with variables
+                url = f"{base_wcs_url}&REQUEST=ProcessCoverages&QUERY={query}"
+                print("                        ")
+                print("                        ")
+                print(url)
+                print("                        ")
+                print("                        ")
+                response = requests.get(url, auth=(rasdaman_username, rasdaman_password))
+                valls=str(response.text)
                 #sample_result.append(ansi_val)
                 if response.status_code == 200:
                     sample_result.append(valls)

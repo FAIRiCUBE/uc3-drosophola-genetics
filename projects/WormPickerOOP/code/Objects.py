@@ -50,8 +50,8 @@ class Coverage(object):
                 long=row["long"]
                 if lat == 'NA' and long == 'NA':
                     continue
-                else:
-                    long,lat=trans4mEPSG("EPSG:4326","EPSG:3035",float(long),float(lat))
+                #else:
+                    #long,lat=trans4mEPSG("EPSG:4326","EPSG:3035",float(long),float(lat))
                 if float(lat) > self.minlat and float(lat) < self.maxlat and float(long) > self.minlong and float(long) < self.maxlong:
                     sampleinfo=(row["lat"],row["long"])
                     filtered_data[row["sampleId"]] = sampleinfo

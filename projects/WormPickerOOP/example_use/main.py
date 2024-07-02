@@ -57,10 +57,10 @@ for layer in layers_to_analyze:
         except:
             continue
     
-out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/IndexBasedResult.csv"
+out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/WGSBasedResult.csv"
 
 # 6- Request the data for the SAMPLES for all chosen layers and save them as .csv
-requestDataProcess(info,layerlist,samplescorr,out)
+requestDataWGS(info,layerlist,samplescorr,out)
 
 
 
