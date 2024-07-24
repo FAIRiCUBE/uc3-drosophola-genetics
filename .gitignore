@@ -18,3 +18,7 @@ projects/LandscapeGenomicsPipeline/data/*.vcf*
 projects/uc3-drosophola-genetics/projects/PlotRaster/wc2-5
 projects/gap_filling/makeWindows/data/Europe_genomewide_weight.csv.gz
 projects/LandscapeGenomicsPipeline/FullData2
+projects/LandscapeGenomicsPipeline/Europe50k_1/results/fullgenome
+projects/LandscapeGenomicsPipeline/S3/Vienna100m
+projects/LandscapeGenomicsPipeline/S3/s3.en4
+projects/LandscapeGenomicsPipeline/S3/config.ini

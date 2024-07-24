@@ -69,6 +69,7 @@ print(selected_columns)
 
 # Ensure selected columns are in the DataFrame
 result_df = merge3[selected_columns]
+result_df.dropna(subset=selected_columns, inplace=True)
 
 # To save the result to a new CSV file
 result_df.to_csv(options.OUT, index=False)

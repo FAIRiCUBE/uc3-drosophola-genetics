@@ -9,8 +9,6 @@ from datetime import datetime
 import math
 from osgeo import gdal, osr
 
-
-
 env_path = '/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/WormPickerOOP'
 
 # Load environment variables from the file
@@ -621,7 +619,10 @@ def requestDataWGS(infoheader,layerlist,samples, filepath):
     base_wcs_url = rasdaman_endpoint + "?SERVICE=WCS&VERSION=2.0.1"
     result=[]
     header=[]
-    header.append('Sample')
+    header.append('sample,')
+    header.append('lat,')
+    header.append('lon,')
+    header.append('date_slice,')
     if len(layerlist) > 1:
         for data_entry in range(0,len(layerlist)):
             layer=layerlist[data_entry][0]
@@ -644,11 +645,11 @@ def requestDataWGS(infoheader,layerlist,samples, filepath):
         print("COORDINATES:", latitude_sample, longitude_sample)
         try:
             date = value[2]
-            print("DATE ASKED:",date)
+            #print("DATE ASKED:",date)
             type(date)
         except IndexError:
             date = str(name_date[-10:])
-            print("DATE ASKED:",date)
+            #print("DATE ASKED:",date)
         try:
             daydate=round_down_to_day(date)
             converted_date=datetime.strptime(daydate, "%Y-%m-%dT%H:%M:%S").isoformat() + "Z"
@@ -657,9 +658,11 @@ def requestDataWGS(infoheader,layerlist,samples, filepath):
         except ValueError:
             date = process_date_string(date + 'T00:00:00Z')
             time_asked=str(date)
-            print(time_asked, name_date)
+            #print(time_asked, name_date)
             #print(sample_result)
         sample_result.append(name_date)
+        sample_result.append(latitude_sample)
+        sample_result.append(longitude_sample)
         sample_result.append(time_asked)
         all_results.append(sample_result)
         #print(sample_result)
@@ -667,13 +670,13 @@ def requestDataWGS(infoheader,layerlist,samples, filepath):
         try:
             converted_date = datetime.strptime(date, "%Y-%m-%d").isoformat() + "Z"
             search_time=parser.isoparse(converted_date)
-            print(search_time)
+            #print(search_time)
         except ValueError:
-            print("converted_cate=date")
+            #print("converted_cate=date")
             search_time=parser.isoparse(time_asked)
         for data_entry in range(0,len(layerlist)):
             i_header=infoheader
-            print(i_header)
+            #print(i_header)
             latitude_request = latitude_sample
             longitude_request = longitude_sample
             layer=layerlist[data_entry][i_header.index("CoverageID")]
@@ -688,7 +691,7 @@ def requestDataWGS(infoheader,layerlist,samples, filepath):
             TimeLabel=AxisLabels.split(",")[0]
             YLabel=AxisLabels.split(",")[1]
             XLabel=AxisLabels.split(",")[2]
-            print(TimeLabel,YLabel, XLabel)
+            #print(TimeLabel,YLabel, XLabel)
             ymin= float(layerlist[data_entry][i_header.index("minlat")])
             ymax = float(layerlist[data_entry][i_header.index("maxlat")])
             xmin= float(layerlist[data_entry][i_header.index("minlong")])
@@ -700,31 +703,31 @@ def requestDataWGS(infoheader,layerlist,samples, filepath):
             ansi_str_o="&subset=ansi(\"{}\")"
             ansi_str_n=ansi_str_o.replace("ansi",TimeLabel)
             if search_time > datetime1 and search_time < datetime2:
-                print(search_time, "- COVERED TEMPROALLY")  #make this to acommand which produces a file, saying which samples and layers REALLYY overlap (also in time)
+                #print(search_time, "- COVERED TEMPROALLY")  #make this to acommand which produces a file, saying which samples and layers REALLYY overlap (also in time)
                 ##produce timestamp here
                 ansi_val=time_asked
             else:
                 min_date = datetime1 if abs((datetime1 - search_time).days) < abs((datetime2 - search_time).days) else datetime2
                 dist=abs(min_date-search_time).days
-                print(time_asked, "NOT COVERED TEMPORALLY, querying:", min_date, ". This is", dist, "days apart!")
+                #print(time_asked, "NOT COVERED TEMPORALLY, querying:", min_date, ". This is", dist, "days apart!")
                 #set timestamp here a general one, the one were coverage is there
                 ansi_val=time_min
-            print("CRS of layer:", crs)
-            print("Calculating Boudns of Layer for EPSG:4326:")
+            #print("CRS of layer:", crs)
+            #print("Calculating Boudns of Layer for EPSG:4326:")
             y1=float(latitude_request)
             x1=float(longitude_request)
             #strlat="&subset=Lat({},{})"
             #strlon = "&subset=Long({},{})"
-            print(layer)
+            #print(layer)
             crs_indicator= crs.replace("EPSG/0/", "EPSG:")
             output_format = "text/csv"
             #print(name_date, request_cov_id, request_encode_format, layer)
             #min_y, min_x = trans4mEPSG("EPSG:3035","EPSG:4326", float(ymin), float(xmin))
             #max_y, max_x = trans4mEPSG("EPSG:3035","EPSG:4326",float(ymax), float(xmax))
-            print("Geobounds LAT:", ymin, "-", ymax)
-            print("Geobounds LONG:", xmin, "-", xmax)
+            #print("Geobounds LAT:", ymin, "-", ymax)
+            #print("Geobounds LONG:", xmin, "-", xmax)
             if x1 <= xmax and x1 >= xmin and y1 >= ymin and y1 <= ymax and ansi_val != time_min and ansi_val != time_max:
-                print("The Layer:", layer, " is within temporal coverage. Querying for", time_asked, "as", ansi_val)
+                #print("The Layer:", layer, " is within temporal coverage. Querying for", time_asked, "as", ansi_val)
                 #TimeLabel="date"
                 #XLabel="Lon"
                 #YLabel="Lat"
@@ -732,10 +735,10 @@ def requestDataWGS(infoheader,layerlist,samples, filepath):
                 #query = f"for $c in ({layer}) return encode($c[date:(\"{ansi_val}\"),Lon :\"CRS:1\"{grid_indices_axis_X},Lat :\"CRS:1\"{grid_indices_axis_Y} ], \"{output_format}\")"
                 # Construct the URL with variables
                 url = f"{base_wcs_url}&REQUEST=ProcessCoverages&QUERY={query}"
-                print("                        ")
-                print("                        ")
+                #print("                        ")
+                #print("                        ")
                 print(url)
-                print("                        ")
+                #print("                        ")
                 print("                        ")
                 response = requests.get(url, auth=(rasdaman_username, rasdaman_password))
                 valls=str(response.text)
@@ -748,14 +751,17 @@ def requestDataWGS(infoheader,layerlist,samples, filepath):
                 else:
                     sample_result.append(response.status_code)
             else:
-                print("NOT COVERED GEOGRAPHICALLY:")
-                print("_______________________________________")
+                #print("NOT COVERED GEOGRAPHICALLY:")
+                #print("_______________________________________")
                 #print("Xmax=", xmax, "YMAX=", ymax, "Xmin", xmin, "Ymin", ymin)
                 #print("Xquery=", x1, "Yquery=", y1)
                 #print(ansi_val, time_min, time_max)
                 valls=("NOT COVERED")
                 sample_result.append(valls)
+        #sample_result.append(query)        
         result.append(sample_result)
+        #header.append('query_sent,')
+        
     #sys.stdout = sys.__stdout__
     print("----------------------")
     print("                      ")

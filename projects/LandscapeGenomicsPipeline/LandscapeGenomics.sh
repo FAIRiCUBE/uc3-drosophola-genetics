@@ -53,13 +53,13 @@ samplelist="${wd}/data/EuropeSamples_Pass.csv"
 #samplelist="/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData/data/EuropeSamples_Pass.csv"
 WorldClim="${wd}/data/WorldclimData.csv"
 metadata="${wd}/dest_v2.samps_3May2024.csv"
-metadata_new="${wd}/data/metadata_new_nsat.csv"
+metadata_new="${wd}/data/metadata_new.csv"
 #
 #
 ############################### MERGE BIOCLIM VARIABLES (e.g. bio1) WITH OTHER ENV DATA (e.g. NSAT) ###############################################################################
 echo "Merging enviornmental data sources"
 #python ${scriptdir}/MergeData.py --biovariable bio1 bio2 --output $metadata_new --samplenames $samplelist --metadata $metadata --worldclim $WorldClim --climate_extra /home/sonjastndl/s3/ClimateData/TESTMARIA_5.csv --climate_var NSAT
-#python3 ${scriptdir}/MergeData.py --biovariable bio1 bio2 bio3 bio4 bio5 bio6 bio7 bio8 bio9 bio10 bio11 bio12 bio13 bio14 bio15 bio16 bio17 bio18 bio19 --output $metadata_new --samplenames $samplelist --metadata $metadata --worldclim $WorldClim 
+python3 ${scriptdir}/MergeData.py --biovariable bio1 bio2 bio3 bio4 bio5 bio6 bio7 bio8 bio9 bio10 bio11 bio12 bio13 bio14 bio15 bio16 bio17 bio18 bio19 --output $metadata_new --samplenames $samplelist --metadata $metadata --worldclim $WorldClim 
 #
 #################################### Remove polyploidies,subsample population samples and exlcude all sites with missing data #################################################
 #
@@ -131,15 +131,15 @@ Sub4="${wd}/results/${arm}/Subsampled_${arm}.final_DP15.vcf.gz"
 #
 #
 #vcftools --gzvcf $Sub4 \
-#    --positions $neutralSNPs \
-#    --recode --stdout | gzip > ${wd}/results/${arm}/Subsampled_neutral.vcf.gz
+#   --positions $neutralSNPs \
+#   --recode --stdout | gzip > ${wd}/results/${arm}/Subsampled_neutral.vcf.gz
 #
 #################################################### CONVERT TO ALLELE FREQUENCIES ############################################################
 
 #echo "CONVERTING VCF FILE TO ALLELE FREQUENCY FILE"
 #
 #python3 ${scriptdir}/VCF2AF.py --input ${Sub4} > ${wd}/results/${arm}/Subsampled_${arm}.final_DP15.af
-#python3 ${scriptdir}/VCF2AF.py --input ${wd}/results/${arm}/Subsampled_neutral.vcf.gz > ${wd}/results/${arm}/Neutral.final.af
+python3 ${scriptdir}/VCF2AF.py --input ${wd}/results/${arm}/Subsampled_neutral.vcf.gz > ${wd}/results/${arm}/Neutral.final.af
 #
 #
 ####annotate SNPs#
@@ -166,7 +166,8 @@ AF="${wd}/results/${arm}/Subsampled_${arm}.final_DP15.af"
 echo "PERFORMING LINEAR REGRESSION"
 
 
-#Rscript ${scriptdir}/Plot_pvalues.R ${wd} $AF $metadata_new $arm $FinalOut
+Rscript ${scriptdir}/Plot_pvalues.R ${wd} $AF $metadata_new $arm $FinalOut
+
 
 ##
 ##bash ${scriptdir}/transpose_and_split.sh $metadata_new 
@@ -181,6 +182,8 @@ echo $variables
 IFS=',' read -ra header_elements <<< "$variables"
 
 #Rscript /home/sonjastndl/s3/InstallLea.R
+##test
+#Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $metadata_new "bio1" $rep
 
 for ((i = 1; i < ${#header_elements[@]}; i++)); do
     element="${header_elements[i]}"
@@ -191,13 +194,14 @@ for ((i = 1; i < ${#header_elements[@]}; i++)); do
     echo $rep
     # Add your processing here
     Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $metadata_new $element $rep
+    Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $metadata_new "bio1" 1
     #If needed average the Repetitions
     #Rscript Rscript ${scriptdir}/LEA_ZPcalc.R $LeaOut $nK $nR $AF $var
 done
 
-#Rscript ${scriptdir}/PlotLEAPValues.r $wd $AF $metadata_new $arm $FinalOut
+Rscript ${scriptdir}/PlotLEAPValues.r $wd $AF $metadata_new $arm $FinalOut
 
-#Rscript ${scriptdir}/ComparePValues.R $AF ${wd}/results/${arm}/GM $LeaOut $FinalOut
+###Rscript ${scriptdir}/ComparePValues.R $AF ${wd}/results/${arm}/GM $LeaOut $FinalOut
 
 ### RDA
 # Get Intronic SNPs
@@ -217,3 +221,19 @@ done
 ##
 #Rscript /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/UC3_Landscape_RDA.R $AF_file $metadata $neutral_af $RDA_out $env_data "Europe" ${wd}/results/annotations.txt
 ###Rscript /media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/RDA.R $AF_file $metadata $neutral_af $RDA_out $nc_folder
+
+
+for value in {1..20}
+do
+    # Assign the current value to the error variable
+    error=$value
+    echo $error
+    # Run the R script with the given parameters
+    Rscript /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/RDA_workflow.R \
+    /media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/Europe50k_newSNPs/SubsampledEurope50k.af \
+    /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/dest_v2.samps_3May2024.csv \
+    /media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/Europe50k/data/matchingEurope_neutral.af \
+    /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA \
+    "Europe" \
+    $error
+done

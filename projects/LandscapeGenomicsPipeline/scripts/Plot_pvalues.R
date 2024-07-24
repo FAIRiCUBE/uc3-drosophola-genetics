@@ -68,8 +68,8 @@ for ( i in colnames(meta)){
     DATA[[ID2]]<-p.val.arcsin
     pvalcsv2[[ID2]]<- p.val.arcsin
     facs2 <- append(facs2,ID2)
-    write.csv(pvalcsv, paste(i,"_pvalues.csv", sep=""))
-    write.csv(pvalcsv2, paste(i,"_pvalues.arcsin.csv", sep=""))
+    #write.csv(pvalcsv, paste(i,"_pvalues.csv", sep=""))
+    #write.csv(pvalcsv2, paste(i,"_pvalues.arcsin.csv", sep=""))
     pdf(paste0("Histograms_P_Values_",i,".pdf"),
     width=15,
     height=5)
