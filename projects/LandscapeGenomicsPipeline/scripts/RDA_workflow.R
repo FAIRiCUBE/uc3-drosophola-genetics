@@ -40,7 +40,6 @@ library(tidyverse)
 get_meta_data <- function(csvfile) {
   meta <- read.csv(csvfile, header = TRUE)
   meta.sub <- meta %>% dplyr::select(sampleId, continent, country, province, lat, long)
-  #meta.sub$sampleId <- gsub("\\-", ".", meta.sub$sampleId)
   return(meta.sub)
 }
 
@@ -89,7 +88,6 @@ freq_mean <- colMeans(AllFreq)
 AllFreq <- AllFreq[,-which(freq_mean>=errorval_higher | freq_mean<=errorval_lower)]
 
 ## Get Worldclim Data
-#Env <- get_worldclim_data(matchedMeta)
 
 FileEnv <- paste0(outdir,"/Env.csv")
 if (file.exists(FileEnv)) {
@@ -104,9 +102,6 @@ if (file.exists(FileEnv)) {
   
 }
 
-
-#Env <- get_worldclim_data(meta)
-#Env <- read.table("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/Europe50k/data/dest.worldclim.csv", header=TRUE)
 print("This is Env.")
 rownames(Env) <- matchedMeta$sampleId
 Env <- na.exclude(Env)
@@ -124,7 +119,6 @@ Env <- scale(Env, center=TRUE, scale=TRUE) # center=TRUE, scale=TRUE are the def
 scale_env <- attr(Env, 'scaled:scale')
 center_env <- attr(Env, 'scaled:center')
 ## Climatic table
-#row.names(Env) <- c(matchedMeta$sampleId)
 Env <- as.data.frame(na.exclude(Env))
 
 new_labels <- function(x) {
@@ -141,15 +135,12 @@ if (file.exists(FileEnvPCA)) {
 } else {
   # Generate the file
   Env.PCA <- FactoMineR::PCA(Env)
-  #Env.PCA$eig[,3]
   saveRDS(Env.PCA, file=FileEnvPCA)
   message("File generated and saved successfully.")
   
 }
 
 neutral_SNPS<-args[3]
-#neutral_SNPS="/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/Europe50k_newSNPs/Neutral.final.af"
-#neutral_SNPS="/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/Europe50k/data/matchingEurope_neutral.af"
 AllFreq_neutral <- read.table(neutral_SNPS, header = T)
 colnames(AllFreq_neutral) <- gsub("\\.", "-", colnames(AllFreq_neutral))
 
@@ -171,7 +162,6 @@ if (file.exists(FilePCANeutral)) {
   
 }
 
-#pca_neutral <- FactoMineR::PCA(AllFreq_neutral)
 
 PCs_neutral <- scores(pca_neutral, choices=c(1:3), display="sites", scaling=0)
 PopStruct <- data.frame(Population = rownames(AllFreq_neutral), PCs_neutral)
@@ -181,7 +171,7 @@ PopStruct <- data.frame(Population = rownames(AllFreq_neutral), PCs_neutral)
 Variables <- data.frame(Env)
 colnames(Variables) <- new_labels(colnames(Variables))
 Parameters <- colnames(Variables)
-##languageR::pairscor.fnc(Variables)
+
 
 AllFreq <- AllFreq[rownames(AllFreq) %in% rownames(Env),]
 
@@ -196,18 +186,14 @@ RDAfull <- rda(formula, data = Variables)
 
 ###PERMUTATION TEST
 
-#####1.ORDIR2STEP
-# VERY SLOW AND SAME AS 2.FS FUNCTION
-#mod <- ordiR2step(RDA0, RDAfull, Pin = 0.01, R2permutations = 1000, R2scope = T)
-#mod$anova
-#rownames(mod$anova)
-
 #####2. FS FUCNTION
 #install.packages("packfor", repos = "http://R-Forge.R-project.org")
 library(packfor)
 
 global_r2 <- RsquareAdj(RDAfull)$adj.r.squared
 
+
+## if permutation is required then do this
 fs <- forward.sel(AllFreq, # Y matrix
                   Variables, # X matrix
                   adjR2thresh = global_r2, # Set the adj.R2 threshold
@@ -304,3 +290,107 @@ dev.off()
 
 result <- rbind(vp$part$fract, vp$part$indfract, vp$part$contr1)
 write.csv(result, file=paste0("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA/VarPart_MAF",errorval_lower,".csv"))
+
+
+###### just tow ork in studio 
+library(tidyverse)
+
+# Specify the directory containing the CSV files
+directory <- "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA"
+
+# List all CSV files in the directory
+csv_files <- list.files(path = directory, pattern = "\\VarPart_MAF.*.csv$", full.names = TRUE)
+
+
+file_names <- sapply(csv_files, function(x) {
+  sub(".*MAF(.*)\\.csv$", "\\1", basename(x))
+})
+
+# Read all CSV files into a list of data frames
+data_list <- lapply(csv_files, read.csv)
+names(data_list) <- file_names
+
+# Create an empty list to hold the R.square values for each entry (i)
+r_square_values <- list()
+
+# Iterate over each dataset (j) in the data_list
+for (j in seq_along(data_list)) {
+  # Extract the R.square column
+  r_square_col <- data_list[[j]]$Adj.R.square
+  
+  # Store the R.square values in the list
+  r_square_values[[j]] <- r_square_col
+}
+
+#r_square_df <- do.call(cbind, r_square_values)
+r_square_df <- data.frame(
+  Series = seq_along(r_square_values[[1]]),
+  do.call(cbind, r_square_values)
+)
+
+colnames(r_square_df) <- c("Variance",names(data_list))
+rownames(r_square_df) <- data_list[[1]]$X
+
+
+# Convert the data to long format
+r_square_long <- r_square_df %>%
+  rownames_to_column(var = "ID") %>%
+  pivot_longer(cols = -ID, names_to = "MAF", values_to = "Variance") %>%
+  mutate(MAF = as.numeric(MAF)) %>%
+  arrange(MAF, ID)
+
+plott <- ggplot(r_square_long, aes(x = MAF, y = Variance, color = ID, group = ID)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Variance Values Across Different MAFs",
+       x = "MAF Value",
+       y = "Variance Value") +
+  theme_bw() +
+  scale_y_continuous(limits = c(0, 0.35)) +  # Use scientific notation if needed
+  scale_x_continuous(breaks = pretty(r_square_long$MAF)) +  # Adjust x-axis breaks
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels if necessary
+
+
+
+
+#png(file =  "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA/VarPartitions_NonConfounded.png", plott, width = 15, height = 6, units = "in", res = 300)
+ggsave(file =  "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA/VarPartitions_NonConfounded.png", plott, width = 15, height = 6)
+
+#r_square_long <- r_square_df %>%
+#  as.data.frame() %>%
+#  mutate(Index = row_number()) %>%
+#  pivot_longer(cols = -Index, names_to = "Dataset", values_to = "R.square")
+
+#r_square_long <- r_square_df %>%
+#  pivot_longer(cols = Variance, names_to = "R.square", values_to = "Dataset")
+#
+## Inspect the long-format data frame
+#print(r_square_long)
+#
+#
+#r_square_long <- r_square_long %>%
+#  pivot_longer(cols = everything(), names_to = "TimePoint", values_to = "R.square") %>%
+#  mutate(Series = factor(rep(1:nrow(r_square_long), each = ncol(r_square_long))))
+#
+#
+## Load necessary library for plotting
+#library(ggplot2)
+#
+## Plot the time series of R.square values
+#ggplot(r_square_df, aes(x = Index, y = R.square, color = Dataset)) +
+#  geom_line() +
+#  labs(title = "Time Series of R.square Values Across Datasets",
+#       x = "Index",
+#       y = "R.square") +
+#  theme_minimal()
+####or
+## Plot the time series of R.square values
+#ggplot(r_square_long, aes(x = Index, y = R.square, color = Dataset)) +
+#  geom_line() +
+#  labs(title = "Time Series of R.square Values Across Datasets",
+#       x = "Index",
+#       y = "R.square") +
+#  theme_minimal() +
+#  scale_y_continuous(labels = scales::scientific) +  # Use scientific notation for small values
+#  theme(axis.text.y = element_text(size = 8))  
+#
