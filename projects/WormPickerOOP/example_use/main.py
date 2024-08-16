@@ -1,14 +1,13 @@
-from code.functions import Coverage
 from code.module_crs_converter import trans4mEPSG
 from code.Objects import Coverage
-from code.functions import select_objects, requestData, trans4mEPSG, requestDataProcess, get_grid_indices_for_axis_X, get_grid_indices_for_axis_Y
+#from code.functions import select_objects, requestData, trans4mEPSG, requestDataProcess, get_grid_indices_for_axis_X, get_grid_indices_for_axis_Y
 from code.UserCred import saveCredentials
-from code.GetLayers import getLayers
-import code.functions
+from code.GetLayers_Window import getLayers
+from code.functions import *
 
 # 1- Provide your user Credentials for fairicube.rasdaman.org
 saveCredentials("/path/to/your/envfile/.env")
-saveCredentials("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/.env")
+#saveCredentials("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/.env")
 
 # 2- Request some info about alyers available to select layers useful for your analysis, when providing a filepath, you can save this information as .csv
 layer_info=getLayers(savepath="NONE")
@@ -57,12 +56,20 @@ for layer in layers_to_analyze:
         except:
             continue 
     
-out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/4326BasedResult.csv"
+out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/RasdamanData.csv"
+outstats="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/RasdamanData_Stats.csv"
 
 # 6- Request the data for the SAMPLES for all chosen layers and save them as .csv
-requestDataWGS(info,layerlist,samplescorr,out)
+requestDataWGS(info,layerlist,samplescorr,out, approximate="TRUE")
 
+#requestDataWGS(info,layerlist,samplescorr,"/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/TestNALoop.csv", approximate="TRUE")
+
+
+#reactivate the sys out
 sys.stdout = sys.__stdout__
  
+import pandas as pd
+#data check 
+summarize_csv(out,outstats)
 
 
