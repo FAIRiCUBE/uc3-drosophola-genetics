@@ -61,6 +61,7 @@ def getLayers(savepath="NONE"):
             print(coverage_id)
             response = requests.get(describe_url + "&REQUEST=DescribeCoverage&COVERAGEID=" + coverage_id,auth=(rasdaman_username, rasdaman_password))
             wcs_coverage_description = xmltodict.parse(response.content)
+            ###null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field']['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue']['#text']
         #print(json.dumps(wcs_coverage_description, indent=2))
             rr=[]
             try: 
@@ -151,66 +152,66 @@ def boundary_function():
     else:
         print("Coverage instance not available.")
 
-# Create the main application window
-root = tk.Tk()
-root.title("Function Executor")
-
-# Create a label
-label = tk.Label(root, text="Select an option:")
-label.pack(padx=20, pady=10)
-
-# Create a radio button for "NONE" option
-savepath_var = tk.StringVar(value="NONE")
-none_radio = tk.Radiobutton(root, text="Process with savepath=NONE", variable=savepath_var, value="NONE")
-none_radio.pack(anchor="w", padx=20)
-
-# Create a radio button for custom savepath option
-custom_radio = tk.Radiobutton(root, text="Enter custom savepath", variable=savepath_var, value="CUSTOM")
-custom_radio.pack(anchor="w", padx=20)
-
-# Create a button that executes the function
-execute_button = tk.Button(root, text="Execute Function", command=execute_function)
-execute_button.pack(padx=20, pady=10)
-
-# Create a Proceed button (initially disabled)
-proceed_button = tk.Button(root, text="Make Coverage Object", state=tk.DISABLED, command=proceed_function)
-proceed_button.pack(padx=20, pady=10)
-
-# Create a Boundary button (initially disabled)
-boundary_button = tk.Button(root, text="Get Coverage Boundary", state=tk.DISABLED, command=boundary_function)
-boundary_button.pack(padx=20, pady=10)
-
-# Start the main event loop
-root.mainloop()
-
-layers_to_analyze=select_objects("manual",x)
-
-
-def select_layers_and_request_data_window():
-    x = coverage_instance
-    x.getSamples("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/data/dest_v2.samps_25Feb2023.csv")
-    samplescovered = x.samples
-    layers_to_analyze = select_objects("manual", x)
-    layerlist = []
-    for layer in layers_to_analyze:
-        for i in range(0, len(x._data)):
-            entries_list = list(x._data[i])
-            try:
-                index = entries_list.index(layer)
-                layerlist.append(entries_list)
-            except:
-                continue
-    output_path = "/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/longtimetry_window.csv"
-    requestData(layerlist, samplescovered, output_path)
-    print("Processed layers and requested data.")
-
-# Create the main application window
-root = tk.Tk()
-root.title("Select Layers and Request Data")
-
-# Create a button for the process
-process_button = tk.Button(root, text="Process Layers and Request Data", command=select_layers_and_request_data_window)
-process_button.pack(padx=20, pady=10)
-
-# Start the main event loop
-root.mainloop()
+## Create the main application window
+#root = tk.Tk()
+#root.title("Function Executor")
+#
+## Create a label
+#label = tk.Label(root, text="Select an option:")
+#label.pack(padx=20, pady=10)
+#
+## Create a radio button for "NONE" option
+#savepath_var = tk.StringVar(value="NONE")
+#none_radio = tk.Radiobutton(root, text="Process with savepath=NONE", variable=savepath_var, value="NONE")
+#none_radio.pack(anchor="w", padx=20)
+#
+## Create a radio button for custom savepath option
+#custom_radio = tk.Radiobutton(root, text="Enter custom savepath", variable=savepath_var, value="CUSTOM")
+#custom_radio.pack(anchor="w", padx=20)
+#
+## Create a button that executes the function
+#execute_button = tk.Button(root, text="Execute Function", command=execute_function)
+#execute_button.pack(padx=20, pady=10)
+#
+## Create a Proceed button (initially disabled)
+#proceed_button = tk.Button(root, text="Make Coverage Object", state=tk.DISABLED, command=proceed_function)
+#proceed_button.pack(padx=20, pady=10)
+#
+## Create a Boundary button (initially disabled)
+#boundary_button = tk.Button(root, text="Get Coverage Boundary", state=tk.DISABLED, command=boundary_function)
+#boundary_button.pack(padx=20, pady=10)
+#
+## Start the main event loop
+#root.mainloop()
+#
+#layers_to_analyze=select_objects("manual",x)
+#
+#
+#def select_layers_and_request_data_window():
+#    x = coverage_instance
+#    x.getSamples("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/data/dest_v2.samps_25Feb2023.csv")
+#    samplescovered = x.samples
+#    layers_to_analyze = select_objects("manual", x)
+#    layerlist = []
+#    for layer in layers_to_analyze:
+#        for i in range(0, len(x._data)):
+#            entries_list = list(x._data[i])
+#            try:
+#                index = entries_list.index(layer)
+#                layerlist.append(entries_list)
+#            except:
+#                continue
+#    output_path = "/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/longtimetry_window.csv"
+#    requestData(layerlist, samplescovered, output_path)
+#    print("Processed layers and requested data.")
+#
+## Create the main application window
+#root = tk.Tk()
+#root.title("Select Layers and Request Data")
+#
+## Create a button for the process
+#process_button = tk.Button(root, text="Process Layers and Request Data", command=select_layers_and_request_data_window)
+#process_button.pack(padx=20, pady=10)
+#
+## Start the main event loop
+#root.mainloop()

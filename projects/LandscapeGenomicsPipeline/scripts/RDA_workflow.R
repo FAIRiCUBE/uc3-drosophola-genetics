@@ -351,8 +351,6 @@ plott <- ggplot(r_square_long, aes(x = MAF, y = Variance, color = ID, group = ID
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels if necessary
 
 
-
-
 #png(file =  "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA/VarPartitions_NonConfounded.png", plott, width = 15, height = 6, units = "in", res = 300)
 ggsave(file =  "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA/VarPartitions_NonConfounded.png", plott, width = 15, height = 6)
 

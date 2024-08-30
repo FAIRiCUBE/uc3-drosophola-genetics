@@ -11,11 +11,11 @@ from osgeo import gdal, osr
 
 #env_path="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/.env"
 
-# Load environment variables from the file
-with open(env_path) as f:
-    for line in f:
-        key, value = line.strip().split('=', 1)
-        os.environ[key] = value
+## Load environment variables from the file
+#with open(env_path) as f:
+#    for line in f:
+#        key, value = line.strip().split('=', 1)
+#        os.environ[key] = value
 
 def trans4mEPSG(InputCRS,OutputCRS,y,x):
     src_crs = InputCRS
@@ -143,16 +143,109 @@ def round_down_to_day(date_str):
     return rounded_down_date_str
 
 
+def findDate(inputtime, description):
+    # Example format of your datetime strings, adjust as necessary
+    datetime_format = "%Y-%m-%dT%H:%M:%S.%fZ"
+    date_obj = datetime.strptime(inputtime, "%Y-%m-%d")
+    timestring = date_obj.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
+    testtime = datetime.strptime(timestring, datetime_format)
+    min_diff_days = float('inf')
+    withinTime=False
+    closest_date = None
+    try:
+        print("Looking for XML metadata on temporal boundaries.")
+        b=description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:metadata']['gmlcov:Extension']['ras:covMetadata']['ras:axes']['ras:time']['ras:areasOfValidity']['ras:area']
+        for item in b: 
+            starttime=datetime.strptime(item['@start'], datetime_format)
+            endtime=datetime.strptime(item['@end'], datetime_format)
+            if (starttime < testtime < endtime):
+                withinTime=True
+                closest_date=testtime
+                min_diff_days=0
+                return closest_date,min_diff_days
+                break
+            else:
+                start_diff_days = abs((starttime - testtime).days)
+                end_diff_days = abs((endtime - testtime).days)
+                if start_diff_days < min_diff_days:
+                    min_diff_days = start_diff_days
+                    closest_date = starttime + timedelta(days=1)
+                if end_diff_days < min_diff_days:
+                    min_diff_days = end_diff_days
+                    closest_date = endtime - timedelta(days=1)
+                if not withinTime and closest_date is not None:
+                    continue
+                    #print("Sample time not within boundaries. Finding closest time slice....")
+        return closest_date, min_diff_days
+    except KeyError:
+        #print("Trying to find right key.")
+        starttime_str=description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['gml:lowerCorner'].split(" ")[0][1:-1]
+        endtime_str=description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['gml:upperCorner'].split(" ")[0][1:-1]
+        starttime=datetime.strptime(starttime_str, datetime_format)
+        endtime=datetime.strptime(endtime_str, datetime_format)
+        if starttime < testtime < endtime:
+            #print("Sample time", testtime, "within time ranges of layer:", starttime_str, endtime_str)
+            return testtime, "0"
+        else:
+            start_diff_days = abs((starttime - testtime).days)
+            end_diff_days = abs((endtime - testtime).days)
+            if start_diff_days < min_diff_days:
+                min_diff_days = start_diff_days
+                closest_date = starttime + timedelta(days=1)
+            if end_diff_days < min_diff_days:
+                min_diff_days = end_diff_days
+                closest_date = endtime - timedelta(days=1)
+            return closest_date,min_diff_days
+    except TypeError:
+        #print("Handling Type Error.")
+        try:
+            timestamps=description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:domainSet']['gmlrgrid:ReferenceableGridByVectors']['gmlrgrid:generalGridAxis'][0]['gmlrgrid:GeneralGridAxis']['gmlrgrid:coefficients']
+            if timestring in timestamps:
+                #print(timestring, "Sample time within time ranges of layer.")
+                return timestring, "0"
+            else:
+                for time in timestamps.split(" "):
+                    #print(time)
+                    #print(testtime)
+                    diff = abs((testtime - datetime.strptime(time[1:-1], datetime_format)).days)
+                    if diff < min_diff_days:
+                        min_diff_days = diff
+                        closest_date = time[1:-1]
+                return closest_date, min_diff_days
+        except KeyError:
+            starttime_str=description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['gml:lowerCorner'].split(" ")[0][1:-1]
+            endtime_str=description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['gml:upperCorner'].split(" ")[0][1:-1]
+            #print(starttime_str, endtime_str)
+            starttime=datetime.strptime(starttime_str, datetime_format)
+            endtime=datetime.strptime(endtime_str, datetime_format)
+            if starttime < testtime < endtime:
+                #print("Sample time within time ranges of layer.",)
+                return testtime, "0"
+            else:
+                start_diff_days = abs((starttime - testtime).days)
+                end_diff_days = abs((endtime - testtime).days)
+                if start_diff_days < min_diff_days:
+                    min_diff_days = start_diff_days
+                    closest_date = starttime + timedelta(days=1)
+                if end_diff_days < min_diff_days:
+                    min_diff_days = end_diff_days
+                    closest_date = endtime - timedelta(days=1)
+                return closest_date,min_diff_days
+###wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['gml:upperCorner'].split(" ")[0][1:-1]
+#result,diff=findDate("2021-03-01",wcs_coverage_description)
 
 
 
-def requestDataWGS(infoheader,layerlist,samples, filepath, approximate="FALSE"):
+def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,approximate=True):
+    log=open(logfilepath, "a")
+    sys.stdout = log
     env_vars = dotenv_values()
     rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT')
     rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
     rasdaman_password = env_vars.get('RASDAMAN_CRED_PASSWORD')
     base_wcs_url = rasdaman_endpoint + "?SERVICE=WCS&VERSION=2.1.0"
     result=[]
+    distances=[]
     header=[]
     header.append('sample,')
     header.append('lat,')
@@ -175,11 +268,10 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, approximate="FALSE"):
             header.append(colname_new)
             #header.append
             #header.append(layer)
-    log=open("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/LatestResults.log", "a")
-    sys.stdout = log
     all_results=[] 
     for key, value in samples.items():
         sample_result=[]
+        sample_distances=[]
         latitude_sample=value[0] 
         longitude_sample=value[1]
         name_date = key
@@ -189,19 +281,19 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, approximate="FALSE"):
         print("COORDINATES lat/long:", latitude_sample, longitude_sample)
         try:
             date = value[2]
-            #print("DATE ASKED:",date)
+            print("DATE ASKED:",date)
             type(date)
         except IndexError:
             date = str(name_date[-10:])
-            #print("DATE ASKED:",date)
-        try:
-            daydate=round_down_to_day(date)
-            converted_date=datetime.strptime(daydate, "%Y-%m-%dT%H:%M:%S").isoformat() + "Z"
-            time_asked=converted_date
-            #print("correct format")
-        except ValueError:
-            date = process_date_string(date + 'T00:00:00Z')
-            time_asked=str(date)
+            print("DATE ASKED:",date)
+        #try:
+        #    daydate=round_down_to_day(date)
+        #    #converted_date=datetime.strptime(daydate, "%Y-%m-%dT%H:%M:%S.%fZ").isoformat() + "Z"
+        #    #time_asked=converted_date
+        #    #print("correct format")
+        #except ValueError:
+        #    date = process_date_string(date + 'T00:00:000Z')
+        #    time_asked=str(date)
             #print(time_asked, name_date)
             #print(sample_result)
         sample_result.append(name_date)
@@ -209,14 +301,15 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, approximate="FALSE"):
         sample_result.append(longitude_sample)
         #all_results.append(sample_result)
         #print(sample_result)
-        print("QUERYING:", time_asked)
-        try:
-            converted_date = datetime.strptime(date, "%Y-%m-%d").isoformat() + "Z"
-            search_time=parser.isoparse(converted_date)
-            #print(search_time)
-        except ValueError:
-            #print("converted_cate=date")
-            search_time=parser.isoparse(time_asked)
+        print("TRYING:", date)
+        #search_time=date
+        #try:
+        #    converted_date = datetime.strptime(date, "%Y-%m-%d").isoformat() + "Z"
+        #    search_time=parser.isoparse(converted_date)
+        #    #print(search_time)
+        #except ValueError:
+        #    #print("converted_cate=date")
+        #    search_time=parser.isoparse(time_asked)
         for data_entry in range(0,len(layerlist)):
             i_header=infoheader
             #print(i_header)
@@ -227,19 +320,32 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, approximate="FALSE"):
             latitude_request = latitude_sample
             longitude_request = longitude_sample
             layer=layerlist[data_entry][i_header.index("CoverageID")]
-            print(layer)
+            ###add description URL and get time stamps
+            describe_url='https://fairicube.rasdaman.com/rasdaman/ows?&SERVICE=WCS&VERSION=2.1.0'
+            response = requests.get(describe_url + "&REQUEST=DescribeCoverage&COVERAGEID=" + layer,auth=(rasdaman_username, rasdaman_password))
+            wcs_coverage_description = xmltodict.parse(response.content)
+            approxvar=approximate
+            if approxvar is True:
+                timetoquery,differencedays=findDate(date,wcs_coverage_description)
+                print(timetoquery, type(timetoquery))
+                #date_obj = datetime.strptime(timetoquery_raw, "%Y-%m-%d")
+                #timetoquery = timetoquery_raw.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
+                #print(timetoquery)
+                print("Querying:", timetoquery, "Difference in Days:", differencedays)
+            else:
+                date_obj = datetime.strptime(date, "%Y-%m-%d")
+                timetoquery = date_obj.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
+                differencedays="0"
+                print("Querying:", timetoquery, "Difference in Days:", differencedays)
             crs=layerlist[data_entry][i_header.index("CRS")]
-            time_min= layerlist[data_entry][i_header.index("f")]
-            time_max= layerlist[data_entry][i_header.index("t")]
-            time_min=time_min.replace('"','')
-            time_max=time_max.replace('"','')
-            datetime1 = parser.isoparse(time_min)
-            datetime2 = parser.isoparse(time_max)
             AxisLabels=layerlist[data_entry][i_header.index("axislabels")]
             if AxisLabels == "ds.earthserver.xyz":
-                TimeLabel="time"
-                YLabel="lat"
-                XLabel="lon"
+                #TimeLabel="ansi"
+                TimeLabel=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['@axisLabels'].split(" ")[0]
+                #YLabel="lat"
+                YLabel=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['@axisLabels'].split(" ")[1]
+                #XLabel="lon"
+                XLabel=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['@axisLabels'].split(" ")[2]
             else:
                 TimeLabel=AxisLabels.split(",")[0]
                 YLabel=AxisLabels.split(",")[1]
@@ -251,89 +357,54 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, approximate="FALSE"):
             xmax = float(layerlist[data_entry][i_header.index("maxlong")])
             xres=float(layerlist[data_entry][i_header.index("resolution_dim1")])
             yres=float(layerlist[data_entry][i_header.index("resolution_dim2")])
-            #strlat="&subset=Y({},{})"
-            #strlon = "&subset=X({},{})"
             ansi_str_o="&subset=ansi(\"{}\")"
             ansi_str_n=ansi_str_o.replace("ansi",TimeLabel)
-            if search_time > datetime1 and search_time < datetime2:
-                #print(search_time, "- COVERED TEMPROALLY")  #make this to acommand which produces a file, saying which samples and layers REALLYY overlap (also in time)
-                ##produce timestamp here
-                ansi_val=time_asked
-            elif search_time < datetime1  and approximate=="TRUE" or search_time > datetime2 and approximate=="TRUE":
-                min_date = datetime1 if abs((datetime1 - search_time).days) < abs((datetime2 - search_time).days) else datetime2
-                dist=abs(min_date-search_time).days
-                print(time_asked, "NOT COVERED TEMPORALLY, querying:", min_date, ". This is", dist, "days apart!")
-                #set timestamp here a general one, the one were coverage is there
-                ansi_val=min_date
-            else:
-                print("Something is wrong with temporal approximation!")
-            #print("CRS of layer:", crs)
-            #print("Calculating Boudns of Layer for EPSG:4326:")
+            ###### NEW TIME LABEL
             y1=float(latitude_request)
             x1=float(longitude_request)
-            #strlat="&subset=Lat({},{})"
-            #strlon = "&subset=Long({},{})"
-            #print(layer)
             crs_indicator= crs.replace("EPSG/0/", "EPSG:")
             output_format = "text/csv"
-            if x1 <= xmax and x1 >= xmin and y1 >= ymin and y1 <= ymax and ansi_val != time_min and ansi_val != time_max:
-                #print("The Layer:", layer, " is within temporal coverage. Querying for", time_asked, "as", ansi_val)
-                #TimeLabel="date"
-                #XLabel="Lon"
-                #YLabel="Lat"
-                query = f"for $c in ({layer}) return encode($c[{TimeLabel}(\"{ansi_val}\"),{XLabel} :\"EPSG:4326\"( {longitude_sample} ), {YLabel}:\"EPSG:4326\"( {latitude_sample}) ], \"{output_format}\")"
-                #query = f"for $c in ({layer}) return encode($c[date:(\"{ansi_val}\"),Lon :\"CRS:1\"{grid_indices_axis_X},Lat :\"CRS:1\"{grid_indices_axis_Y} ], \"{output_format}\")"
-                # Construct the URL with variables
-                url = f"{base_wcs_url}&REQUEST=ProcessCoverages&QUERY={query}"
-                #print("                        ")
-                #print("                        ")
-                print(url)
-                #print("                        ")
-                print("                        ")
-                response = requests.get(url, auth=(rasdaman_username, rasdaman_password))
-                value_response=str(response.text)
-                print(value_response)
-                if isinstance(value_response, str) and value_response.startswith("{") and value_response.endswith("}"):
-                    valls=str(response.text)[1:-1].replace(" ", ",")
-                else:
-                    valls=str(response.text).replace(" ", ",")
-                #if isinstance(value_response, tuple):
-                    #valls=value_response[0]
-                #sample_result.append(ansi_val)
-                if response.status_code == 200:
-                    #sample_result.append(valls)
-                    for singleval in valls.strip('"').split(","):
-                        print(singleval)
-                        sample_result.append(singleval)
-                    print("RESULT:", valls)
-                    print("   ")
-                    print("_______________________________________")
-                else:
-                    #sample_result.append(response.status_code)
-                    #sample_result.append("na")
-                    #na_adjust= ["na"] * number_bands
-                    #sample_result.append(na_adjust)
-                    for _ in range(number_bands):
-                        sample_result.append("na")
+            query = f"for $c in ({layer}) return encode($c[{TimeLabel}(\"{timetoquery}\"),{XLabel} :\"EPSG:4326\"( {longitude_sample} ), {YLabel}:\"EPSG:4326\"( {latitude_sample}) ], \"{output_format}\")"
+            url = f"{base_wcs_url}&REQUEST=ProcessCoverages&QUERY={query}"
+            print(url)
+            print("                        ")
+            response = requests.get(url, auth=(rasdaman_username, rasdaman_password))
+            value_response=str(response.text)
+            #print(value_response)
+            if isinstance(value_response, str) and value_response.startswith("{") and value_response.endswith("}"):
+                valls=str(response.text)[1:-1].replace(" ", ",")
             else:
-                #print("NOT COVERED GEOGRAPHICALLY:")
-                #print("_______________________________________")
-                #valls=["nc"] * number_bands
+                valls=str(response.text).replace(" ", ",")
+            if response.status_code == 200:
                 #sample_result.append(valls)
+                for singleval in valls.strip('"').split(","):
+                    #print(singleval)
+                    sample_result.append(singleval)
+                    sample_distances.append(differencedays)
+                print("RESULT:", valls)
+                print("   ")
+                print("_______________________________________")
+            else:
                 for _ in range(number_bands):
-                        sample_result.append("nc")
-        #sample_result.append(query)   
+                    sample_result.append("na")
+                    sample_distances.append("na")
         result.append(sample_result)
+        distances.append(sample_distances)
         #result.append(samples_results_sep)
         #header.append('query_sent,')  
     #sys.stdout = sys.__stdout__
     print("----------------------")
     print("                      ")
+    print(sample_distances)
     if filepath!="NONE":
         with open(filepath, "w", newline="") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(header)
             writer.writerows(result)
+        with open((filepath+"2"), "w", newline="") as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(header[3:])
+            writer.writerows(distances)
     else:
         return result
     

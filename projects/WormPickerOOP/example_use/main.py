@@ -5,8 +5,8 @@ from code.UserCred import saveCredentials
 from code.GetLayers_Window import getLayers
 from code.functions import *
 
-# 1- Provide your user Credentials for fairicube.rasdaman.org
-saveCredentials("/path/to/your/envfile/.env")
+# 1- Provide your user Credentials for fairicube.rasdaman.org if you have not saved them in an .env file yet
+#saveCredentials("/path/to/your/envfile/.env")
 #saveCredentials("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/.env")
 
 # 2- Request some info about alyers available to select layers useful for your analysis, when providing a filepath, you can save this information as .csv
@@ -20,6 +20,7 @@ x.getBoundary()
 #x.getSamples("path/to/samplefile/with/geoinformation/file.csv")
 
 x.getSamples("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/dest_v2.samps_3May2024.csv")
+x.getSamples("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/EuropeSamples.csv")
 samplescovered=x.samples
 
 import re
@@ -56,11 +57,12 @@ for layer in layers_to_analyze:
         except:
             continue 
     
-out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/RasdamanData.csv"
-outstats="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/RasdamanData_Stats.csv"
+out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/RasdamanData0829.csv"
+outstats="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/RasdamanDataAll0824._Stats.csv"
+logpath="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/RasdamanData0829.log"
 
 # 6- Request the data for the SAMPLES for all chosen layers and save them as .csv
-requestDataWGS(info,layerlist,samplescorr,out, approximate="TRUE")
+requestDataWGS(info,layerlist,samplescorr,out, logpath, approximate=True)
 
 #requestDataWGS(info,layerlist,samplescorr,"/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/TestNALoop.csv", approximate="TRUE")
 
