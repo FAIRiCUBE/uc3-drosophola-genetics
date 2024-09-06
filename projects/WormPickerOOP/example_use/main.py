@@ -4,6 +4,7 @@ from code.Objects import Coverage
 from code.UserCred import saveCredentials
 from code.GetLayers_Window import getLayers
 from code.functions import *
+import re
 
 # 1- Provide your user Credentials for fairicube.rasdaman.org if you have not saved them in an .env file yet
 #saveCredentials("/path/to/your/envfile/.env")
@@ -23,22 +24,6 @@ x.getSamples("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genet
 x.getSamples("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/EuropeSamples.csv")
 samplescovered=x.samples
 
-import re
-#####
-def remove_partial_dates(data_dict):
-    # Regular expression pattern for "MM-DDTT00"
-    invalid_data_pattern = re.compile(r"\d{4}-\d{2}-\d{2}$")
-    # List to store keys to remove
-    keys_to_remove = []
-    # # Identify keys with partial dates
-    for key in data_dict.keys():
-        date_part= key.split('_')[-1]
-        if not invalid_data_pattern.match(date_part):
-            keys_to_remove.append(key)
-            # Remove identified keys 
-    for key in keys_to_remove:
-        del data_dict[key]
-    return data_dict
 
 samplescorr=remove_partial_dates(samplescovered)
     #####
@@ -57,12 +42,12 @@ for layer in layers_to_analyze:
         except:
             continue 
     
-out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/RasdamanData0829.csv"
-outstats="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/RasdamanDataAll0824._Stats.csv"
-logpath="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/RasdamanData0829.log"
+out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/Era5.csv"
+outstats="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/RasdamanDataAllSept24._Stats.csv"
+logpath="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/Era5.log"
 
 # 6- Request the data for the SAMPLES for all chosen layers and save them as .csv
-requestDataWGS(info,layerlist,samplescorr,out, logpath, approximate=True)
+requestDataWGS(info,layerlist,samplescorr,out, logpath, offset=0, approximate=True)
 
 #requestDataWGS(info,layerlist,samplescorr,"/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/TestNALoop.csv", approximate="TRUE")
 

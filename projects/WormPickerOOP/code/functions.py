@@ -4,10 +4,11 @@ import csv
 import requests
 from dotenv import dotenv_values
 from dateutil import parser     
-from datetime import datetime
+from datetime import datetime, timedelta
 #from module_crs_converter import trans4mEPSG
 import math
 from osgeo import gdal, osr
+import xmltodict
 
 #env_path="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/.env"
 
@@ -92,6 +93,21 @@ def select_objects(mode, object, items_per_page=15):
     return use_layers
 
 
+#####
+def remove_partial_dates(data_dict):
+    # Regular expression pattern for "MM-DDTT00"
+    invalid_data_pattern = re.compile(r"\d{4}-\d{2}-\d{2}$")
+    # List to store keys to remove
+    keys_to_remove = []
+    # # Identify keys with partial dates
+    for key in data_dict.keys():
+        date_part= key.split('_')[-1]
+        if not invalid_data_pattern.match(date_part):
+            keys_to_remove.append(key)
+            # Remove identified keys 
+    for key in keys_to_remove:
+        del data_dict[key]
+    return data_dict
 
 
 def is_valid_iso_date(date_string):
@@ -236,9 +252,10 @@ def findDate(inputtime, description):
 
 
 
-def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,approximate=True):
+def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0, approximate=True):
     log=open(logfilepath, "a")
     sys.stdout = log
+    datetime.now()
     env_vars = dotenv_values()
     rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT')
     rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
@@ -255,20 +272,25 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,approxima
             layer=layerlist[data_entry][0]
             layerbands_nr=layerlist[data_entry][-1]
             #header.append(layer)
-            for col in layerbands_nr:
-                colname_new=str(layer)+str(col)
-                header.append(colname_new)
+            for offday in range(abs(offset)+1):
+                for col in layerbands_nr:
+                    if offset >= 0:
+                        colname_new=str(layer)+"_"+str(col)+"+"+str(offday)
+                    else:
+                        colname_new=str(layer)+"_"+str(col)+"-"+str(offday)
+                    header.append(colname_new)
     else:
         #for data_entry in range(0,len(layerlist)):
         layer=layerlist[0][0]
         layerbands_nr=layerlist[0][-1]
         print(layerbands_nr)
-        for col in layerbands_nr:
-            colname_new=str(layer)+"_"+str(col)
-            header.append(colname_new)
-            #header.append
-            #header.append(layer)
-    all_results=[] 
+        for offday in range(abs(offset)+1):
+            for col in layerbands_nr:
+                if offset >= 0:
+                    colname_new=str(layer)+"_"+str(col)+"+"+str(offday)
+                else:
+                    colname_new=str(layer)+"_"+str(col)+"-"+str(offday)
+                header.append(colname_new)
     for key, value in samples.items():
         sample_result=[]
         sample_distances=[]
@@ -286,30 +308,11 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,approxima
         except IndexError:
             date = str(name_date[-10:])
             print("DATE ASKED:",date)
-        #try:
-        #    daydate=round_down_to_day(date)
-        #    #converted_date=datetime.strptime(daydate, "%Y-%m-%dT%H:%M:%S.%fZ").isoformat() + "Z"
-        #    #time_asked=converted_date
-        #    #print("correct format")
-        #except ValueError:
-        #    date = process_date_string(date + 'T00:00:000Z')
-        #    time_asked=str(date)
-            #print(time_asked, name_date)
-            #print(sample_result)
         sample_result.append(name_date)
         sample_result.append(latitude_sample)
         sample_result.append(longitude_sample)
-        #all_results.append(sample_result)
-        #print(sample_result)
-        print("TRYING:", date)
-        #search_time=date
-        #try:
-        #    converted_date = datetime.strptime(date, "%Y-%m-%d").isoformat() + "Z"
-        #    search_time=parser.isoparse(converted_date)
-        #    #print(search_time)
-        #except ValueError:
-        #    #print("converted_cate=date")
-        #    search_time=parser.isoparse(time_asked)
+        #print("TRYING:", date)
+        #days_offset=0+offset
         for data_entry in range(0,len(layerlist)):
             i_header=infoheader
             #print(i_header)
@@ -317,8 +320,6 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,approxima
                 number_bands=len(layerlist[data_entry][-1])
             else:
                 number_bands=len(layerlist[0][-1])
-            latitude_request = latitude_sample
-            longitude_request = longitude_sample
             layer=layerlist[data_entry][i_header.index("CoverageID")]
             ###add description URL and get time stamps
             describe_url='https://fairicube.rasdaman.com/rasdaman/ows?&SERVICE=WCS&VERSION=2.1.0'
@@ -326,20 +327,21 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,approxima
             wcs_coverage_description = xmltodict.parse(response.content)
             approxvar=approximate
             if approxvar is True:
+                date_obj = datetime.strptime(date, "%Y-%m-%d")
                 timetoquery,differencedays=findDate(date,wcs_coverage_description)
                 print(timetoquery, type(timetoquery))
                 #date_obj = datetime.strptime(timetoquery_raw, "%Y-%m-%d")
                 #timetoquery = timetoquery_raw.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
                 #print(timetoquery)
-                print("Querying:", timetoquery, "Difference in Days:", differencedays)
+                print("Querying approximate time:", timetoquery, "Difference in Days:", differencedays)
             else:
                 date_obj = datetime.strptime(date, "%Y-%m-%d")
                 timetoquery = date_obj.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
                 differencedays="0"
-                print("Querying:", timetoquery, "Difference in Days:", differencedays)
-            crs=layerlist[data_entry][i_header.index("CRS")]
+                print("Querying only sample date:", timetoquery, "Difference in Days:", differencedays)
             AxisLabels=layerlist[data_entry][i_header.index("axislabels")]
             if AxisLabels == "ds.earthserver.xyz":
+                print("Querying Earth Server Data")
                 #TimeLabel="ansi"
                 TimeLabel=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['@axisLabels'].split(" ")[0]
                 #YLabel="lat"
@@ -350,44 +352,48 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,approxima
                 TimeLabel=AxisLabels.split(",")[0]
                 YLabel=AxisLabels.split(",")[1]
                 XLabel=AxisLabels.split(",")[2]
-            print(TimeLabel,YLabel, XLabel)
-            ymin= float(layerlist[data_entry][i_header.index("minlat")])
-            ymax = float(layerlist[data_entry][i_header.index("maxlat")])
-            xmin= float(layerlist[data_entry][i_header.index("minlong")])
-            xmax = float(layerlist[data_entry][i_header.index("maxlong")])
-            xres=float(layerlist[data_entry][i_header.index("resolution_dim1")])
-            yres=float(layerlist[data_entry][i_header.index("resolution_dim2")])
-            ansi_str_o="&subset=ansi(\"{}\")"
-            ansi_str_n=ansi_str_o.replace("ansi",TimeLabel)
+            print("Axislabels:",TimeLabel,YLabel, XLabel)
+            #ansi_str_o="&subset=ansi(\"{}\")"
             ###### NEW TIME LABEL
-            y1=float(latitude_request)
-            x1=float(longitude_request)
-            crs_indicator= crs.replace("EPSG/0/", "EPSG:")
             output_format = "text/csv"
-            query = f"for $c in ({layer}) return encode($c[{TimeLabel}(\"{timetoquery}\"),{XLabel} :\"EPSG:4326\"( {longitude_sample} ), {YLabel}:\"EPSG:4326\"( {latitude_sample}) ], \"{output_format}\")"
-            url = f"{base_wcs_url}&REQUEST=ProcessCoverages&QUERY={query}"
-            print(url)
-            print("                        ")
-            response = requests.get(url, auth=(rasdaman_username, rasdaman_password))
-            value_response=str(response.text)
-            #print(value_response)
-            if isinstance(value_response, str) and value_response.startswith("{") and value_response.endswith("}"):
-                valls=str(response.text)[1:-1].replace(" ", ",")
-            else:
-                valls=str(response.text).replace(" ", ",")
-            if response.status_code == 200:
-                #sample_result.append(valls)
-                for singleval in valls.strip('"').split(","):
-                    #print(singleval)
-                    sample_result.append(singleval)
-                    sample_distances.append(differencedays)
-                print("RESULT:", valls)
-                print("   ")
-                print("_______________________________________")
-            else:
-                for _ in range(number_bands):
-                    sample_result.append("na")
-                    sample_distances.append("na")
+            for dayoff in range(abs(offset)+1):
+                #date_obj = datetime.strptime(timetoquery, "%Y-%m-%dT%H:%M:%S.%fZ")
+                if offset >= 0 and isinstance(timetoquery, str):
+                    print("Offset positive!")
+                    date2=datetime.strptime(timetoquery[0:10], "%Y-%m-%d") + timedelta(days=dayoff)
+                    #print(date2)
+                elif offset < 0 and isinstance(timetoquery, str):
+                    date2=datetime.strptime(timetoquery[0:10], "%Y-%m-%d") - timedelta(days=dayoff)
+                elif offset >= 0 and isinstance(timetoquery, datetime):
+                    date2=timetoquery + timedelta(days=dayoff)
+                else:
+                    date2=timetoquery - timedelta(days=dayoff)
+                timetoquery = date2.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
+                query = f"for $c in ({layer}) return encode($c[{TimeLabel}(\"{timetoquery}\"),{XLabel} :\"EPSG:4326\"( {longitude_sample} ), {YLabel}:\"EPSG:4326\"( {latitude_sample}) ], \"{output_format}\")"
+                url = f"{base_wcs_url}&REQUEST=ProcessCoverages&QUERY={query}"
+                print(url)
+                print("                        ")
+                response = requests.get(url, auth=(rasdaman_username, rasdaman_password))
+                value_response=str(response.text)
+                #print(value_response)
+                if isinstance(value_response, str) and value_response.startswith("{") and value_response.endswith("}"):
+                    valls=str(response.text)[1:-1].replace(" ", ",")
+                else:
+                    valls=str(response.text).replace(" ", ",")
+                if response.status_code == 200:
+                    #sample_result.append(valls)
+                    for singleval in valls.strip('"').split(","):
+                        #print(singleval)
+                        sample_result.append(singleval)
+                        sample_distances.append(differencedays)
+                    print("RESULT:", valls)
+                    print("   ")
+                    print("_______________________________________")
+                else:
+                    print(response)
+                    for _ in range(number_bands):
+                        sample_result.append("na")
+                        sample_distances.append("na")
         result.append(sample_result)
         distances.append(sample_distances)
         #result.append(samples_results_sep)
@@ -396,6 +402,7 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,approxima
     print("----------------------")
     print("                      ")
     print(sample_distances)
+    datetime.now()
     if filepath!="NONE":
         with open(filepath, "w", newline="") as csvfile:
             writer = csv.writer(csvfile)
