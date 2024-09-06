@@ -42,9 +42,9 @@ for layer in layers_to_analyze:
         except:
             continue 
     
-out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/Era5.csv"
+out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/use_case/rasdaman_data.csv"
 outstats="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/RasdamanDataAllSept24._Stats.csv"
-logpath="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/Era5.log"
+logpath="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/use_case/rasdaman_data.log"
 
 # 6- Request the data for the SAMPLES for all chosen layers and save them as .csv
 requestDataWGS(info,layerlist,samplescorr,out, logpath, offset=0, approximate=True)
