@@ -23,4 +23,4 @@ projects/LandscapeGenomicsPipeline/S3/ViennaData
 projects/LandscapeGenomicsPipeline/S3/s3.en4
 projects/LandscapeGenomicsPipeline/S3/config.ini
 projects/WormPickerOOP/dev_use
-projects/WormPickerOOP/validation/*
+projects/WormPickerOOP/validation/near_surface_air_temperature/Tair_WFDE5_CRU_201801_v2.1.nc
