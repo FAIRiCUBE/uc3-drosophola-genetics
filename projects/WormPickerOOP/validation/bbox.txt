@@ -1,4 +1,0 @@
-Minlat:46.297611
-Maxlat:48.922499
-Minlong:9.404297
-Maxlong:17.089233

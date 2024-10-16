@@ -60,3 +60,21 @@ import pandas as pd
 summarize_csv(out,outstats)
 
 
+
+
+##write Null values to list
+
+data_list= layer_info
+with open("NUllValuesDetail.csv", "w") as file:
+    for item in data_list:
+        try:
+            # Get elements from index 12 and 13
+            entry_12 = item[12]  # Expected to be a list like ['a', 'b', 'c']
+            entry_13 = item[13]  # Expected to be a list like [1, 2, 3]
+            ln = item[0]
+            # Write each pair from entry_12 and entry_13 in a new row
+            for e12, e13 in zip(entry_12, entry_13):
+                file.write(f"{ln}_{e12}.0,{e13}\n")      
+        except IndexError:
+            # Handle the case where index 12 or 13 does not exist
+            print(f"Error: One of the entries at index 12 or 13 is missing in item: {item}")

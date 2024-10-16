@@ -24,3 +24,11 @@ projects/LandscapeGenomicsPipeline/S3/s3.en4
 projects/LandscapeGenomicsPipeline/S3/config.ini
 projects/WormPickerOOP/dev_use
 projects/WormPickerOOP/validation/near_surface_air_temperature/Tair_WFDE5_CRU_201801_v2.1.nc
+projects/WormPickerOOP/use_case
+projects/WormPickerOOP/example_use
+projects/LandscapeGenomicsPipeline/FullDataRun
+projects/LandscapeGenomicsPipeline/FullDataRun.log
+projects/LandscapeGenomicsPipeline/FullDataRun2.log
+projects/LandscapeGenomicsPipeline/RasdaTest
+projects/WormPickerOOP/validation/bboxAUT
+projects/WormPickerOOP/validation/bboxSCA

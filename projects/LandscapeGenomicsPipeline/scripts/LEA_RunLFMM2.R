@@ -14,6 +14,13 @@ library(readr)
 library(gtools)
 library(tidyverse)
 
+
+print(args[1])
+print(args[2])
+print(args[3])
+print(args[4])
+print(args[5])
+
 rep=args[5]
 
 repdir=paste0(args[1],"/",args[4])
@@ -24,26 +31,26 @@ is_monomorphic <- function(row) {
   return(length(unique(row)) == 1)
 }
 
-# Function to identify and remove monomorphic rows
+## Function to identify and remove monomorphic rows
 remove_monomorphic_rows <- function(genotype_data) {
   monomorphic_rows <- apply(genotype_data, 1, is_monomorphic)
   polymorphic_data <- genotype_data[!monomorphic_rows, ]
   return(polymorphic_data)
 }
-
+#
 DATA_full <- read.table(args[2], h=T, sep="\t")
 rownames(DATA_full) <- paste0(DATA_full$Chr, DATA_full$Pos)
 SUB <- DATA_full[3:length(DATA_full)]
 samples <- gsub("\\.", "-", colnames(DATA_full))
 colnames(SUB) <- gsub("\\.", "-", colnames(SUB))
-ss_data <- metadata[metadata$sampleId %in% samples,]
+ss_data <- metadata[metadata$sample %in% samples,]
 s_data <- na.exclude(ss_data)
-SUB2 <- SUB[colnames(SUB) %in% s_data$sampleId]
+SUB2 <- SUB[colnames(SUB) %in% s_data$sample]
 SUB2 <- remove_monomorphic_rows(SUB2)
 
 geno_object <- paste0(args[1],"/genotypes.lfmm")
 
-if (file.exists(geno_object)) {
+if (file.exists(geno_object) && file.info(geno_object)$size > 0){
   # If the file exists, read it
   tr <- read.lfmm(geno_object)
   print("File exists and has been opened.")
@@ -57,14 +64,17 @@ if (file.exists(geno_object)) {
   write.lfmm(tr,geno_object)
   print("A new geno.lffm.file has been created.")
 }
-
+#
 varname=paste(args[4])
+#var=grep(args[4], colnames(s_data))
 
-var=grep(args[4], colnames(s_data))
-f <- as.matrix(s_data[,var])
+print(varname)
+#print(var)
+f <- as.matrix(s_data[,varname])
+#print(f)
 write.env(f, paste0(repdir, "/gradients.env"))
-
-run_lfmm <- function(data, env, K_range = 1:1) {
+#
+run_lfmm <- function(data, env, K_range = 1:10) {
     project <- snmf(data, K = K_range, entropy = TRUE, repetitions = 2, project = "new")
     CE <- sapply(K_range, function(K) mean(cross.entropy(project, K = K)))
     K <- which.min(CE)
@@ -89,7 +99,6 @@ markerpos <- as.data.frame(markerpos)
 colnames(markerpos) <- c("Pos", "Pval")
 outliers <- markerpos[markerpos$Pval < Bonf,]
 write.csv(outliers, paste(repdir,"/",varname,"_LEA_pvals_outliers.csv", sep=""))
-
                  
 print("PLOT MANHATTAN")
 plot_list <- list()

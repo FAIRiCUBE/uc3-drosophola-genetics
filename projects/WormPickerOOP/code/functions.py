@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 import math
 from osgeo import gdal, osr
 import xmltodict
+import re
 
 #env_path="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/.env"
 
@@ -380,7 +381,7 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
                     valls=str(response.text)[1:-1].replace(" ", ",")
                 else:
                     valls=str(response.text).replace(" ", ",")
-                if response.status_code == 200:
+                if response.status_code == 200 and valls != '':
                     #sample_result.append(valls)
                     for singleval in valls.strip('"').split(","):
                         #print(singleval)
@@ -403,6 +404,7 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
     print("                      ")
     print(sample_distances)
     datetime.now()
+    sys.stdout = sys.__stdout__
     if filepath!="NONE":
         with open(filepath, "w", newline="") as csvfile:
             writer = csv.writer(csvfile)

@@ -14,12 +14,11 @@ mkdir $resultsdir
 pdir="${resultsdir}/${arm}"
 mkdir $pdir
 
-cd $wd
-
-mkdir data
-
-FinalOut="${resultsdir}/${arm}/Summary"
+FinalOut="${resultsdir}/${arm}/summary"
 mkdir $FinalOut
+
+cd $wd
+mkdir data
 
 ################################################## DOWNLOAD VCF FROM DEST.bio AND EXTRACT SAMPLENAMES  ##################################################
 echo "DOWNLOADING VCF FROM DEST.bio AND EXTRACTING SAMPLENAMES"
@@ -40,26 +39,29 @@ module load Tools/vcftools_0.1.13
 
 #################################################################### NAMING THE ANALYSIS ###################################################################################
 
-input=${wd}/data/PoolSeq2024.vcf.gz
-
+#input=${wd}/data/PoolSeq2024.vcf.gz
+input="$5"
 echo $input
 ##
 ##
-#wk -F, 'NR > 1 && $6 == "Europe" {print $1}' dest_v2.samps_3May2024.csv > ${wd}/data/EuropeSamples.csv
+#awk -F, 'NR > 1 && $6 == "Europe" {print $1}' dest_v2.samps_3May2024.csv > ${wd}/data/EuropeSamples.csv
 #awk -F, -v var="$continent" 'NR > 1 && $6 == var && $46 == "Pass" {print $1}' dest_v2.samps_3May2024.csv > ${wd}/data/EuropeSamples_Pass.csv
 #awk -F "," '$(NF-7) !="Pass" || $(NF-9)<15 {print $1"\t"$(NF-7)"\t"$(NF-9)}' dest_v2.samps_3May2024.csv > ${wd}/data/REMOVE.ids
 ##
-samplelist="${wd}/data/EuropeSamples_Pass.csv"
+samplelist="$4"
+#samplelist="${wd}/data/EuropeSamples_Pass.csv"
 #samplelist="/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData/data/EuropeSamples_Pass.csv"
-WorldClim="${wd}/data/WorldclimData.csv"
-metadata="${wd}/dest_v2.samps_3May2024.csv"
-metadata_new="${wd}/data/metadata_new.csv"
+#WorldClim="${wd}/data/WorldclimData.csv"
+#metadata="${wd}/dest_v2.samps_3May2024.csv"
+metadata="$6"
+#metadata_new="${wd}/data/metadata_new.csv"
+envdata="$7"
 #
 #
 ############################### MERGE BIOCLIM VARIABLES (e.g. bio1) WITH OTHER ENV DATA (e.g. NSAT) ###############################################################################
-echo "Merging enviornmental data sources"
+#echo "Merging environmental data sources"
 #python ${scriptdir}/MergeData.py --biovariable bio1 bio2 --output $metadata_new --samplenames $samplelist --metadata $metadata --worldclim $WorldClim --climate_extra /home/sonjastndl/s3/ClimateData/TESTMARIA_5.csv --climate_var NSAT
-python3 ${scriptdir}/MergeData.py --biovariable bio1 bio2 bio3 bio4 bio5 bio6 bio7 bio8 bio9 bio10 bio11 bio12 bio13 bio14 bio15 bio16 bio17 bio18 bio19 --output $metadata_new --samplenames $samplelist --metadata $metadata --worldclim $WorldClim 
+#python3 ${scriptdir}/MergeData.py --biovariable bio1 bio2 bio3 bio4 bio5 bio6 bio7 bio8 bio9 bio10 bio11 bio12 bio13 bio14 bio15 bio16 bio17 bio18 bio19 --output $metadata_new --samplenames $samplelist --metadata $metadata --worldclim $WorldClim 
 #
 #################################### Remove polyploidies,subsample population samples and exlcude all sites with missing data #################################################
 #
@@ -139,7 +141,7 @@ Sub4="${wd}/results/${arm}/Subsampled_${arm}.final_DP15.vcf.gz"
 #echo "CONVERTING VCF FILE TO ALLELE FREQUENCY FILE"
 #
 #python3 ${scriptdir}/VCF2AF.py --input ${Sub4} > ${wd}/results/${arm}/Subsampled_${arm}.final_DP15.af
-python3 ${scriptdir}/VCF2AF.py --input ${wd}/results/${arm}/Subsampled_neutral.vcf.gz > ${wd}/results/${arm}/Neutral.final.af
+#python3 ${scriptdir}/VCF2AF.py --input ${wd}/results/${arm}/Subsampled_neutral.vcf.gz > ${wd}/results/${arm}/Neutral.final.af
 #
 #
 ####annotate SNPs#
@@ -158,25 +160,28 @@ python3 ${scriptdir}/VCF2AF.py --input ${wd}/results/${arm}/Subsampled_neutral.v
 #more $annotated | gunzip | awk ' !/^#/ {split($8,a,"|"); print $1 " " $2 " " a[4]}' > ${wd}/results/annotations.txt
 #awk 'NR==FNR{a[$1,$2]; next} ($1,$2) in a' ${wd}/results/${arm}/Subsampled_${arm}.final_DP15.af ${wd}/results/annotations.txt > ${wd}/results/annotated_used_frqs.txt
 ###
-AF="${wd}/results/${arm}/Subsampled_${arm}.final_DP15.af"
+#AF="${wd}/results/${arm}/Subsampled_${arm}.final_DP15.af"
+AF="$8"
 #
 ###conda deactivate 
 
 ################################################## PERFORM LINEAR REGRESSION #################################################################
 echo "PERFORMING LINEAR REGRESSION"
 
-
-Rscript ${scriptdir}/Plot_pvalues.R ${wd} $AF $metadata_new $arm $FinalOut
+#unmute to run 
+####Rscript ${scriptdir}/Plot_pvalues.R ${wd} $AF $envdata $arm ${LGAdir}/${FinalOut}
 
 
 ##
 ##bash ${scriptdir}/transpose_and_split.sh $metadata_new 
 #
 ################################################## PERFORM LFMM 2 (LATENT FACTOR MIXED MODEL) ###################################################
+echo "PERFORMING LFMM"
+
 LeaOut="${wd}/results/${arm}/LEA"
 mkdir $LeaOut
 #
-variables=$(head -n 1 "$metadata_new" | sed 's/\r$//')
+variables=$(head -n 1 "$envdata" | sed 's/\r$//')
 echo $variables
 ##  #Use a for loop to iterate over words (assuming space-separated words)
 IFS=',' read -ra header_elements <<< "$variables"
@@ -185,7 +190,8 @@ IFS=',' read -ra header_elements <<< "$variables"
 ##test
 #Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $metadata_new "bio1" $rep
 
-for ((i = 1; i < ${#header_elements[@]}; i++)); do
+#for ((i = 1; i < ${#header_elements[@]}; i++)); do
+for ((i = 1; i < 2; i++)); do
     element="${header_elements[i]}"
     echo "$element"
     echo $LeaOut
@@ -193,13 +199,13 @@ for ((i = 1; i < ${#header_elements[@]}; i++)); do
     rep=1
     echo $rep
     # Add your processing here
-    Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $metadata_new $element $rep
-    Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $metadata_new "bio1" 1
+    Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $envdata $element $rep
+    #Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $metadata_new "bio1" 1
     #If needed average the Repetitions
     #Rscript Rscript ${scriptdir}/LEA_ZPcalc.R $LeaOut $nK $nR $AF $var
 done
 
-Rscript ${scriptdir}/PlotLEAPValues.r $wd $AF $metadata_new $arm $FinalOut
+#Rscript ${scriptdir}/PlotLEAPValues.r $wd $AF $metadata_new $arm $FinalOut
 
 ###Rscript ${scriptdir}/ComparePValues.R $AF ${wd}/results/${arm}/GM $LeaOut $FinalOut
 
@@ -223,17 +229,17 @@ Rscript ${scriptdir}/PlotLEAPValues.r $wd $AF $metadata_new $arm $FinalOut
 ###Rscript /media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/RDA.R $AF_file $metadata $neutral_af $RDA_out $nc_folder
 
 
-for value in {1..20}
-do
-    # Assign the current value to the error variable
-    error=$value
-    echo $error
-    # Run the R script with the given parameters
-    Rscript /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/RDA_MAFtest.R \
-    /media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/Europe50k_newSNPs/SubsampledEurope50k.af \
-    /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/dest_v2.samps_3May2024.csv \
-    /media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/Europe50k/data/matchingEurope_neutral.af \
-    /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA \
-    "Europe" \
-    $error
-done
+#for value in {1..20}
+#do
+#    # Assign the current value to the error variable
+#    error=$value
+#    echo $error
+#    # Run the R script with the given parameters
+#    Rscript /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/RDA_MAFtest.R \
+#    /media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/Europe50k_newSNPs/SubsampledEurope50k.af \
+#    /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/dest_v2.samps_3May2024.csv \
+#    /media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/Europe50k/data/matchingEurope_neutral.af \
+#    /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA \
+#    "Europe" \
+#    $error
+#done

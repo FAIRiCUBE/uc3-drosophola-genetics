@@ -10,7 +10,7 @@ from dotenv import dotenv_values
 def getLayers(savepath="NONE"):
     #create an empty array and add headers
     layer_info_2 = []
-    layer_info_2.append(("CoverageID", "CRS", "minlong","maxlong", "minlat", "maxlat","f","t", "axislabels", "resolution_dim1","resolution_dim2" , "resolution_time" , "bands"))
+    layer_info_2.append(("CoverageID", "CRS", "minlong","maxlong", "minlat", "maxlat","f","t", "axislabels", "resolution_dim1","resolution_dim2" , "resolution_time" , "bands", "null_values"))
     #Load environment variables from the .env file
     env_vars = dotenv_values()
     # Access specific environment variables (useful when declared in a unix environment already)
@@ -61,8 +61,19 @@ def getLayers(savepath="NONE"):
             print(coverage_id)
             response = requests.get(describe_url + "&REQUEST=DescribeCoverage&COVERAGEID=" + coverage_id,auth=(rasdaman_username, rasdaman_password))
             wcs_coverage_description = xmltodict.parse(response.content)
-            ###null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field']['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue']['#text']
+            null_values=[]
+            try:
+                try:
+                    null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field']['swe:Category']['swe:nilValues']['swe:NilValues']['swe:nilValue']['#text']
+                except KeyError:
+                    try:
+                        null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field']['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue']['#text']
+                    except KeyError:
+                        null_value="NA"
+            except TypeError:
+                null_value=""        
         #print(json.dumps(wcs_coverage_description, indent=2))
+            null_values.append(null_value)
             rr=[]
             try: 
                 l=len(wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:domainSet']['gmlrgrid:ReferenceableGridByVectors']['gmlrgrid:generalGridAxis'][0]['gmlrgrid:GeneralGridAxis']['gmlrgrid:offsetVector']['#text'].split(" "))
@@ -85,6 +96,11 @@ def getLayers(savepath="NONE"):
                         band_name=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'][band_nr]['@name']
                         print(band_name)
                         band_infos.append(band_name)
+                        try:
+                            null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'][band_nr]['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue']['#text']
+                        except TypeError:
+                            null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'][band_nr]['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue']
+                        null_values.append(null_value)
                     #print(band_infos)
                 if isinstance(wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'],dict):
                     band_name=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field']['@name']
@@ -93,7 +109,7 @@ def getLayers(savepath="NONE"):
                 pass
             #x=tuple([resolution])
         #print(layer_info_2[ID])
-            layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max,axislabels, rr[0], rr[1], rr[2], band_infos))
+            layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max,axislabels, rr[0], rr[1], rr[2], band_infos, null_values))
         else:
             print("NOT ALL DIMENSIONS AVAILABLE")
         #layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max,axislabels, rr[0], rr[1], rr[2], band_infos))
