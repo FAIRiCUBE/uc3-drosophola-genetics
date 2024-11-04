@@ -7,7 +7,6 @@ projects/LandscapeGenomicsPipeline/results/2R
 projects/LandscapeGenomicsPipeline/results/3L
 projects/LandscapeGenomicsPipeline/data/metadata_advanced.csv
 projects/LandscapeGenomicsPipeline/results
-.env
 projects/LandscapeGenomicsPipeline/Europe50k_newSNPs
 projects/LandscapeGenomicsPipeline/Europe50k
 projects/LandscapeGenomicsPipeline/Europe50k_1/results/fullgenome/BAYPASS
@@ -32,3 +31,4 @@ projects/LandscapeGenomicsPipeline/FullDataRun2.log
 projects/LandscapeGenomicsPipeline/RasdaTest
 projects/WormPickerOOP/validation/bboxAUT
 projects/WormPickerOOP/validation/bboxSCA
+projects/LandscapeGenomicsPipeline/FullDataRun_test

@@ -16,7 +16,7 @@ setup(
     name="WormPickerOOP",
     version=VERSION,
     author="Sonja Steindl",
-    author_email="<sonja.steind@nhm-wien.ac.at>",
+    author_email="<sonja.steindl@nhm-wien.ac.at>",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=long_description,
@@ -24,11 +24,9 @@ setup(
     install_requires=[],
     keywords=['python', 'video', 'stream', 'video stream', 'camera stream', 'sockets'],
     classifiers=[
-        "Development Status :: 1 - First Try",
-        "Intended Audience :: ? ",
+        "Development Status :: 1 ",
+        "Intended Audience ::  ",
         "Programming Language :: Python :: 3",
-        "Operating System :: Unix",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Microsoft :: Windows",
+        "Operating System :: Unix"
     ]
 )

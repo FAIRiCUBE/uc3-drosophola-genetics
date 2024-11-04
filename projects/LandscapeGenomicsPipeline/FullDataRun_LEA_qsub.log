@@ -1,0 +1,100 @@
+mkdir: das Verzeichnis „/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun“ kann nicht angelegt werden: Die Datei existiert bereits
+mkdir: das Verzeichnis „/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results“ kann nicht angelegt werden: Die Datei existiert bereits
+mkdir: das Verzeichnis „/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs“ kann nicht angelegt werden: Die Datei existiert bereits
+mkdir: das Verzeichnis „/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/summary“ kann nicht angelegt werden: Die Datei existiert bereits
+mkdir: das Verzeichnis „data“ kann nicht angelegt werden: Die Datei existiert bereits
+DOWNLOADING VCF FROM DEST.bio AND EXTRACTING SAMPLENAMES
+/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/data/PoolSeq2024.vcf.gz
+/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/data/PoolSeq2024.vcf.gz
+/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/data/EuropeSamples_Pass.csv
+AllSNPs
+PERFORMING LINEAR REGRESSION
+PERFORMING LFMM
+mkdir: das Verzeichnis „/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA“ kann nicht angelegt werden: Die Datei existiert bereits
+lat
+1
+278033.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_lat.sh
+lon
+1
+278034.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_lon.sh
+corine_land_cover_landcover+0
+1
+278035.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_corine_land_cover_landcover+0.sh
+dominant_leaf_type_10m_dlt+0
+1
+278036.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_dominant_leaf_type_10m_dlt+0.sh
+dominant_leaf_type_20m_dlt+0
+1
+278037.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_dominant_leaf_type_20m_dlt+0.sh
+eu_demography_tot_p+0
+1
+278038.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_eu_demography_tot_p+0.sh
+european_settlement_map_Gray+0
+1
+278039.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_european_settlement_map_Gray+0.sh
+forest_type_10m_ft+0
+1
+278040.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_forest_type_10m_ft+0.sh
+forest_type_20m_ft+0
+1
+278041.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_forest_type_20m_ft+0.sh
+global_pesticide_grids_apr_h_Alfalfa_2_4_d+0
+1
+278042.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_global_pesticide_grids_apr_h_Alfalfa_2_4_d+0.sh
+Waiting for jobs to finish... 11 jobs still running.
+Waiting for jobs to finish... 11 jobs still running.
+Waiting for jobs to finish... 11 jobs still running.
+Waiting for jobs to finish... 11 jobs still running.
+Less than 10 jobs are running, proceeding to the next batch...
+global_pesticide_grids_apr_h_Alfalfa_2_4_db+0
+1
+278043.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_global_pesticide_grids_apr_h_Alfalfa_2_4_db+0.sh
+global_pesticide_grids_apr_h_Alfalfa_Bromoxynil+0
+1
+278044.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_global_pesticide_grids_apr_h_Alfalfa_Bromoxynil+0.sh
+global_pesticide_grids_apr_h_Alfalfa_Carbaryl+0
+1
+278045.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_global_pesticide_grids_apr_h_Alfalfa_Carbaryl+0.sh
+global_pesticide_grids_apr_h_Alfalfa_Chlorpyrifos+0
+1
+278046.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_global_pesticide_grids_apr_h_Alfalfa_Chlorpyrifos+0.sh
+global_pesticide_grids_apr_h_Alfalfa_Clethodim+0
+1
+278047.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_global_pesticide_grids_apr_h_Alfalfa_Clethodim+0.sh
+global_pesticide_grids_apr_h_Alfalfa_Cyhalothrin_lambda+0
+1
+278048.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_global_pesticide_grids_apr_h_Alfalfa_Cyhalothrin_lambda+0.sh
+global_pesticide_grids_apr_h_Alfalfa_Dimethoate+0
+1
+278049.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_global_pesticide_grids_apr_h_Alfalfa_Dimethoate+0.sh
+global_pesticide_grids_apr_h_Alfalfa_Diuron+0
+1
+278050.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_global_pesticide_grids_apr_h_Alfalfa_Diuron+0.sh
+global_pesticide_grids_apr_h_Alfalfa_Eptc+0
+1
+278051.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_global_pesticide_grids_apr_h_Alfalfa_Eptc+0.sh
+global_pesticide_grids_apr_h_Alfalfa_Glyphosate+0
+1
+278052.nhm-phylo2
+Submitted /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/shell/test_global_pesticide_grids_apr_h_Alfalfa_Glyphosate+0.sh
+Waiting for jobs to finish... 18 jobs still running.
+Waiting for jobs to finish... 18 jobs still running.

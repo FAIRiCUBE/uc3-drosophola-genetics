@@ -169,7 +169,7 @@ AF="$8"
 echo "PERFORMING LINEAR REGRESSION"
 
 #unmute to run 
-####Rscript ${scriptdir}/Plot_pvalues.R ${wd} $AF $envdata $arm ${LGAdir}/${FinalOut}
+###Rscript ${scriptdir}/Plot_pvalues.R ${wd} $AF $envdata $arm ${LGAdir}/${FinalOut}
 
 
 ##
@@ -182,7 +182,7 @@ LeaOut="${wd}/results/${arm}/LEA"
 mkdir $LeaOut
 #
 variables=$(head -n 1 "$envdata" | sed 's/\r$//')
-echo $variables
+#echo $variables
 ##  #Use a for loop to iterate over words (assuming space-separated words)
 IFS=',' read -ra header_elements <<< "$variables"
 
@@ -190,21 +190,31 @@ IFS=',' read -ra header_elements <<< "$variables"
 ##test
 #Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $metadata_new "bio1" $rep
 
-#for ((i = 1; i < ${#header_elements[@]}; i++)); do
-for ((i = 1; i < 2; i++)); do
-    element="${header_elements[i]}"
+#for ((i = 1; i < 4; i++)); do
+for ((i = 1; i < ${#header_elements[@]}; i++)); do
+    element=${header_elements[i]} 
     echo "$element"
-    echo $LeaOut
-    echo $AF
+    #echo $LeaOut
+    #echo $AF
     rep=1
     echo $rep
     # Add your processing here
-    Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $envdata $element $rep
-    #Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $metadata_new "bio1" 1
-    #If needed average the Repetitions
-    #Rscript Rscript ${scriptdir}/LEA_ZPcalc.R $LeaOut $nK $nR $AF $var
-done
+    #Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $envdata $element $rep
+    echo """
+##!/bin/sh
+## name of Job
+#PBS -N RasdaLEA_${element}
+## Redirect output stream to this file.
+#PBS -o /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RasdaTest/logs
+## Stream Standard Output AND Standard Error to outputfile (see above)
+#PBS -j oe
+## Select a maximum of 20 cores and 200gb of RAM
+#PBS -l select=1:ncpus=10:mem=50gb
+## load all necessary software into environment
 
+Rscript ${scriptdir}/LEA_old.r $LeaOut $AF $envdata $element $rep """ > ${LeaOut}/shell/test_${element}.sh
+    qsub ${LeaOut}/shell/test_${element}.sh
+done
 #Rscript ${scriptdir}/PlotLEAPValues.r $wd $AF $metadata_new $arm $FinalOut
 
 ###Rscript ${scriptdir}/ComparePValues.R $AF ${wd}/results/${arm}/GM $LeaOut $FinalOut
@@ -220,12 +230,18 @@ done
 ####RDA
 #AF_file="${wd}/results/fullgenome2/Subsampled_fullgenome2.final_DP15.af"
 #metadata="${wd}/dest_v2.samps_3May2024.csv"
-#neutral_af="${wd}/results/fullgenome2/Neutral.final.af"
+neutral_af="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/Neutral.final.af"
+RDA_out="${wd}/results/${arm}/RDA"
+mkdir $RDA_out
 #RDA_out="${wd}/results/fullgenome2/RDA_annotations"
 #wc_folder="" ##needs to be included in script
 #env_data="/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RDA-landscape-genomics/wc2.5"
 ##
-#Rscript /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/UC3_Landscape_RDA.R $AF_file $metadata $neutral_af $RDA_out $env_data "Europe" ${wd}/results/annotations.txt
+
+#Rscript /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/UC3_Landscape_RDA.R $AF $metadata $neutral_af $RDA_out $envdata "Europe" "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/annotationdata/annotations.txt"
+#Rscript /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/RDA/NewApproachRDA.r $AF $metadata $neutral_af $RDA_out $envdata "Europe" "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/annotationdata/annotations.txt"
+
+
 ###Rscript /media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/RDA.R $AF_file $metadata $neutral_af $RDA_out $nc_folder
 
 

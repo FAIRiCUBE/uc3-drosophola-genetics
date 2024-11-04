@@ -1,11 +1,12 @@
+##!/bin/sh
 ## name of Job
-#PBS -N TestRasda
+#PBS -N RasdaLEA_only
 ## Redirect output stream to this file.
 #PBS -o /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RasdaTest/logs
 ## Stream Standard Output AND Standard Error to outputfile (see above)
 #PBS -j oe
 ## Select a maximum of 20 cores and 200gb of RAM
-#PBS -l select=1:ncpus=20:mem=200gb
+#PBS -l select=1:ncpus=8:mem=50gb
 ## load all necessary software into environment
 
 
@@ -23,4 +24,6 @@ envdata="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/p
 AF="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/Subsampled_fullgenome.final_DP15.af"
 
 
-bash LandscapeGenomics.sh $wd $continent $arm $samplelist $input $metadata $envdata $AF >> FullDataRun2.log 2>&1
+#bash LandscapeGenomics.sh $wd $continent $arm $samplelist $input $metadata $envdata $AF >> FullDataRun_LEA_qsub.log 2>&1
+bash LandscapeGenomics_qsub.sh $wd $continent $arm $samplelist $input $metadata $envdata $AF >> FullDataRun_LEA_qsub.log 2>&1
+

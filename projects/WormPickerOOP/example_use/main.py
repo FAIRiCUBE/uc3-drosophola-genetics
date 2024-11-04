@@ -59,9 +59,6 @@ import pandas as pd
 #data check 
 summarize_csv(out,outstats)
 
-
-
-
 ##write Null values to list
 
 data_list= layer_info

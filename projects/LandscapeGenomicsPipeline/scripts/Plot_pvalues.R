@@ -12,9 +12,9 @@ args <- commandArgs(TRUE)
 
 
 ## set working directory
-setwd(args[1])
+setwd(args[1]) 
 arm=args[4]
-directory_path=paste("results/",arm, "/GM2", sep="")
+directory_path=paste("results/",arm, "/LinearRegressions", sep="")
 dir.create(directory_path, recursive = TRUE)
 ## read AlleleFrequency Matrix
 DATA=read.table(args[2],header=3)
@@ -29,7 +29,7 @@ null_values <- read.csv("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-droso
 ##null_values in args
 
 columns_with_only_na_string <- sapply(envfile, function(x) all(x == "na"))
-na_string_columns <- names(df)[columns_with_only_na_string]
+na_string_columns <- names(envfile)[columns_with_only_na_string]
 Rclean <- envfile[, colSums(envfile == "na") != nrow(envfile)]
 Rclean <- as.data.frame(Rclean[2:ncol(Rclean)])
 df_numeric <- as.data.frame(lapply(Rclean, as.numeric))
@@ -39,7 +39,7 @@ rownames(df_numeric) <- envfile$sample
 valid_columns <- intersect(null_values$V1, colnames(df_numeric))
 
 # Diese validen Spalten aus df_numeric auswählen
-new <- df_numeric[, valid_columns]
+#new <- df_numeric[, valid_columns]
 #sel <- intersect(rownames(df_numeric), samplesFreqs)
 
 filtered_null_values <- null_values[null_values$V1 %in% colnames(df_numeric),]
@@ -47,12 +47,20 @@ named_list <- as.list(setNames(filtered_null_values$V2, filtered_null_values$V1)
 
 null_values_list <- named_list
 
-df_new <- as.data.frame(lapply(seq_along(new), function(i) {
-  replace(new[[i]], new[[i]] == null_values_list[[names(new)[i]]], NA)
-}))
+#df_new <- as.data.frame(lapply(seq_along(df_numeric), function(i) {
+#  replace(new[[i]], new[[i]] == null_values_list[[names(new)[i]]], NA)
+#}))
 
-colnames(df_new) <- colnames(new)
-rownames(df_new) <- rownames(new)
+is_monomorphic <- function(column) {
+  length(unique(column)) == 1}
+
+# Apply the function to each column and get the names of monomorphic columns
+monomorphic_columns <- sapply(df_numeric, is_monomorphic)
+df_new <- df_numeric[, !monomorphic_columns]
+
+
+colnames(df_new) <- colnames(df_numeric)
+rownames(df_new) <- rownames(df_numeric)
 
 #print(length(envfile$sample))
 #print(length(samplesFreqs))
@@ -108,9 +116,9 @@ thres_env <- 0.05/length(DATA$Pos)
 #pvalcsv <- data.frame(DATA$Chr, DATA$Pos)
 
 facs2 <- c()
-for ( i in colnames(envfile)[1:3]){
+for ( i in colnames(envfile)){
   y=envfile[[i]]
-  print(y)
+  #print(y)
   facs <- c()
   pvalcsv <- annotations
   colnames(pvalcsv) <- c("Chr", "Pos", "Gene")
@@ -125,10 +133,12 @@ for ( i in colnames(envfile)[1:3]){
     DATA[[ID2]]<-p.val.arcsin
     pvalcsv2[[ID2]]<- p.val.arcsin
     facs2 <- append(facs2,ID2)
-    write.csv(pvalcsv, paste(directory_path,"/",i,"_pvalues_single.csv", sep=""))
+    #write.csv(pvalcsv, paste(directory_path,"/",i,"_pvalues_single.csv", sep=""), row.names= FALSE)
+    write.csv(pvalcsv, paste("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LinearRegressions/LinearRegr2/",i,"_pvalues.csv", sep=""), row.names=FALSE)
     #outliers <- na.exclude(pvalcsv[pvalcsv[[ID2]] < thres_env,])
-    outliers <- paste(na.exclude(y[y$pvals < 0.00005,])$Chr, na.exclude(y[y$pvals < 0.00005,])$Pos, sep=".")
-    write.csv(outliers, paste(directory_path,"/",i,"_pvalues_outliers.csv", sep=""))
+    outliers <- na.omit(pvalcsv[pvalcsv[[ID2]] < thres_env,])
+    #write.csv(outliers, paste(directory_path,"/",i,"_pvalues_outliers.csv", sep=""), row.names= FALSE)
+    write.csv(outliers, paste("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LinearRegressions/LinearRegr2/",i,"_pvalue_outliers.csv", sep=""), row.names=FALSE)
     #pdf(paste0("Histograms_P_Values_",i,".pdf"),
     #width=15,
     #height=5)
@@ -149,6 +159,7 @@ for ( i in colnames(envfile)[1:3]){
         theme(legend.position = "none")
     # Export as PNG
     png(filename = paste0(directory_path,"/",i, "_Pvalues.png"), width = 800, height = 600)
+    #png(filename = paste0("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LinearRegressions/LinearRegr2/",i, "_Pvalues.png"), width = 800, height = 600)
     print(pl)
     dev.off()
   } else {
@@ -156,7 +167,7 @@ for ( i in colnames(envfile)[1:3]){
   }
 }
 
-write.csv(pvalcsv2, paste(directory_path,"/Merged_pvalues.arcsin.csv", sep=""))
+write.csv(pvalcsv2, paste(directory_path,"/Merged_pvalues.arcsin.csv", sep=""), row.names= FALSE)
 
 ##export DATA to directory
 ##pvalpath=paste(directoy_path, "/P_Values.csv")
