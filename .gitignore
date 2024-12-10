@@ -24,7 +24,7 @@ projects/LandscapeGenomicsPipeline/S3/config.ini
 projects/WormPickerOOP/dev_use
 projects/WormPickerOOP/validation/near_surface_air_temperature/Tair_WFDE5_CRU_201801_v2.1.nc
 projects/WormPickerOOP/use_case
-projects/WormPickerOOP/example_use
+projects/WormPickerOOP/example_use/LandscapeRasdaman_files
 projects/LandscapeGenomicsPipeline/FullDataRun
 projects/LandscapeGenomicsPipeline/FullDataRun.log
 projects/LandscapeGenomicsPipeline/FullDataRun2.log
