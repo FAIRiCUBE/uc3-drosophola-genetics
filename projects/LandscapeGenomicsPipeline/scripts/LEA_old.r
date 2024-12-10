@@ -48,6 +48,18 @@ s_data <- s_data[s_data$sample %in% colnames(SUB2), ]
 DATA_full <- DATA_full[rownames(DATA_full) %in% rownames(SUB2), ]
 
 
+varname_or=paste(args[4])
+#print(colnames(s_data))
+varname <- gsub("\\+", ".", varname_or)
+
+print(varname)
+
+if (!(varname %in% colnames(s_data))) {
+    stop(paste("Column", varname, "not found in s_data"))
+}
+
+
+
 print(paste0("After removing monomorphic rows,", nrow(SUB2), "SNPs  are being analysed"))
 
 
@@ -68,15 +80,15 @@ if (file.exists(geno_object)) {
   print("A new geno.lffm.file has been created.")
 }
 
-varname=paste(args[4])
+
 
 var_index <- match(varname, colnames(s_data))
 print(varname)
-f <- as.matrix(s_data[, var_index])  
+f <- as.matrix(s_data[,varname])  
 write.env(f, paste0(repdir, "/gradients.env"))
 
 run_lfmm <- function(data, env, K_range = 1:10) {
-    project <- snmf(data, K = K_range, entropy = TRUE, repetitions = 3, project = "new")
+    project <- snmf(data, K = K_range, entropy = TRUE, repetitions = 2, project = "new")
     CE <- sapply(K_range, function(K) mean(cross.entropy(project, K = K)))
     K <- which.min(CE)
     mod.lfmm2 <- lfmm2(data, env, K = K)

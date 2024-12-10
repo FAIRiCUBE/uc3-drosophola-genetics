@@ -1,0 +1,614 @@
+lat,999
+lon,999
+AD4GD_GBIF_occurrence,-9999
+ADC_Arable_Land_Markers_Autumn_adc,65535
+ADC_Arable_Land_Markers_Spring_adc,65535
+ADC_Crop_Parcels_Crop_Code_adc,65535
+ADC_Crop_Parcels_Field_ID_adc,65535
+ADC_Crop_Rotation_Index_adc,-999
+ADC_Grassland_Markers_NDVI_Spring_ndvi,-999
+ADC_Grassland_Markers_No_Mowing_adc,65535
+ADC_arable_land_markers_no_ndvi_adc,65535
+LGN_lgn,0
+LGN_Monitoring_lgn,65535
+Precipitation_Netherlands_precipitation,-9999
+S2_L2A_Netherlands_CloudFree_blue,NA
+S2_L2A_Netherlands_CloudFree_green,0
+S2_L2A_Netherlands_CloudFree_red,0
+S2_L2A_Netherlands_CloudFree_nir,0
+Temperature_Netherlands_temperature,-9999
+corine_land_cover_landcover,-32768
+dominant_leaf_type_10m_dlt,240;255
+dominant_leaf_type_20m_dlt,250;255
+eu_demography_tot_p,65535
+european_settlement_map_2015_esm,0
+european_settlement_map_2018_esm,0
+forest_type_10m_ft,240;255
+forest_type_20m_ft,250;255
+global_pesticide_grids_apr_h_Alfalfa_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_2_4_db,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Bromoxynil,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Carbaryl,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Clethodim,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Cyhalothrin_lambda,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Dimethoate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Diuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Eptc,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Hexazinone,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Indoxacarb,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Malathion,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Metribuzin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Phosmet,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Sethoxydim,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Alfalfa_Trifluralin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Acetochlor,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Alachlor,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Atrazine,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Azoxystrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Clopyralid,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Dicamba,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Dimethenamid_p,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Glufosinate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Isoxaflutole,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Mesotrione,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Metolachlor_s,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Propargite,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Pyraclostrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Simazine,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Corn_Terbufos,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Acephate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Acetochlor,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Bifenthrin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Dicamba,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Dichloropropene,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Dicrotophos,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Diuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Fluometuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Fomesafen,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Glufosinate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Imidacloprid,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Metolachlor_s,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Msma,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Prometryn,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Cotton_Trifluralin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Calcium_polysulfide,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Captan,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Chloropicrin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Chlorothalonil,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Copper_hydroxide,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Copper_sulfate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Copper_sulfate_tribasic,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Dichloropropene,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Diuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Glufosinate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Mancozeb,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Methyl_bromide,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Oxyfluorfen,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Petroleum_oil,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_OrcGra_Ziram,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Acetochlor,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Atrazine,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Bacillus_amyloliquifacien,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Bromoxynil,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Chloropicrin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Chlorothalonil,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Dicamba,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Dichloropropene,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Dimethenamid_p,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Flutolanil,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Metam,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Metolachlor_s,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Metribuzin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Phorate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Other_Propazine,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_2_4_db,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Aminopyralid,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Atrazine,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Clethodim,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Clopyralid,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Dicamba,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Dichlorprop,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Diuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Fluroxypyr,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Glufosinate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Imazapyr,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Mcpa,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Metolachlor_s,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Metribuzin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Metsulfuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Picloram,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_PasHay_Triclopyr,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Acifluorfen,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Azoxystrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Bentazone,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Clomazone,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Clothianidin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Copper_sulfate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Cyhalofop,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Cyhalothrin_lambda,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Halosulfuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Imazethapyr,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Propanil,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Propiconazole,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Quinclorac,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Saflufenacil,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Thiobencarb,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Triclopyr,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Rice_Trifloxystrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Acephate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Acetochlor,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Acifluorfen,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Clethodim,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Dicamba,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Dimethenamid_p,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Flumioxazin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Fomesafen,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Glufosinate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Metolachlor_s,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Metribuzin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Pyraclostrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Pyroxasulfone,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Sulfentrazone,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Soybean_Trifluralin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Bacillus_amyloliquifacien,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Bensulide,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Bentazone,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Captan,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Chloropicrin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Chlorothalonil,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Copper_hydroxide,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Dichloropropene,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Eptc,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Ethalfluralin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Ethoprophos,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Mancozeb,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Metam,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Metam_potassium,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Methyl_bromide,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Metolachlor_s,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Petroleum_oil,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_VegFru_Thiophanate_methyl,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Atrazine,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Azoxystrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Bromoxynil,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Clopyralid,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Dicamba,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Dimethoate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Fluroxypyr,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Mcpa,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Metconazole,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Pinoxaden,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Propiconazole,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Prothioconazole,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Pyraclostrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Tebuconazole,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Thiophanate_methyl,-2;-1.5;-1;0
+global_pesticide_grids_apr_h_Wheat_Tri_allate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_2_4_db,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Bromoxynil,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Carbaryl,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Clethodim,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Cyhalothrin_lambda,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Dimethoate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Diuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Eptc,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Hexazinone,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Indoxacarb,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Malathion,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Metribuzin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Phosmet,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Sethoxydim,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Alfalfa_Trifluralin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Acetochlor,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Alachlor,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Atrazine,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Azoxystrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Clopyralid,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Dicamba,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Dimethenamid_p,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Glufosinate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Isoxaflutole,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Mesotrione,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Metolachlor_s,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Propargite,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Pyraclostrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Simazine,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Corn_Terbufos,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Acephate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Acetochlor,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Bifenthrin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Dicamba,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Dichloropropene,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Dicrotophos,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Diuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Fluometuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Fomesafen,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Glufosinate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Imidacloprid,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Metolachlor_s,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Msma,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Prometryn,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Cotton_Trifluralin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Calcium_polysulfide,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Captan,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Chloropicrin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Chlorothalonil,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Copper_hydroxide,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Copper_sulfate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Copper_sulfate_tribasic,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Dichloropropene,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Diuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Glufosinate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Mancozeb,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Methyl_bromide,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Oxyfluorfen,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Petroleum_oil,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_OrcGra_Ziram,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Acetochlor,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Atrazine,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Bacillus_amyloliquifacien,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Bromoxynil,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Chloropicrin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Chlorothalonil,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Dicamba,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Dichloropropene,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Dimethenamid_p,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Flutolanil,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Metam,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Metolachlor_s,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Metribuzin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Phorate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Other_Propazine,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_2_4_db,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Aminopyralid,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Atrazine,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Clethodim,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Clopyralid,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Dicamba,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Dichlorprop,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Diuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Fluroxypyr,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Glufosinate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Imazapyr,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Mcpa,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Metolachlor_s,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Metribuzin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Metsulfuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Picloram,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_PasHay_Triclopyr,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Acifluorfen,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Azoxystrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Bentazone,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Clomazone,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Clothianidin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Copper_sulfate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Cyhalofop,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Cyhalothrin_lambda,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Halosulfuron,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Imazethapyr,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Propanil,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Propiconazole,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Quinclorac,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Saflufenacil,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Thiobencarb,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Triclopyr,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Rice_Trifloxystrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Acephate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Acetochlor,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Acifluorfen,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Clethodim,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Dicamba,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Dimethenamid_p,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Flumioxazin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Fomesafen,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Glufosinate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Metolachlor_s,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Metribuzin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Pyraclostrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Pyroxasulfone,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Sulfentrazone,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Soybean_Trifluralin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Bacillus_amyloliquifacien,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Bensulide,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Bentazone,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Captan,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Chloropicrin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Chlorothalonil,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Copper_hydroxide,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Dichloropropene,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Eptc,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Ethalfluralin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Ethoprophos,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Mancozeb,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Metam,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Metam_potassium,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Methyl_bromide,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Metolachlor_s,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Pendimethalin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Petroleum_oil,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_VegFru_Thiophanate_methyl,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_2_4_d,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Atrazine,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Azoxystrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Bromoxynil,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Chlorpyrifos,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Clopyralid,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Dicamba,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Dimethoate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Fluroxypyr,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Glyphosate,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Mcpa,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Metconazole,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Paraquat,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Pinoxaden,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Propiconazole,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Prothioconazole,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Pyraclostrobin,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Tebuconazole,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Thiophanate_methyl,-2;-1.5;-1;0
+global_pesticide_grids_apr_l_Wheat_Tri_allate,-2;-1.5;-1;0
+grassland_10m_grassland,240;255
+grassland_20m_grassland,250;255
+imperviousness_10m_imperviousness,240;255
+imperviousness_20m_imperviousness,250;255
+input_lulc_aggreg_types_Gray,0
+input_lulc_extended_types_Gray,0
+output_connectivity_graphab_corridors_forests_Gray,NA
+output_connectivity_graphab_iic_forests_b1,NA
+output_connectivity_miramon_ict_aquatic_environments_Gray,-9999
+output_connectivity_miramon_ict_forests_Gray,-9999
+output_connectivity_miramon_ict_herbaceous_crops_Gray,-9999
+output_connectivity_miramon_ict_shrublands_Gray,-9999
+output_connectivity_miramon_ict_woody_crops_Gray,-9999
+small_woody_features_2015_swf,255
+small_woody_features_2018_swf,255
+tree_cover_density_10m_tcd,240;255
+tree_cover_density_20m_tcd,250;255
+water_and_wetness_10m_waw,240;255
+water_and_wetness_20m_waw,250;255
+ds.earthserver.xyz--7000--AvgTemperatureColorScaled_Red,NA
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_active_daily_dnflag_Day / Night Flag,0
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_active_daily_flag_Flag,127
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_active_daily_freqbandID_Frequency Band Identification,0
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_active_daily_mode_Satellite Mode,0
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_active_daily_sensor_Sensor,0
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_active_daily_sm_Percent of Saturation Soil Moisture,-9999
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_active_daily_sm_uncertainty_Percent of Saturation Soil Moisture Uncertainty,-9999
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_active_daily_t0_Observation Timestamp,-9999
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_combined_daily_dnflag_Day / Night Flag,0
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_combined_daily_flag_Flag,127
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_combined_daily_freqbandID_Frequency Band Identification,0
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_combined_daily_mode_Satellite Mode,0
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_combined_daily_sensor_sensor,0
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_combined_daily_sm_Volumetric Soil Moisture,-9999
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_combined_daily_sm_uncertainty_Volumetric Soil Moisture Uncertainty,-9999
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_combined_daily_t0_Observation Timestamp,-9999
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_passive_daily_dnflag_Day / Night Flag,0
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_passive_daily_flag_Flag,127
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_passive_daily_freqbandID_Frequency Band Identification,0
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_passive_daily_mode_Satellite Mode,0
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_passive_daily_sensor_Sensor,0
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_passive_daily_sm_Volumetric Soil Moisture,-9999
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_passive_daily_sm_uncertainty_Volumetric Soil Moisture Uncertainty,-9999
+ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_passive_daily_t0_Observation Timestamp,-9999
+ds.earthserver.xyz--7000--ERA5_2 metre dewpoint temperature,-32767
+ds.earthserver.xyz--7000--ERA5_Surface pressure,-32767
+ds.earthserver.xyz--7000--ERA5_Surface thermal radiation downwards,-32767
+ds.earthserver.xyz--7000--ERA5_2 metre temperature,-32767
+ds.earthserver.xyz--7000--ERA5_10 metre U wind component,-32767
+ds.earthserver.xyz--7000--ERA5_10 metre V wind component,-32767
+ds.earthserver.xyz--7000--ERA5_Total precipitation,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_10 metre U wind component,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_10 metre V wind component,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_2 metre dewpoint temperature,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_2 metre temperature,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Evaporation from bare soil,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Evaporation from open water surfaces excluding oceans,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Evaporation from the top of canopy,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Evaporation from vegetation transpiration,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Forecast albedo,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Lake bottom temperature,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Lake ice total depth,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Lake ice surface temperature,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Lake mix-layer depth,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Lake mix-layer temperature,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Lake shape factor,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Lake total layer temperature,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Leaf area index, high vegetation,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Leaf area index, low vegetation,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Potential evaporation,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Runoff,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Skin reservoir content,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Skin temperature,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Snow albedo,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Snow cover,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Snow density,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Snow depth,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Snow depth,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Snow evaporation,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Snowfall,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Snowmelt,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Soil temperature level 1,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Soil temperature level 2,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Soil temperature level 3,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Soil temperature level 4,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Sub-surface runoff,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Surface latent heat flux,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Surface net solar radiation,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Surface net thermal radiation,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Surface pressure,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Surface runoff,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Surface sensible heat flux,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Surface solar radiation downwards,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Surface thermal radiation downwards,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Temperature of snow layer,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Evaporation,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Total precipitation,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Volumetric soil water layer 1,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Volumetric soil water layer 2,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Volumetric soil water layer 3,-32767
+ds.earthserver.xyz--7000--ERA5_Land_monthly_Volumetric soil water layer 4,-32767
+ds.earthserver.xyz--7000--S1_GRDH_IW_DV_VH_Sentinel-1 GRD,0
+ds.earthserver.xyz--7000--S1_GRDH_IW_DV_VV_Sentinel-1 GRD,0
+ds.earthserver.xyz--7000--S1_GRDM_EW_DH_HH_Sentinel-1 GRD,0
+ds.earthserver.xyz--7000--S1_GRDM_EW_DH_HV_Sentinel-1 GRD,0
+ds.earthserver.xyz--7000--S1_GRDM_EW_DV_VH_Sentinel-1 GRD,0
+ds.earthserver.xyz--7000--S1_GRDM_EW_DV_VV_Sentinel-1 GRD,0
+ds.earthserver.xyz--7000--S2_L2A_AOT_10m_AOT,NA
+ds.earthserver.xyz--7000--S2_L2A_B01_20m_B01,0
+ds.earthserver.xyz--7000--S2_L2A_B02_10m_B02,0
+ds.earthserver.xyz--7000--S2_L2A_B03_10m_B03,0
+ds.earthserver.xyz--7000--S2_L2A_B04_10m_B04,0
+ds.earthserver.xyz--7000--S2_L2A_B05_20m_B05,0
+ds.earthserver.xyz--7000--S2_L2A_B06_20m_B06,0
+ds.earthserver.xyz--7000--S2_L2A_B07_20m_B07,0
+ds.earthserver.xyz--7000--S2_L2A_B08_10m_B08,0
+ds.earthserver.xyz--7000--S2_L2A_B09_60m_B09,0
+ds.earthserver.xyz--7000--S2_L2A_B11_20m_B11,0
+ds.earthserver.xyz--7000--S2_L2A_B12_20m_B12,0
+ds.earthserver.xyz--7000--S2_L2A_B8A_20m_B8A,0
+ds.earthserver.xyz--7000--S2_L2A_CLASSI_60m_opaque,0
+ds.earthserver.xyz--7000--S2_L2A_CLASSI_60m_cirrus,0
+ds.earthserver.xyz--7000--S2_L2A_CLASSI_60m_snowice,0
+ds.earthserver.xyz--7000--S2_L2A_CLDPRB_10m_CLDPRB,NA
+ds.earthserver.xyz--7000--S2_L2A_SCL_20m_Scene Classification,NA
+ds.earthserver.xyz--7000--S2_L2A_SNWPRB_10m_SNWPRB,NA
+ds.earthserver.xyz--7000--S2_L2A_TCI_10m_red,0
+ds.earthserver.xyz--7000--S2_L2A_TCI_10m_green,0
+ds.earthserver.xyz--7000--S2_L2A_TCI_10m_blue,0
+ds.earthserver.xyz--7000--S2_L2A_WVP_10m_WVP,NA
+ds.earthserver.xyz--7000--S3_OLCI_L2_LFR_GIFAPAR_global_Green Instantaneous Fraction of Absorbed Photosynthetically Active Radiation,255
+ds.earthserver.xyz--7000--S3_OLCI_L2_LFR_IWV_global_Integrated water vapour column,255
+ds.earthserver.xyz--7000--S3_OLCI_L2_LFR_OTCI_global_OLCI Terrestrial Chlorophyll Index,255
+ds.earthserver.xyz--7000--S3_OLCI_L2_LFR_RC681_global_Radiance at 681 nm,65535
+ds.earthserver.xyz--7000--S3_OLCI_L2_LFR_RC865_global_Radiance at 865 nm,65535
+ds.earthserver.xyz--7000--S3_OLCI_L2_LFR_RC_GIFAPAR_RC681_global_Radiance at 681 nm,65535
+ds.earthserver.xyz--7000--S3_OLCI_L2_LFR_RC_GIFAPAR_RC865_global_Radiance at 865 nm,65535
+ds.earthserver.xyz--7000--S3_SLSTR_SL_2_LST__sea_ice_fraction_tx_Greenland_fraction of sea ice,0
+ds.earthserver.xyz--7000--S3_SLSTR_SL_2_LST__sea_surface_temperature_tx_Greenland_sea surface temperature,0
+ds.earthserver.xyz--7000--S3_SLSTR_SL_2_LST__sensible_heat_tx_Greenland_sensible heat flux at the surface,0
+ds.earthserver.xyz--7000--S3_SLSTR_SL_2_LST__snow_albedo_tx_Greenland_Snow albedo,0
+ds.earthserver.xyz--7000--S3_SLSTR_SL_2_LST__snow_depth_tx_Greenland_Snow depth,0
+ds.earthserver.xyz--7000--S3_SLSTR_SL_2_LST__surface_pressure_tx_Greenland_Surface atmospheric pressure,0
+ds.earthserver.xyz--7000--S3_SLSTR_SL_2_LST__temperature_tx_Greenland_land surface temperature,0
+ds.earthserver.xyz--7000--S3_SLSTR_SL_2_LST__u_wind_tx_Greenland_u-component of the wind velocity,0
+ds.earthserver.xyz--7000--S3_SLSTR_SL_2_LST__v_wind_tx_Greenland_v-component of the wind velocity,0
+ds.earthserver.xyz--7000--S5p_L2_AER_AI_aerosol_index_335_367_global_Aerosol Index (335-367 nm),9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_AER_AI_aerosol_index_335_367_precision_global_Aerosol Index Precision (335-367 nm),9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_AER_AI_aerosol_index_340_380_global_Aerosol Index (340-380 nm),9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_AER_AI_aerosol_index_340_380_precision_global_Aerosol Index Precision (340-380 nm),9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_AER_AI_aerosol_index_354_388_global_Aerosol Index (354-388 nm),9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_AER_AI_aerosol_index_354_388_precision_global_Aerosol Index Precision (354-388 nm),9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_AER_LH_aerosol_mid_height_global_Aerosol Mid-Height,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_AER_LH_aerosol_mid_height_precision_global_Aerosol Mid-Height Precision,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_AER_LH_aerosol_mid_pressure_global_Aerosol Mid-Pressure,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_AER_LH_aerosol_mid_pressure_precision_global_Aerosol Mid-Pressure Precision,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CH4_methane_mixing_ratio_bias_corrected_global_Methane Mixing Ratio (Bias Corrected),9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CH4_methane_mixing_ratio_global_Methane Mixing Ratio,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CH4_methane_mixing_ratio_precision_global_Methane Mixing Ratio Precision,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CLOUD_cloud_base_height_global_Cloud Base Height,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CLOUD_cloud_base_height_precision_global_Cloud Base Height Precision,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CLOUD_cloud_base_pressure_global_Cloud Base Pressure,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CLOUD_cloud_base_pressure_precision_global_Cloud Base Pressure Precision,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CLOUD_cloud_fraction_global_Cloud Fraction,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CLOUD_cloud_fraction_precision_global_Cloud Fraction Precision,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CLOUD_cloud_optical_thickness_global_Cloud Optical Thickness,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CLOUD_cloud_optical_thickness_precision_global_Cloud Optical Thickness Precision,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CLOUD_cloud_top_height_global_Cloud Top Height,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CLOUD_cloud_top_height_precision_global_Cloud Top Height Precision,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CLOUD_cloud_top_pressure_global_Cloud Top Pressure,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CLOUD_cloud_top_pressure_precision_global_Cloud Top Pressure Precision,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CO_carbonmonoxide_total_column_corrected_global_CO Total Column (Corrected),9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CO_carbonmonoxide_total_column_global_CO Total Column,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_CO_carbonmonoxide_total_column_precision_global_CO Total Column Precision,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_HCHO_formaldehyde_tropospheric_vertical_column_global_Formaldehyde Vertical Column,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_HCHO_formaldehyde_tropospheric_vertical_column_precision_global_Formaldehyde Vertical Column Precision,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_NO2_air_mass_factor_total_global_NO2 Air Mass Factor (Total),9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_NO2_air_mass_factor_troposphere_global_NO2 Air Mass Factor (Troposphere),9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_NO2_nitrogendioxide_tropospheric_column_global_NO2 Tropospheric Column,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_NO2_nitrogendioxide_tropospheric_column_precision_global_NO2 Tropospheric Column Precision,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_NO2_nitrogendioxide_tropospheric_column_precision_kernel_global_NO2 Tropospheric Column Precision Kernel,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_NO2_tm5_tropopause_layer_index_global_NO2 Tropopause Layer Index,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_O3_ozone_total_vertical_column_global_Ozone Vertical Column,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_O3_ozone_total_vertical_column_precision_global_Ozone Vertical Column Precision,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_SO2_sulfurdioxide_total_vertical_column_global_SO2 Vertical Column,9.96921E+36
+ds.earthserver.xyz--7000--S5p_L2_SO2_sulfurdioxide_total_vertical_column_precision_global_SO2 Vertical Column Precision,9.96921E+36
+ds.earthserver.xyz--7000--TotalPrecipitation_Total precipitation,-32767

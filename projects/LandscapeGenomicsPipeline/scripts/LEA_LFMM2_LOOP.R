@@ -102,8 +102,8 @@ print("LOADING ANNOTATIONS")
 annotations <- read.table("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/annotationdata/annotations.txt", header = FALSE)
 annotLoci <- paste(annotations$V1, annotations$V2, sep=".")
 colnames(annotations) <- c("Chr", "Pos", "Gene")
-u_annotations <- unique(annotations)
-annotations <- merge(annotations, markerpos, by = c("Chr", "Pos"), all.x = TRUE)
+annotations <- unique(annotations)
+#annotations <- merge(annotations, markerpos, by = c("Chr", "Pos"), all.x = TRUE)
 
 envfile <- s_data
 
@@ -120,7 +120,7 @@ for ( varname in colnames(envfile)){
     markerpos <- data.frame(
       Chr = SUB2$Chr,
       Pos = SUB2$Pos,
-      Pval = as.numeric(pv$pvalues)  # Make sure the p-values are numeric)
+      Pval = as.numeric(pv$pvalues))  # Make sure the p-values are numeric)
     write.csv(markerpos, paste(repdir,"/",varname,"_LEA_pvals_all.csv", sep=""),row.names = FALSE)
     Bonf=0.05/(nrow(markerpos)+1)
     outliers <- markerpos[markerpos$Pval < Bonf,]

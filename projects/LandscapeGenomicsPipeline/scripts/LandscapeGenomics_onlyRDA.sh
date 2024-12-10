@@ -229,7 +229,7 @@ mkdir $RDA_out
 
 
 #Rscript /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/UC3_Landscape_RDA.R $AF $metadata $neutral_af $RDA_out $envdata "Europe" "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/annotationdata/annotations.txt"
-Rscript /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/RDA/NewApproachRDA.r $AF $metadata $neutral_af $RDA_out $envdata "Europe" "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/annotationdata/annotations.txt"
+Rscript /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun_test/results/AllSNPs/RDA/NewApproachRDA.r $AF $metadata $neutral_af $RDA_out $envdata "Europe" "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/annotationdata/annotations.txt"
 ##Rscript /media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/RDA.R $AF_file $metadata $neutral_af $RDA_out $nc_folder
 #for value in {1..20}
 #do

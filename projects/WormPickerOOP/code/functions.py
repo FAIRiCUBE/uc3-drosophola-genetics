@@ -265,33 +265,24 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
     result=[]
     distances=[]
     header=[]
-    header.append('sample,')
-    header.append('lat,')
-    header.append('lon,')
-    if len(layerlist) > 1:
-        for data_entry in range(0,len(layerlist)):
-            layer=layerlist[data_entry][0]
-            layerbands_nr=layerlist[data_entry][-1]
-            #header.append(layer)
-            for offday in range(abs(offset)+1):
-                for col in layerbands_nr:
-                    if offset >= 0:
-                        colname_new=str(layer)+"_"+str(col)+"+"+str(offday)
-                    else:
-                        colname_new=str(layer)+"_"+str(col)+"-"+str(offday)
-                    header.append(colname_new)
-    else:
-        #for data_entry in range(0,len(layerlist)):
-        layer=layerlist[0][0]
-        layerbands_nr=layerlist[0][-1]
-        print(layerbands_nr)
-        for offday in range(abs(offset)+1):
-            for col in layerbands_nr:
-                if offset >= 0:
-                    colname_new=str(layer)+"_"+str(col)+"+"+str(offday)
-                else:
-                    colname_new=str(layer)+"_"+str(col)+"-"+str(offday)
-                header.append(colname_new)
+    header.append('sample')
+    header.append('lat')
+    header.append('lon')
+    for data_entry in range(0,len(layerlist)):
+            i_header=infoheader
+            if len(layerlist) > 1:
+                number_bands=len(layerlist[data_entry][-2])
+                layer=layerlist[data_entry][0]
+                layerbands_nr=layerlist[data_entry][-2]
+                for offday in range(abs(offset)+1):
+                    for col in layerbands_nr:
+                        if offset > 0:
+                            colname_new=str(layer)+"_"+str(col)+"+"+str(offday)
+                        if offset < 0:
+                            colname_new=str(layer)+"_"+str(col)+"-"+str(offday)
+                        else:
+                            colname_new=str(layer)+"_"+str(col)
+                        header.append(colname_new)
     for key, value in samples.items():
         sample_result=[]
         sample_distances=[]
@@ -315,26 +306,65 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
         #print("TRYING:", date)
         #days_offset=0+offset
         for data_entry in range(0,len(layerlist)):
+            value_result=[]
             i_header=infoheader
+            ##old
             #print(i_header)
             if len(layerlist) > 1:
-                number_bands=len(layerlist[data_entry][-1])
+                number_bands=len(layerlist[data_entry][-2])
+                #print(number_bands)
+                ##new block 2 lines
+                layer=layerlist[data_entry][0]
+                layerbands_nr=layerlist[data_entry][-2]
+                for offday in range(abs(offset)+1):
+                    for col in layerbands_nr:
+                        if offset > 0:
+                            colname_new=str(layer)+"_"+str(col)+"+"+str(offday)
+                            #sample_result.append([colname_new])
+                        if offset < 0:
+                            colname_new=str(layer)+"_"+str(col)+"-"+str(offday)
+                        else:
+                            colname_new=str(layer)+"_"+str(col)
+                            #sample_result.append([colname_new])
+                        #header.append(colname_new)
+                        value_result.append(colname_new)
             else:
-                number_bands=len(layerlist[0][-1])
+                number_bands=len(layerlist[0][-2])
+                layer=layerlist[0][0]
+                layerbands_nr=layerlist[0][-2]
+                print(layerbands_nr)
+                for offday in range(abs(offset)+1):
+                    for col in layerbands_nr:
+                        if offset >= 0:
+                            colname_new=str(layer)+"_"+str(col)+"+"+str(offday)
+                            #sample_result.append([colname_new])
+                        else:
+                            colname_new=str(layer)+"_"+str(col)+"-"+str(offday)
+                            #sample_result.append([colname_new])
+                        value_result.append(colname_new)
             layer=layerlist[data_entry][i_header.index("CoverageID")]
+            print(layer)
             ###add description URL and get time stamps
             describe_url='https://fairicube.rasdaman.com/rasdaman/ows?&SERVICE=WCS&VERSION=2.1.0'
             response = requests.get(describe_url + "&REQUEST=DescribeCoverage&COVERAGEID=" + layer,auth=(rasdaman_username, rasdaman_password))
-            wcs_coverage_description = xmltodict.parse(response.content)
+            try:
+                wcs_coverage_description = xmltodict.parse(response.content)
+            except:
+                print("Response Content:", response.content)
+                continue
             approxvar=approximate
             if approxvar is True:
                 date_obj = datetime.strptime(date, "%Y-%m-%d")
-                timetoquery,differencedays=findDate(date,wcs_coverage_description)
-                print(timetoquery, type(timetoquery))
-                #date_obj = datetime.strptime(timetoquery_raw, "%Y-%m-%d")
-                #timetoquery = timetoquery_raw.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
-                #print(timetoquery)
-                print("Querying approximate time:", timetoquery, "Difference in Days:", differencedays)
+                try:
+                    timetoquery,differencedays=findDate(date,wcs_coverage_description)
+                    #date_obj = datetime.strptime(timetoquery_raw, "%Y-%m-%d")
+                    #timetoquery = timetoquery_raw.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
+                    #print(timetoquery)
+                    print("Querying approximate time:", timetoquery, "Difference in Days:", differencedays)
+                except:
+                    print("Could not execute function called: findDate " )
+                    sample_result.append("na")
+                    continue
             else:
                 date_obj = datetime.strptime(date, "%Y-%m-%d")
                 timetoquery = date_obj.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
@@ -387,14 +417,20 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
                         #print(singleval)
                         sample_result.append(singleval)
                         sample_distances.append(differencedays)
+                        value_result.append(singleval)
+                    #sample_result.append(layer)
                     print("RESULT:", valls)
                     print("   ")
                     print("_______________________________________")
                 else:
                     print(response)
                     for _ in range(number_bands):
-                        sample_result.append("na")
+                        sample_result.append("NA")
                         sample_distances.append("na")
+                        value_result.append("NA")
+                print("##########################")
+                print(value_result)
+                    #sample_result.append(layer)
         result.append(sample_result)
         distances.append(sample_distances)
         #result.append(samples_results_sep)
@@ -414,10 +450,10 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
             writer = csv.writer(csvfile)
             writer.writerow(header[3:])
             writer.writerows(distances)
+            #writer.writerows(value_result)
     else:
         return result
     
-
 
 
 ####### 

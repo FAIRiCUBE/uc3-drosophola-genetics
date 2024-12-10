@@ -32,3 +32,8 @@ projects/LandscapeGenomicsPipeline/RasdaTest
 projects/WormPickerOOP/validation/bboxAUT
 projects/WormPickerOOP/validation/bboxSCA
 projects/LandscapeGenomicsPipeline/FullDataRun_test
+projects/ClimateData/CDS
+projects/ClimateData/Rasdaman
+projects/ClimateData/Stats/SummaryEnv.csv
+projects/LandscapeGenomicsPipeline/RDA_utils/forest_type_20m.tiff
+projects/LandscapeGenomicsPipeline/RDA_utils/layers

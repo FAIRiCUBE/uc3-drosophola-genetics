@@ -6,6 +6,7 @@ import xmltodict
 import csv
 from pathlib import Path
 from dotenv import dotenv_values
+import re
 
 def getLayers(savepath="NONE"):
     #create an empty array and add headers
@@ -48,11 +49,18 @@ def getLayers(savepath="NONE"):
             #x_max=bb_upp.split(" ")[1] 
             #y_max=bb_upp.split(" ")[2]
             try:
-                axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][2]['ows:Value']
-                if axislabels == "ds.earthserver.xyz":
-                    axislables=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][1]['ows:Value']
+                axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][3]['ows:Value']
+                if re.search("ds.earthserver.xyz", axislabels):
+                    print("matched: ", axislabels)
+                    axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][1]['ows:Value']
+                    if re.search(r"[0-9]", axislabels):
+                        axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][2]['ows:Value']
+                        print("substituted with:", axislabels)
             except IndexError:
-                axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][1]['ows:Value']
+                try:
+                    axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][2]['ows:Value']
+                except IndexError:
+                    axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][1]['ows:Value']
             #print(coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_min)
             #!!!!usually:layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max,axislabels))
             #try:
@@ -68,10 +76,10 @@ def getLayers(savepath="NONE"):
                 except KeyError:
                     try:
                         null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field']['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue']['#text']
-                    except KeyError:
-                        null_value="NA"
-            except TypeError:
-                null_value=""        
+                    except TypeError:
+                        null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field']['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue'][0]['#text']
+            except:
+                null_value="NA"       
         #print(json.dumps(wcs_coverage_description, indent=2))
             null_values.append(null_value)
             rr=[]

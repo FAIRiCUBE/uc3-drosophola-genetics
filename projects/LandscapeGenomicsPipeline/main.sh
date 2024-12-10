@@ -10,7 +10,7 @@
 ## load all necessary software into environment
 
 
-scriptdir="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline"
+scriptdir="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts"
 
 cd $scriptdir 
 
@@ -25,5 +25,5 @@ AF="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projec
 
 
 #bash LandscapeGenomics.sh $wd $continent $arm $samplelist $input $metadata $envdata $AF >> FullDataRun_LEA_qsub.log 2>&1
-bash LandscapeGenomics_qsub.sh $wd $continent $arm $samplelist $input $metadata $envdata $AF >> FullDataRun_LEA_qsub.log 2>&1
-
+#bash LandscapeGenomics_qsub.sh $wd $continent $arm $samplelist $input $metadata $envdata $AF >> FullDataRun_LEA_qsub.log 2>&1
+bash ${scriptdir}/LandscapeGenomics_onlyRDA.sh $wd $continent $arm $samplelist $input $metadata $envdata $AF >> FullDataRun_RDA_qsub.log 2>&1
