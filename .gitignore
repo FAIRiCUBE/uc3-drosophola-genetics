@@ -37,3 +37,5 @@ projects/ClimateData/Rasdaman
 projects/ClimateData/Stats/SummaryEnv.csv
 projects/LandscapeGenomicsPipeline/RDA_utils/forest_type_20m.tiff
 projects/LandscapeGenomicsPipeline/RDA_utils/layers
+projects/WormPickerOOP/example_use/TryAgain.Rmd
+projects/ClimateData/CDS/Download.log
