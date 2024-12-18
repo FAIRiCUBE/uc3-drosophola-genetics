@@ -253,14 +253,17 @@ def findDate(inputtime, description):
 
 
 
-def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0, approximate=True):
+def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0, approximate=True, rasdaman_username=None, rasdaman_password=None, rasdaman_endpoint=None):
     log=open(logfilepath, "a")
-    sys.stdout = log
+    #sys.stdout = log
     datetime.now()
     env_vars = dotenv_values()
-    rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT')
-    rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
-    rasdaman_password = env_vars.get('RASDAMAN_CRED_PASSWORD')
+    #rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT') 
+    #rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
+    #rasdaman_password = env_vars.get('RASDAMAN_CRED_PASSWORD')
+    rasdaman_endpoint = rasdaman_endpoint or env_vars.get('RASDAMAN_SERVICE_ENDPOINT') 
+    rasdaman_username = rasdaman_username or env_vars.get('RASDAMAN_CRED_USERNAME')
+    rasdaman_password = rasdaman_password or env_vars.get('RASDAMAN_CRED_PASSWORD')
     base_wcs_url = rasdaman_endpoint + "?SERVICE=WCS&VERSION=2.1.0"
     result=[]
     distances=[]
@@ -348,7 +351,12 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
             describe_url='https://fairicube.rasdaman.com/rasdaman/ows?&SERVICE=WCS&VERSION=2.1.0'
             response = requests.get(describe_url + "&REQUEST=DescribeCoverage&COVERAGEID=" + layer,auth=(rasdaman_username, rasdaman_password))
             try:
-                wcs_coverage_description = xmltodict.parse(response.content)
+                if 'wcs:CoverageDescriptions' in xmltodict.parse(response.content).keys():
+                    wcs_coverage_description = xmltodict.parse(response.content)
+                elif 'ows:ExceptionReport' in xmltodict.parse(response.content).keys():
+                    print("Credentials provided are not valid.")
+                #print(response.content)
+                #print(wcs_coverage_description)
             except:
                 print("Response Content:", response.content)
                 continue

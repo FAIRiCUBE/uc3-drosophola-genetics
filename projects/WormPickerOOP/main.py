@@ -1,5 +1,6 @@
+from argparse import ArgumentParser
 from code.module_crs_converter import trans4mEPSG
-from code.Objects import Coverage
+from code.Objects import *
 #from code.functions import select_objects, requestData, trans4mEPSG, requestDataProcess, get_grid_indices_for_axis_X, get_grid_indices_for_axis_Y
 from code.UserCred import saveCredentials
 from code.GetLayers_Window import getLayers
@@ -7,12 +8,32 @@ from code.functions import *
 import re
 import os
 
+log_object = LogObject()
+logger = log_object.logger
+
+argparse = ArgumentParser()
+argparse.add_argument("-outdir", help="Path to the outputfolder.", required=True)
+argparse.add_argument("-samples", help='Samplesfile that carries information on ID, lat and long', required=True)
+argparse.add_argument("-username", help='Username for Rasdaman', required=True)
+argparse.add_argument("-password", help='Password for Rasdaman', required=True)
+argparse.add_argument("-endpoint", help='Service Endpoint e.g. Rasdaman', required=True)
+#argparse.add_argument("-samples", help='Samplesfile that carries information on ID, lat and long', required=True)
+
+args = argparse.parse_args()
+outdir = args.outdir
+samples = args.samples
+username = args.username
+password = args.password
+endpoint=args.endpoint
+
+
+
 # 1- Provide your user Credentials for fairicube.rasdaman.org if you have not saved them in an .env file yet
 #saveCredentials("/path/to/your/envfile/.env")
 #saveCredentials("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/.env")
 
 # 2- Request some info about alyers available to select layers useful for your analysis, when providing a filepath, you can save this information as .csv
-layer_info=getLayers(savepath="NONE")
+layer_info=getLayers(savepath="NONE", rasdaman_endpoint=endpoint, rasdaman_password=password, rasdaman_username=username, loggerobject=logger)
 
 # 3- Apply Coverage onto the *rasdaman* layers and make them ready to select
 x=Coverage(layer_info)
@@ -21,14 +42,12 @@ x.getBoundary()
 # 4- Filter out the samples that are covered by >1  of your selected layers 
 #x.getSamples("path/to/samplefile/with/geoinformation/file.csv")
 
-x.getSamples("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/dest_v2.samps_3May2024.csv")
-x.getSamples("/home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/samples_europe_pass.csv")
+#x.getSamples("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/dest_v2.samps_3May2024.csv")
+#x.getSamples("/home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/samples_europe_pass.csv")
+x.getSamples(samples)
 samplescovered=x.samples
 #samplescorr={'AT_Kar_See_1_2016-08-01': ('46.8136889', '13.50794792'), 'AT_Nie_Mau_1_2015-07-20': ('48.375', '15.56'), 'AT_Nie_Mau_1_2015-10-19': ('48.375', '15.56'), 'AT_Wie_Gro_1_2012-08-03': ('48.2', '16.37'), 'AT_Wie_Gro_1_2012-10-20': ('48.2', '16.37')}
-
-
 samplescorr=remove_partial_dates(samplescovered)
-    #####
 
 # 5- Create a list of layers by selecting them 
 layers_to_analyze=select_objects("automatic",x)
@@ -44,52 +63,43 @@ for layer in layers_to_analyze:
         except:
             continue 
     
-out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/use_case/wormpicked_data/rasdaman_data_test2.csv"
-outstats="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/use_case/wormpicked_data/rasdaman_data_all_soilmoisture.csvStats.csv"
-logpath="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/use_case/wormpicked_data/rasdaman_data_test2.log2.log"
+out = outdir+"/WormpickerResult.csv"
+#outstats="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/use_case/wormpicked_data/rasdaman_data_all_soilmoisture.csvStats.csv"
+logpath = outdir+"/WormpickerResult.log"
 
 # 6- Request the data for the SAMPLES for all chosen layers and save them as .csv
-requestDataWGS(info,layerlist,samplescorr,out, logpath, offset=0, approximate=True)
+requestDataWGS(info,layerlist,samplescorr,"NONE", logpath, offset=0, approximate=True, rasdaman_password=password, rasdaman_username=username, rasdaman_endpoint=endpoint)
 
 #requestDataWGS(info,layerlist,samplescorr,"/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/TestNALoop.csv", approximate="TRUE")
 
-#reactivate the sys out
-sys.stdout = sys.__stdout__
- 
-import pandas as pd
-#data check 
-summarize_csv(out,outstats)
-
-##write Null values to list
-
-data_list= layer_info_2811
-#with open("NullValues_05_12_24.csv", "w") as file:
+##reactivate the sys out
+#sys.stdout = sys.__stdout__
+# 
+##data check 
+#summarize_csv(out,outstats)
+#
+###write Null values to list
+#
+#data_list= layer_info
+#
+#with open("NullValues_10_12_24.csv", "w") as file:
 #    for item in data_list:
 #        try:
-#            # Get elements from index 12 and 13
+#        # Get elements from index 12 and 13
 #            entry_12 = item[12]  # Expected to be a list like ['a', 'b', 'c']
 #            entry_13 = item[13]  # Expected to be a list like [1, 2, 3]
 #            ln = item[0]
-#            # Write each pair from entry_12 and entry_13 in a new row
-#            for e12, e13 in zip(entry_12, entry_13):
-#                file.write(f"{ln}_{e12},{e13}\n")
-#                #print(f"{ln}_{e12},{e13}\n")
+#            print(entry_12, entry_13)
+#        #print(entry_13)
+#        # Check if entry_13 is longer than entry_12 by 1 element, and if that element is 'NA'
+#            if len(entry_13) != len(entry_12):
+#                print(entry_13, entry_12) # Remove the 'NA' from entry_13
 #        except IndexError:
 #            # Handle the case where index 12 or 13 does not exist
 #            print(f"Error: One of the entries at index 12 or 13 is missing in item: {item}")
 
-with open("NullValues_10_12_24.csv", "w") as file:
-    for item in data_list:
-        try:
-        # Get elements from index 12 and 13
-            entry_12 = item[12]  # Expected to be a list like ['a', 'b', 'c']
-            entry_13 = item[13]  # Expected to be a list like [1, 2, 3]
-            ln = item[0]
-            print(entry_12, entry_13)
-        #print(entry_13)
-        # Check if entry_13 is longer than entry_12 by 1 element, and if that element is 'NA'
-            if len(entry_13) != len(entry_12):
-                print(entry_13, entry_12) # Remove the 'NA' from entry_13
-        except IndexError:
-            # Handle the case where index 12 or 13 does not exist
-            print(f"Error: One of the entries at index 12 or 13 is missing in item: {item}")
+
+# Access logs later
+print("Captured Logs:")
+for log in log_object.get_logs():
+    print(log)

@@ -1,6 +1,7 @@
 import csv
 #from code.module_crs_converter import trans4mEPSG
 from code.functions import trans4mEPSG
+import logging
 
 
 class Coverage(object):
@@ -57,4 +58,30 @@ class Coverage(object):
                     filtered_data[row["sampleId"]] = sampleinfo
                     #filtered_data.append(sampleinfo)
         self.samples=filtered_data
-        
+
+
+
+class MemoryLogHandler(logging.Handler):
+    """
+    Custom logging handler that stores log messages in memory.
+    """
+    def __init__(self):
+        super().__init__()
+        self.logs = []  # List to store log records
+    def emit(self, record):
+        # Format the log message and add it to the list
+        log_entry = self.format(record)
+        self.logs.append(log_entry)
+
+# Create a log object that uses the custom handler
+class LogObject:
+    def __init__(self):
+        self.logger = logging.getLogger("MemoryLogger")
+        self.logger.setLevel(logging.DEBUG)  # Set logging level
+        # Add the custom handler
+        self.memory_handler = MemoryLogHandler()
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        self.memory_handler.setFormatter(formatter)
+        self.logger.addHandler(self.memory_handler)
+    def get_logs(self):
+        return self.memory_handler.logs  # Return the stored log messages
