@@ -415,7 +415,8 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
                     #sample_result.append(valls)
                     for singleval in valls.strip('"').split(","):
                         #print(singleval)
-                        sample_result.append(singleval)
+                        singlevalq="{"+singleval+"}"
+                        sample_result.append(singlevalq)
                         sample_distances.append(differencedays)
                         value_result.append(singleval)
                     #sample_result.append(layer)
@@ -425,7 +426,8 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
                 else:
                     print(response)
                     for _ in range(number_bands):
-                        sample_result.append("NA")
+                        t="NA"+str(_)
+                        sample_result.append(t)
                         sample_distances.append("na")
                         value_result.append("NA")
                 print("##########################")

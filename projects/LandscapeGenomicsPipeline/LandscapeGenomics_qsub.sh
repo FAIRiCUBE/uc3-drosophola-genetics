@@ -2,8 +2,8 @@
 
 ################################################# CREATING REQUIRED DIRECTORIES TO PROCESS AND STORE OUTPUTS ##################################################
 #scriptdir="/home/sonjastndl/s3/LGA/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts"
-LGAdir=$(pwd)
-scriptdir="${LGAdir}/scripts"
+#LGAdir=$(pwd)
+scriptdir="$9"
 wd="$1"
 continent="$2"
 arm="$3"
@@ -169,75 +169,73 @@ AF="$8"
 echo "PERFORMING LINEAR REGRESSION"
 
 #unmute to run 
-###Rscript ${scriptdir}/Plot_pvalues.R ${wd} $AF $envdata $arm ${LGAdir}/${FinalOut}
+Rscript ${scriptdir}/Plot_pvalues.R ${wd} $AF $envdata $arm ${LGAdir}/${FinalOut}
 
 
+
+################################################### PERFORM LFMM 2 (LATENT FACTOR MIXED MODEL) ###################################################
+#echo "PERFORMING LFMM"
+#
+#LeaOut="${wd}/results/${arm}/LEA"
+#mkdir $LeaOut
+#LeaShell="${LeaOut}/shell"
+#mkdir $LeaShell
 ##
-##bash ${scriptdir}/transpose_and_split.sh $metadata_new 
+#variables=$(head -n 1 "$envdata" | sed 's/\r$//')
+##echo $variables
+###  #Use a for loop to iterate over words (assuming space-separated words)
+#IFS=',' read -ra header_elements <<< "$variables"
 #
-################################################## PERFORM LFMM 2 (LATENT FACTOR MIXED MODEL) ###################################################
-echo "PERFORMING LFMM"
-
-LeaOut="${wd}/results/${arm}/LEA"
-mkdir $LeaOut
-LeaShell="${LeaOut}/shell"
-mkdir $LeaShell
+## Number of jobs to submit in each batch
+#batch_size=10
 #
-variables=$(head -n 1 "$envdata" | sed 's/\r$//')
-#echo $variables
-##  #Use a for loop to iterate over words (assuming space-separated words)
-IFS=',' read -ra header_elements <<< "$variables"
-
-# Number of jobs to submit in each batch
-batch_size=10
-
-# Wait time between checking the queue (in seconds)
-wait_time=60  # 60 seconds
-
-# Loop through the header elements, but in batches of 10
-for ((i=1; i<${#header_elements[@]}; i+=batch_size)); do
-    # Submit a batch of jobs
-    for ((j=i; j<i+batch_size && j<${#header_elements[@]}; j++)); do
-        element=${header_elements[j]}
-        echo "$element"
-        rep=1
-        echo $rep
-
-        # Create a PBS script for each element
-        pbs_script="${LeaOut}/shell/test_${element}.sh"
-        echo """
-##!/bin/sh
-## name of Job
-#PBS -N RasdaLEA_${element}
-## Redirect output stream to this file.
-#PBS -o /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RasdaTest/logs
-## Stream Standard Output AND Standard Error to outputfile (see above)
-#PBS -j oe
-## Select a maximum of 20 cores and 200gb of RAM
-#PBS -l select=1:ncpus=2:mem=200gb
-## load all necessary software into environment
-
-Rscript ${scriptdir}/LEA_old.r $LeaOut $AF $envdata $element $rep
-""" > $pbs_script
-
-        # Submit the PBS script
-        qsub $pbs_script
-        echo "Submitted $pbs_script"
-    done
-    # Monitor the number of running jobs in the queue
-    while :; do
-        # Count the number of your running jobs (modify "your_username")
-        num_running_jobs=$(qstat -u ssteindl |  grep -E ' R | Q | H '  | wc -l)
-        # If running jobs are less than the batch size, proceed to the next batch
-        if [ "$num_running_jobs" -lt "$batch_size" ]; then
-            echo "Less than $batch_size jobs are running, proceeding to the next batch..."
-            break
-        else
-            # If there are still jobs running, wait and check again
-            echo "Waiting for jobs to finish... $num_running_jobs jobs still running."
-            sleep $wait_time
-        fi
-    done
-done
-
-echo "All jobs have been submitted."
+## Wait time between checking the queue (in seconds)
+#wait_time=60  # 60 seconds
+#
+## Loop through the header elements, but in batches of 10
+#for ((i=1; i<${#header_elements[@]}; i+=batch_size)); do
+#    # Submit a batch of jobs
+#    for ((j=i; j<i+batch_size && j<${#header_elements[@]}; j++)); do
+#        element=${header_elements[j]}
+#        echo "$element"
+#        rep=1
+#        echo $rep
+#
+#        # Create a PBS script for each element
+#        pbs_script="${LeaOut}/shell/test_${element}.sh"
+#        echo """
+###!/bin/sh
+### name of Job
+##PBS -N RasdaLEA_${element}
+### Redirect output stream to this file.
+##PBS -o /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RasdaTest/logs
+### Stream Standard Output AND Standard Error to outputfile (see above)
+##PBS -j oe
+### Select a maximum of 20 cores and 200gb of RAM
+##PBS -l select=1:ncpus=2:mem=200gb
+### load all necessary software into environment
+#
+#Rscript ${scriptdir}/LEA_old.r $LeaOut $AF $envdata $element $rep
+#""" > $pbs_script
+#
+#        # Submit the PBS script
+#        qsub $pbs_script
+#        echo "Submitted $pbs_script"
+#    done
+#    # Monitor the number of running jobs in the queue
+#    while :; do
+#        # Count the number of your running jobs (modify "your_username")
+#        num_running_jobs=$(qstat -u ssteindl |  grep -E ' R | Q | H '  | wc -l)
+#        # If running jobs are less than the batch size, proceed to the next batch
+#        if [ "$num_running_jobs" -lt "$batch_size" ]; then
+#            echo "Less than $batch_size jobs are running, proceeding to the next batch..."
+#            break
+#        else
+#            # If there are still jobs running, wait and check again
+#            echo "Waiting for jobs to finish... $num_running_jobs jobs still running."
+#            sleep $wait_time
+#        fi
+#    done
+#done
+#
+#echo "All jobs have been submitted."

@@ -26,6 +26,7 @@ projects/WormPickerOOP/validation/near_surface_air_temperature/Tair_WFDE5_CRU_20
 projects/WormPickerOOP/use_case
 projects/WormPickerOOP/example_use/LandscapeRasdaman_files
 projects/LandscapeGenomicsPipeline/FullDataRun
+projects/LandscapeGenomicsPipeline/DataAnalysis_after_RDA_1224
 projects/LandscapeGenomicsPipeline/FullDataRun.log
 projects/LandscapeGenomicsPipeline/FullDataRun2.log
 projects/LandscapeGenomicsPipeline/RasdaTest

@@ -1,5 +1,5 @@
 ---
-title: "RDA Research Plan"
+title: "RDA Research Plan - Data Preparation"
 author: "Steindl S."
 date: "13 11 2024"
 output: html_document
@@ -22,9 +22,9 @@ library(factoextra)
 ### load data and remove sample, lat and long from exploration
 ERA5_path <- "/home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/ERA5/ERA5_Europe_Pass.csv"
 ERA5 <- read.csv(ERA5_path)
-WP_path <-"/home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/Rasdaman/RasdamanData24.csv"
+WP_path <-"/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/use_case/wormpicked_data/rasdaman_data_test.csv"
 WP_data <- read.csv(WP_path, header=T)
-WP_Null_path <- "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/NullValues_05_12_24.csv"
+WP_Null_path <- "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/data/NullValues_05_12_24.csv"
 WP_null_values <- read.csv(WP_Null_path, header=FALSE)
 ERA5_monthly_path <- "/home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/ERA5/ERA5_Europe_Monthly_Pass.csv"
 ERA5_monthly <- read.csv(ERA5_monthly_path)
@@ -34,11 +34,12 @@ Env_Full_o <- merge(WP_data, ERA5, by=c("sample", "latitude", "longitude"))
 Env_Full <- merge(Env_Full_o, ERA5_monthly, by=c("sample", "latitude", "longitude", "date"))
 
 
-metadata <- read.csv("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Stats/metadata_o.csv", header=TRUE)
+metadata <- read.csv("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Stats/metadata_corrected.csv", header=TRUE)
 samples <- Env_Full$sample
 lat <- Env_Full$latitude
 lon <- Env_Full$longitude
-date <- Env_Full$date
+datevals <- Env_Full$date
+
 #metadata$Layer.Name <- gsub("--","..", metadata$Layer.Name)
 metadata$Layer.Name <- gsub("\\(",".", metadata$Layer.Name)
 metadata$Layer.Name <- gsub(" ",".", metadata$Layer.Name)
@@ -93,12 +94,12 @@ rownames(EnvNULL) <- samples
 
 ##Replace Null Values with "NULL"
 #old code not working anymore
-for (col in names(replace_list)) {
-  if (col %in% colnames(EnvData)) {
-    print(col)
-    EnvNULL[[col]] <- ifelse(EnvData[[col]] %in% replace_list[[col]][[1]], "NULL", EnvData[[col]])
-  }
-}
+#for (col in names(replace_list)) {
+#  if (col %in% colnames(EnvData)) {
+#    print(col)
+#    EnvNULL[[col]] <- ifelse(EnvData[[col]] %in% replace_list[[col]][[1]], "NULL", #EnvData[[col]])
+#  }
+#}
 
 ## Iterating through replace_list
 for (col in names(replace_list)) {
@@ -122,7 +123,7 @@ for (col in names(replace_list)) {
 #}
 
 ##EnvNULL <- EnvNULL[!grepl("^UA|RU|BY|DK", rownames(EnvNULL)), ]
-EnvNULL <- as.data.frame(cbind(date,EnvNULL))
+EnvNULL <- as.data.frame(cbind(datevals,EnvNULL))
 
 ## count/frequency of Null/NA’s for each Env
 
@@ -143,8 +144,12 @@ Env85_cols <- rownames(NA_NULL_Proportions[
   (is.na(NA_NULL_Proportions$NULL_proportion) | NA_NULL_Proportions$NULL_proportion < 0.15),
 ])
 
+
 Env85 <- EnvNULL[colnames(EnvNULL) %in% Env85_cols]
-Env85 <-  Env85[, !colnames(Env85) %in% RasdaERA5] 
+
+RasdaERA5 <- colnames(Env85)[51:57]
+Env85 <-  Env85[, !colnames(Env85) %in% RasdaERA5]
+colnames(Env85) <- gsub("\\.y","",colnames(Env85))
 ###work with this
 #rownames(Env85) <- Env_Full$sample
 #EnvCore <- Env_Full[!grepl("^UA|RU|BY|DK", rownames(Env85)), ]
@@ -207,19 +212,48 @@ print("Number of variables left")
 ncol(EnvCore)
 print("Number of samples left")
 nrow(EnvCore)
+
+
+#non_monomorphic <- sapply(EnvCore, function(col) length(unique(col)) > 1)
+#EnvCore <- EnvCore[, non_monomorphic]
+#
+#
+#is_monomorphic <- function(column, threshold = 0.7) {
+#  column <- na.omit(column)
+#  value_counts <- table(column)
+#  max_proportion <- max(value_counts) / length(column)
+#  return(max_proportion >= threshold)
+#}
+#
+## Apply the function to each column of EnvCore_imputed
+#col_monomorphs <- apply(EnvCore, 2, function(column) is_monomorphic(column, threshold = 0.7))
+#EnvStats <- EnvCore[,!col_monomorphs]
+#EnvDataStats <- as.data.frame(lapply(EnvStats, as.numeric))
+#s <- t(summary(EnvDataStats))
+#write.table(s, file="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/Cli#mateData/Stats/SummaryEnv.csv")
+
+```
+
+
+```{addMetadata, echo=FALSE}
+metadata <- read.csv("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Stats/metadata_corrected.csv", header=TRUE)
+metadata$Layer.Name <- gsub("monthly means","monthly.means", metadata$Layer.Name)
 ```
 
 ```{r DimensionsEnvAndHistogram, echo=FALSE, warning=FALSE}
 
 #EnvCore <- as.data.frame(lapply(EnvCore, as.numeric))
-colnames(EnvCore) <- gsub("\\.y","", colnames(EnvCore))
+#colnames(EnvCore) <- gsub("\\.y","", colnames(EnvCore))
 columns_to_impute_idw <- metadata$Layer.Name[metadata$Type=="Numeric"]
 
-df <- as.data.frame(lapply(EnvCore[,colnames(EnvCore) %in% columns_to_impute_idw], as.numeric))
+
+df <- EnvCore[,colnames(EnvCore) %in% columns_to_impute_idw]
+# Transform Date to numeric for temporal calculations
+Date_num <- as.numeric(as.Date(EnvCore$date, format = "%Y-%m-%d"))
+df <- as.data.frame(cbind(Date_num,as.data.frame(lapply(df, as.numeric))))
 #df <- as.data.frame(lapply(EnvCore[,4:ncol(EnvCore)], as.numeric))
 #df$date <- EnvCore$date
-# Transform Date to numeric for temporal calculations
-df$Date_num <- as.numeric(as.Date(EnvCore$date, format = "%Y-%m-%d"))
+
 # Define a function for manual IDW interpolation
 manual_idw <- function(latitude, longitude, values, target_latitude, target_longitude, idp = 2) {
   # Compute distances from target point to all other points
@@ -256,7 +290,7 @@ impute_column <- function(df, col_name, idp = 2) {
 #columns_to_impute <- colnames(EnvCore[,4:ncol(EnvCore)])
 
 # Apply the imputation function to each column
-for (col in columns_to_impute_idw) {
+for (col in colnames(df)) {
   df <- impute_column(df, col)
 }
 
@@ -280,17 +314,7 @@ EnvCore_imputed <- as.data.frame(cbind(df,categoric_imputed))
 #EnvCore_imputed$date <- EnvCore$date
 
 #RasdaERA5 <- colnames(EnvCore_imputed[,34:42])
-#"ds.earthserver.xyz..7000..ERA5_2.metre.dewpoint.temperature"          
-#"ds.earthserver.xyz..7000..ERA5_Surface.pressure"                      
-#"ds.earthserver.xyz..7000..ERA5_Surface.thermal.radiation.downwards"   
-#"ds.earthserver.xyz..7000..ERA5_2.metre.temperature"                   
-#"ds.earthserver.xyz..7000..ERA5_10.metre.U.wind.component"             
-#"ds.earthserver.xyz..7000..ERA5_10.metre.V.wind.component"             
-#"ds.earthserver.xyz..7000..ERA5_Total.precipitation"                   
-#"ds.earthserver.xyz..7000..ERA5_Land_monthly_10.metre.U.wind.component"
-#"ds.earthserver.xyz..7000..ERA5_Land_monthly_10.metre.V.wind.component"
-##remove rasdaman ERA5
-EnvCore_imputed <-  EnvCore_imputed[, !colnames(EnvCore_imputed) %in% RasdaERA5] 
+#EnvCore_imputed <-  EnvCore_imputed[, !colnames(EnvCore_imputed) %in% RasdaERA5] 
 
 ###again remove monomorphic
 non_monomorphic <- sapply(EnvCore_imputed, function(col) length(unique(col)) > 1)
@@ -329,6 +353,7 @@ create_plot <- function(column, col_name) {
   col_name_old <- col_name
   dtype <- "Numeric"
   ncat <- "Unknown"
+  valids <- ""
   # Apply substitutions
   #for (i in seq_along(patterns)) {
   #  col_name <- gsub(patterns[i], replacements[i], col_name)
@@ -339,6 +364,7 @@ create_plot <- function(column, col_name) {
         col_name <- gsub(patterns[i], replacements[i], col_name)
         dtype <- datatype[i]
         ncat <- metadata$Categories[i]
+        valids <- metadata$Valid.Values[i]
         break  # Stop after the first match, if only one match is expected
     }
   }
@@ -365,7 +391,7 @@ create_plot <- function(column, col_name) {
     ggplot(freq_table, aes(x = Value, y = Frequency, fill = Value_is_null)) +
       geom_bar(stat = "identity", position = "dodge", color = "black") +
       scale_fill_manual(values = c("TRUE" = "red", "FALSE" = "#347e5b"),
-                        labels = c(paste("Unique Values:",nrow(freq_table), "\nNA Ratio:",round(sum(is.na(column))/ncol(DATA),3),"\nMax Categories:", ncat), "Not Valid")) +
+                        labels = c(paste("Unique Values:",nrow(freq_table), "\nNA Ratio:",round(sum(is.na(column))/ncol(DATA),3),"\nMax Categories:", ncat, "\nValid Categories:", valids), "Not Valid")) +
       labs(title = paste(col_name), 
            x = "Value", y = "Frequency",
            fill = paste(dtype, "Data Type")) +
@@ -373,13 +399,10 @@ create_plot <- function(column, col_name) {
   }
 }
 
-##Env85$ds.earthserver.xyz..7000..S5p_L2_NO2_tm5_tropopause_layer_index_global_NO2.Tropopause.Layer.Index
 
-
- 
-plots <- lapply(names(DATA[,32:40]),function(col_name){create_plot(DATA[,32:40][[col_name]], col_name) })
-
-grid.arrange(grobs = plots, ncol = 3, nrow = 3)
+    #DATA <- EnvCore_imputed
+    #plots <- lapply(names(DATA[,32:40]),function(col_name){create_plot(DATA[,32:40][[col_name]],     col_name) })
+    #grid.arrange(grobs = plots, ncol = 3, nrow = 3)
 
 
 EnvDataUse <- EnvCore_imputed
@@ -400,16 +423,14 @@ num_cols <- ncol(EnvDataUse)
 #}
 
 # Apply the function to each column of EnvCore_imputed
-#col_monomorphs <- apply(EnvDataUse, 2, function(column) is_monomorphic(column, threshold = 0.7))
+#col_monomorphs <- apply(EnvCore_imputed, 2, function(column) is_monomorphic(column, threshold = 0.7))
 
-# Print the result
-#EnvCore_imputed_filtered <- EnvDataUse[, !col_monomorphs]
 
-#DATA <- EnvCore_imputed_filtered
+#DATA <- EnvCore_imputed
 #DATA <- Env85[,4:ncol(Env85)]
 #DATA <- as.data.frame(lapply(Env85[,4:ncol(Env85)], as.numeric))
-#DATA <- EnvDataUse
-#colnames(DATA) <- gsub("\\.y","", colnames(DATA))
+#
+DATA <- EnvDataUse
 
 
 num_cols <- ncol(DATA)
@@ -419,28 +440,10 @@ for (start in seq(1, num_cols, by = 12)) {
   plots <- lapply(names(DATA[,start:end]), function(col_name) {
     create_plot(DATA[,start:end][[col_name]], col_name) })
   # Save plots to a PDF file
-  pdf(file = sprintf("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Stats/ValidationAfterCleanUp/Validatio_before_Imputation_new_%d.pdf", start), width = 12, height = 11)
+  pdf(file = sprintf("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Stats/ValidationAfterImputation/Validatio_after_Correction_and_Imputation_%d.pdf", start), width = 14, height = 11)
   grid.arrange(grobs = plots, ncol = 3, nrow = 4)
   dev.off()
 }
-
-
-
-
-##simplify variable names
-colnames(EnvCore_imputed_filtered) <- gsub("reanalysis.era5.single.levels","era5", colnames(EnvCore_imputed_filtered))
-colnames(EnvCore_imputed_filtered) <- gsub("aerosol_index_","", colnames(EnvCore_imputed_filtered))
-colnames(EnvCore_imputed_filtered) <- gsub("Gray.0","", colnames(EnvCore_imputed_filtered))
-colnames(EnvCore_imputed_filtered) <- gsub("sulfurdioxide_total_vertical_column_","", colnames(EnvCore_imputed_filtered))
-colnames(EnvCore_imputed_filtered) <- gsub("nitrogendioxide_tropospheric_column_","", colnames(EnvCore_imputed_filtered))
-colnames(EnvCore_imputed_filtered) <- gsub("formaldehyde_tropospheric_vertical_column_","", colnames(EnvCore_imputed_filtered))
-colnames(EnvCore_imputed_filtered) <- gsub("global_pesticide_grids_apr_l_","pest_low_", colnames(EnvCore_imputed_filtered))
-colnames(EnvCore_imputed_filtered) <- gsub("global_pesticide_grids_apr_h_","pest_high", colnames(EnvCore_imputed_filtered))
-colnames(EnvCore_imputed_filtered) <- gsub("ozone_total_vertical_column_","", colnames(EnvCore_imputed_filtered))
-colnames(EnvCore_imputed_filtered) <- gsub("carbonmonoxide_total_column_","", colnames(EnvCore_imputed_filtered))
-colnames(EnvCore_imputed_filtered) <- gsub("ds.earthserver.xyz..7000..","", colnames(EnvCore_imputed_filtered))
-colnames(EnvCore_imputed_filtered) <- gsub("_satellite_soil_moisture_active_daily","", colnames(EnvCore_imputed_filtered))
-
 
 
 ```
@@ -452,14 +455,70 @@ colnames(EnvCore_imputed_filtered) <- gsub("_satellite_soil_moisture_active_dail
 You can also embed plots, for example:
 
 ```{r pcaplot, fig.width=20, fig.height=14 , echo=FALSE}
+rownames(EnvCore_imputed) <- rownames(EnvCore)
+
+patterns <- metadata$Layer.Name
+replacements <- metadata$Short.Name
 
 
 
-pr <- prcomp(EnvCore_imputed_filtered, scale. = TRUE)
+
+nc <- sapply(names(EnvCore_imputed), rename, patterns = patterns, replacements = replacements)
+colnames(EnvCore_imputed) <- nc
+exclude <- c("SMcF", "SMcSens", "SMpF", "ERA5stype")
+DATA <- EnvCore_imputed[, ! colnames(EnvCore_imputed) %in% exclude]
+
+# Functions
+get_meta_data <- function(csvfile) {
+  meta <- read.csv(csvfile, header = TRUE)
+  meta.sub <- meta %>% dplyr::select(sampleId, lat, long)
+  meta.sub$sampleId <- gsub("\\-", ".", meta.sub$sampleId)
+  return(meta.sub)
+}
+
+get_worldclim_data <- function(meta.sub) {
+  biod <- worldclim_global(var = "bio", 2.5, "data")
+  bio <- raster::extract(biod, cbind(meta.sub$long, meta.sub$lat))
+  bio.sub <- as.data.frame(bio)
+  return(bio.sub)
+}
+
+meta2024 <- "/home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/samples_europe_pass.csv"
+meta <- get_meta_data(meta2024)
+WC <- get_worldclim_data(meta)
+rownames(WC) <- meta$sampleId
+
+ROWS <- WC[rownames(WC) %in% rownames(DATA),]
+colnames(ROWS) <- gsub("wc2.1_2.5m_b","B", colnames(ROWS))
+DATA <- as.data.frame(cbind(DATA, ROWS))
+
+
+
+
+pr <- prcomp(DATA, scale. = TRUE)
 fviz_pca_biplot(pr)
 
 
 fviz_pca_var(pr, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), repel = TRUE)
+
+
+write.csv(DATA, file="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Env.csv")
+
+
 ``` 
 
+
+``` {r correlateData} 
+# Compute Pairwise Correlations
+correlations <- cor(DATA, use = "pairwise.complete.obs")
+#write.csv(correlations, file=paste0(outdir,"/correlations.csv"))
+# Convert to Data Frame
+correlations_df <- as.data.frame(as.table(correlations))
+
+# View the Result
+print(correlations_df)
+highly_corr <- correlations_df[abs(correlations_df$Freq) > 0.9 & abs(correlations_df$Freq) < 1, ]
+write.csv(correlations, file=paste0(outdir,"/high_correlations.csv"))
+
+``` 
 

@@ -445,6 +445,8 @@ tree_cover_density_20m_tcd,250;255
 water_and_wetness_10m_waw,240;255
 water_and_wetness_20m_waw,250;255
 ds.earthserver.xyz--7000--AvgTemperatureColorScaled_Red,NA
+ds.earthserver.xyz--7000--AvgTemperatureColorScaled_Green,NA
+ds.earthserver.xyz--7000--AvgTemperatureColorScaled_Blue,NA
 ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_active_daily_dnflag_Day / Night Flag,0
 ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_active_daily_flag_Flag,127
 ds.earthserver.xyz--7000--C3S_satellite_soil_moisture_active_daily_freqbandID_Frequency Band Identification,0

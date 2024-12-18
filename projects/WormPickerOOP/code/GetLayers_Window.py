@@ -79,7 +79,10 @@ def getLayers(savepath="NONE"):
                     except TypeError:
                         null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field']['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue'][0]['#text']
             except:
-                null_value="NA"       
+                try:
+                    null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field']['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue']
+                except:    
+                    null_value="NA"       
         #print(json.dumps(wcs_coverage_description, indent=2))
             null_values.append(null_value)
             rr=[]
@@ -100,24 +103,31 @@ def getLayers(savepath="NONE"):
             try:
                 if isinstance(wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'],list):
                     bands=len(wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'])
+                    print(bands)
                     for band_nr in range(0,bands): 
                         band_name=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'][band_nr]['@name']
-                        print(band_name)
+                        print("Number of bands:",bands, "in", band_name)
+                        print("APPENDING BAND INFORMATION")
                         band_infos.append(band_name)
                         try:
                             null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'][band_nr]['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue']['#text']
-                        except TypeError:
-                            null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'][band_nr]['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue']
+                        except:
+                            try:
+                                null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'][band_nr]['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue']
+                            except:
+                                null_value="NA"
                         null_values.append(null_value)
-                    #print(band_infos)
+                    print(band_infos)
                 if isinstance(wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'],dict):
                     band_name=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field']['@name']
-                    band_infos.append(band_name)              
+                    band_infos.append(band_name)
+                    print(band_infos)              
             except KeyError:
                 pass
             #x=tuple([resolution])
         #print(layer_info_2[ID])
             layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max,axislabels, rr[0], rr[1], rr[2], band_infos, null_values))
+            print(coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max,axislabels, rr[0], rr[1], rr[2], band_infos, null_values)
         else:
             print("NOT ALL DIMENSIONS AVAILABLE")
         #layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max,axislabels, rr[0], rr[1], rr[2], band_infos))

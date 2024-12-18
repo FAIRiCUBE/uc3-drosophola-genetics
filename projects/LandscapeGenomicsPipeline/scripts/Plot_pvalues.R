@@ -25,7 +25,7 @@ rownames(AF) <- paste(DATA$Chr, DATA$Pos, sep=".")
 envfile <- read.table(args[3], header=1, sep=",",  dec = ".")
 
 samplesFreqs <- colnames(AF)
-null_values <- read.csv("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/NUllValuesDetail.csv", header=FALSE)
+null_values <- read.csv("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/data/NullValues_05_12_24.csv", header=FALSE)
 ##null_values in args
 
 columns_with_only_na_string <- sapply(envfile, function(x) all(x == "na"))

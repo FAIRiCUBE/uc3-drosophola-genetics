@@ -12,10 +12,10 @@ import os
 #saveCredentials("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/.env")
 
 # 2- Request some info about alyers available to select layers useful for your analysis, when providing a filepath, you can save this information as .csv
-layer_info_2811=getLayers(savepath="NONE")
+layer_info=getLayers(savepath="NONE")
 
 # 3- Apply Coverage onto the *rasdaman* layers and make them ready to select
-x=Coverage(layer_info_2811)
+x=Coverage(layer_info)
 x.getBoundary()
 
 # 4- Filter out the samples that are covered by >1  of your selected layers 
@@ -24,7 +24,7 @@ x.getBoundary()
 x.getSamples("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/dest_v2.samps_3May2024.csv")
 x.getSamples("/home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/samples_europe_pass.csv")
 samplescovered=x.samples
-#samplescorr={'AT_Kar_See_1_2014-08-17': ('46.8136889', '13.50794792'), 'AT_Kar_See_1_2016-08-01': ('46.8136889', '13.50794792')}
+#samplescorr={'AT_Kar_See_1_2016-08-01': ('46.8136889', '13.50794792'), 'AT_Nie_Mau_1_2015-07-20': ('48.375', '15.56'), 'AT_Nie_Mau_1_2015-10-19': ('48.375', '15.56'), 'AT_Wie_Gro_1_2012-08-03': ('48.2', '16.37'), 'AT_Wie_Gro_1_2012-10-20': ('48.2', '16.37')}
 
 
 samplescorr=remove_partial_dates(samplescovered)
@@ -32,7 +32,7 @@ samplescorr=remove_partial_dates(samplescovered)
 
 # 5- Create a list of layers by selecting them 
 layers_to_analyze=select_objects("automatic",x)
-info=layer_info_2811[0]
+info=layer_info[0]
 
 layerlist=[]
 for layer in layers_to_analyze:
@@ -44,9 +44,9 @@ for layer in layers_to_analyze:
         except:
             continue 
     
-out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/use_case/wormpicked_data/rasdaman_data_test.csv"
+out="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/use_case/wormpicked_data/rasdaman_data_test2.csv"
 outstats="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/use_case/wormpicked_data/rasdaman_data_all_soilmoisture.csvStats.csv"
-logpath="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/use_case/wormpicked_data/rasdaman_data_test.log2.log"
+logpath="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/use_case/wormpicked_data/rasdaman_data_test2.log2.log"
 
 # 6- Request the data for the SAMPLES for all chosen layers and save them as .csv
 requestDataWGS(info,layerlist,samplescorr,out, logpath, offset=0, approximate=True)
