@@ -235,7 +235,7 @@ nrow(EnvCore)
 ```
 
 
-```{addMetadata, echo=FALSE}
+```{r addMetadata, echo=FALSE}
 metadata <- read.csv("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Stats/metadata_corrected.csv", header=TRUE)
 metadata$Layer.Name <- gsub("monthly means","monthly.means", metadata$Layer.Name)
 ```
@@ -463,10 +463,6 @@ replacements <- metadata$Short.Name
 
 
 
-nc <- sapply(names(EnvCore_imputed), rename, patterns = patterns, replacements = replacements)
-colnames(EnvCore_imputed) <- nc
-exclude <- c("SMcF", "SMcSens", "SMpF", "ERA5stype")
-DATA <- EnvCore_imputed[, ! colnames(EnvCore_imputed) %in% exclude]
 
 # Functions
 get_meta_data <- function(csvfile) {

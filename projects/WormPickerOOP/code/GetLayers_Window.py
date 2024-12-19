@@ -23,9 +23,13 @@ def getLayers(savepath="NONE", rasdaman_username=None, rasdaman_password=None, r
     rasdaman_password = rasdaman_password or env_vars.get('RASDAMAN_CRED_PASSWORD')
     base_wcs_url = rasdaman_endpoint + "?&SERVICE=WCS&ACCEPTVERSIONS=2.1.0"
     loggerobject.info("TESTING AUTHENTICATION!")
-    response = requests.get(base_wcs_url + "&REQUEST=GetCapabilities", auth=(rasdaman_username, rasdaman_password))
+    try:
+        response = requests.get(base_wcs_url + "&REQUEST=GetCapabilities", auth=(rasdaman_username, rasdaman_password))
+    except Exception as e:
+        loggerobject.error(f"Could not send request to Service Endpoint. {e}")
+        return
     if response.status_code != 200:
-        loggerobject.error("Access to Service Endpoint not possible!")
+        loggerobject.error("Access to Service Endpoint not possible.")
         return
     else:
         wcs_capabilities = xmltodict.parse(response.content)
@@ -43,7 +47,7 @@ def getLayers(savepath="NONE", rasdaman_username=None, rasdaman_password=None, r
             crs_str = wcs_coverage_summary[i]['ows:BoundingBox']['@crs']
             crs = '/'.join(crs_str.split('/')[-3:])
             if dim==3:
-                loggerobject.info(f"DIM IS 3, {coverage_id}")
+                loggerobject.info(f"Layer has 3 Dimensions: {coverage_id}")
                 x_min=wcs_coverage_summary[i]['ows:WGS84BoundingBox']['ows:LowerCorner'].split(" ")[0]
                 y_min=wcs_coverage_summary[i]['ows:WGS84BoundingBox']['ows:LowerCorner'].split(" ")[1]
                 x_max=wcs_coverage_summary[i]['ows:WGS84BoundingBox']['ows:UpperCorner'].split(" ")[0]
@@ -59,11 +63,12 @@ def getLayers(savepath="NONE", rasdaman_username=None, rasdaman_password=None, r
                 try:
                     axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][3]['ows:Value']
                     if re.search("ds.earthserver.xyz", axislabels):
-                        print("matched: ", axislabels)
+                        #print("matched: ", axislabels)
                         axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][1]['ows:Value']
                         if re.search(r"[0-9]", axislabels):
                             axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][2]['ows:Value']
-                            print("substituted with:", axislabels)
+                            #print("substituted with:", axislabels)
+                            loggerobject.debug(f"Coverage carrying the prefix 'earthserver' - Axis Lables were set to {axislabels} ")
                 except IndexError:
                     try:
                         axislabels=wcs_coverage_summary[i]['ows:AdditionalParameters']['ows:AdditionalParameter'][2]['ows:Value']
@@ -74,7 +79,6 @@ def getLayers(savepath="NONE", rasdaman_username=None, rasdaman_password=None, r
                 #try:
                     #for ID in range(1,len(layer_info_2)):
                         #coverage=layer_info_2[ID][0]
-                loggerobject.info(coverage_id)
                 response = requests.get(describe_url + "&REQUEST=DescribeCoverage&COVERAGEID=" + coverage_id,auth=(rasdaman_username, rasdaman_password))
                 wcs_coverage_description = xmltodict.parse(response.content)
                 null_values=[]
@@ -90,7 +94,8 @@ def getLayers(savepath="NONE", rasdaman_username=None, rasdaman_password=None, r
                     try:
                         null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field']['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue']
                     except:    
-                        null_value="NA"       
+                        null_value="NA"
+                        loggerobject.warning("Warning: Null Value could not be found in Coverage Description. Default setting for Null Value is NA.")       
             #print(json.dumps(wcs_coverage_description, indent=2))
                 null_values.append(null_value)
                 rr=[]
@@ -112,10 +117,10 @@ def getLayers(savepath="NONE", rasdaman_username=None, rasdaman_password=None, r
                     if isinstance(wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'],list):
                         bands=len(wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'])
                         #print(bands)
+                        loggerobject.info(f"Coverage {coverage_id}  has {bands} bands:")
                         for band_nr in range(0,bands): 
                             band_name=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'][band_nr]['@name']
-                            loggerobject.info(f"Number of bands: {bands} in {band_name}")
-                            print("APPENDING BAND INFORMATION")
+                            loggerobject.info(f"{coverage_id}: Band {band_nr} : {band_name}")
                             band_infos.append(band_name)
                             try:
                                 null_value=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'][band_nr]['swe:Quantity']['swe:nilValues']['swe:NilValues']['swe:nilValue']['#text']
@@ -125,19 +130,16 @@ def getLayers(savepath="NONE", rasdaman_username=None, rasdaman_password=None, r
                                 except:
                                     null_value="NA"
                             null_values.append(null_value)
-                        print(band_infos)
                     if isinstance(wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field'],dict):
                         band_name=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:rangeType']['swe:DataRecord']['swe:field']['@name']
-                        band_infos.append(band_name)
-                        print(band_infos)              
+                        band_infos.append(band_name)            
                 except KeyError:
                     pass
                 #x=tuple([resolution])
             #print(layer_info_2[ID])
                 layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max,axislabels, rr[0], rr[1], rr[2], band_infos, null_values))
-                print(coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max,axislabels, rr[0], rr[1], rr[2], band_infos, null_values)
             else:
-                print("NOT ALL DIMENSIONS AVAILABLE")
+                loggerobject.debug(f"Coverage {coverage_id} does not have 3 dimensions. Skipped coverage.")
             #layer_info_2.append((coverage_id, crs, x_min, x_max, y_min, y_max, date_min, date_max,axislabels, rr[0], rr[1], rr[2], band_infos))
         if savepath!="NONE":
             os.chdir(savepath)
@@ -147,53 +149,53 @@ def getLayers(savepath="NONE", rasdaman_username=None, rasdaman_password=None, r
         else:
             return layer_info_2
 
-def processFunctionResult(result):
-    global coverage_instance, boundary_button
-    coverage_instance = Coverage(result)
-    print("Coverage instance created.")
-    boundary_button.config(state=tk.NORMAL)  # Enable the Boundary button
-
-def processCoverageInstance(result):
-    global boundary
-    global samplescovered
-    boundary = result.getBoundary()
-    result.getSamples("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/data/dest_v2.samps_25Feb2023.csv")
-    samplescovered = result.samples
-    print("Boundary created:", boundary, "Samples covered are:", samplescovered)
-
-
-def execute_function():
-    global function_result, proceed_button, boundary_button
-    if savepath_var.get() == "NONE":
-        function_result = getLayers(savepath="NONE")
-        print("Function executed without custom savepath.")
-    else:
-        custom_savepath = simpledialog.askstring("Custom Savepath", "Enter custom savepath:")
-        if custom_savepath:
-            function_result = getLayers(savepath=custom_savepath)
-            print("Function executed with custom savepath:", custom_savepath)
-    proceed_button.config(state=tk.NORMAL)  # Enable the Proceed button
-    proceed_button.focus_set()  # Set focus to the Proceed button
-    execute_button.config(state=tk.DISABLED)  # Disable the Execute button
-
-def proceed_function():
-    global function_result, coverage_instance, proceed_button, boundary_button
-    if 'function_result' in globals():
-        processFunctionResult(function_result)
-        proceed_button.config(state=tk.DISABLED)  # Disable the Proceed button
-        execute_button.config(state=tk.DISABLED)  # Disable the Execute button
-        boundary_button.config(state=tk.NORMAL)  # Enable the Boundary button
-    else:
-        print("Function result not available.")
-
-def boundary_function():
-    global coverage_instance, boundary_button
-    if 'coverage_instance' in globals():
-        processCoverageInstance(coverage_instance)
-        boundary_button.config(state=tk.DISABLED)  # Disable the Boundary button
-    else:
-        print("Coverage instance not available.")
-
+#def processFunctionResult(result):
+#    global coverage_instance, boundary_button
+#    coverage_instance = Coverage(result)
+#    print("Coverage instance created.")
+#    boundary_button.config(state=tk.NORMAL)  # Enable the Boundary button
+#
+#def processCoverageInstance(result):
+#    global boundary
+#    global samplescovered
+#    boundary = result.getBoundary()
+#    result.getSamples("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/data/dest_v2.samps_25Feb2023.csv")
+#    samplescovered = result.samples
+#    print("Boundary created:", boundary, "Samples covered are:", samplescovered)
+#
+#
+#def execute_function():
+#    global function_result, proceed_button, boundary_button
+#    if savepath_var.get() == "NONE":
+#        function_result = getLayers(savepath="NONE")
+#        print("Function executed without custom savepath.")
+#    else:
+#        custom_savepath = simpledialog.askstring("Custom Savepath", "Enter custom savepath:")
+#        if custom_savepath:
+#            function_result = getLayers(savepath=custom_savepath)
+#            print("Function executed with custom savepath:", custom_savepath)
+#    proceed_button.config(state=tk.NORMAL)  # Enable the Proceed button
+#    proceed_button.focus_set()  # Set focus to the Proceed button
+#    execute_button.config(state=tk.DISABLED)  # Disable the Execute button
+#
+#def proceed_function():
+#    global function_result, coverage_instance, proceed_button, boundary_button
+#    if 'function_result' in globals():
+#        processFunctionResult(function_result)
+#        proceed_button.config(state=tk.DISABLED)  # Disable the Proceed button
+#        execute_button.config(state=tk.DISABLED)  # Disable the Execute button
+#        boundary_button.config(state=tk.NORMAL)  # Enable the Boundary button
+#    else:
+#        print("Function result not available.")
+#
+#def boundary_function():
+#    global coverage_instance, boundary_button
+#    if 'coverage_instance' in globals():
+#        processCoverageInstance(coverage_instance)
+#        boundary_button.config(state=tk.DISABLED)  # Disable the Boundary button
+#    else:
+#        print("Coverage instance not available.")
+#
 ## Create the main application window
 #root = tk.Tk()
 #root.title("Function Executor")

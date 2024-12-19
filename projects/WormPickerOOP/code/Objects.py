@@ -47,14 +47,15 @@ class Coverage(object):
         with open(path, 'r') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                lat=row["lat"]
-                long=row["long"]
+                lat=row["lat"] or row["latitude"]
+                long=row["long"] or row["longitude"]
+                date=row["date"] 
                 if lat == 'NA' and long == 'NA':
                     continue
                 #else:
                     #long,lat=trans4mEPSG("EPSG:4326","EPSG:3035",float(long),float(lat))
                 if float(lat) > self.minlat and float(lat) < self.maxlat and float(long) > self.minlong and float(long) < self.maxlong:
-                    sampleinfo=(row["lat"],row["long"])
+                    sampleinfo=(row["lat"],row["long"], row["date"])
                     filtered_data[row["sampleId"]] = sampleinfo
                     #filtered_data.append(sampleinfo)
         self.samples=filtered_data

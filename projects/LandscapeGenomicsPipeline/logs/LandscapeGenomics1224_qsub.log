@@ -38,3 +38,4 @@ In dir.create(directory_path, recursive = TRUE) :
   'results/EuropePass/LinearRegressions' existiert bereits
 [1] 153
 [1] 121
+Es gab 50 oder mehr Warnungen (Anzeige der ersten 50 mit warnings())

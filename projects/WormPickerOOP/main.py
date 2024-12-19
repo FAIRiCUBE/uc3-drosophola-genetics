@@ -1,7 +1,6 @@
 from argparse import ArgumentParser
 from code.module_crs_converter import trans4mEPSG
 from code.Objects import *
-#from code.functions import select_objects, requestData, trans4mEPSG, requestDataProcess, get_grid_indices_for_axis_X, get_grid_indices_for_axis_Y
 from code.UserCred import saveCredentials
 from code.GetLayers_Window import getLayers
 from code.functions import *
@@ -12,11 +11,11 @@ log_object = LogObject()
 logger = log_object.logger
 
 argparse = ArgumentParser()
-argparse.add_argument("-outdir", help="Path to the outputfolder.", required=True)
+argparse.add_argument("-outdir", help="Path to the outputfolder.")
 argparse.add_argument("-samples", help='Samplesfile that carries information on ID, lat and long', required=True)
-argparse.add_argument("-username", help='Username for Rasdaman', required=True)
-argparse.add_argument("-password", help='Password for Rasdaman', required=True)
-argparse.add_argument("-endpoint", help='Service Endpoint e.g. Rasdaman', required=True)
+argparse.add_argument("-username", help='Username for Rasdaman')
+argparse.add_argument("-password", help='Password for Rasdaman')
+argparse.add_argument("-endpoint", help='Service Endpoint e.g. Rasdaman')
 #argparse.add_argument("-samples", help='Samplesfile that carries information on ID, lat and long', required=True)
 
 args = argparse.parse_args()
@@ -27,27 +26,24 @@ password = args.password
 endpoint=args.endpoint
 
 
+# A) Provide your user Credentials for fairicube.rasdaman.org if you have not saved them in an .env file yet
+# B) Request some info about alyers available to select layers useful for your analysis, when providing a filepath, you can save this information as .csv
+#layer_info=getLayers(savepath="NONE", loggerobject=logger)
 
-# 1- Provide your user Credentials for fairicube.rasdaman.org if you have not saved them in an .env file yet
-#saveCredentials("/path/to/your/envfile/.env")
-#saveCredentials("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/.env")
-
-# 2- Request some info about alyers available to select layers useful for your analysis, when providing a filepath, you can save this information as .csv
 layer_info=getLayers(savepath="NONE", rasdaman_endpoint=endpoint, rasdaman_password=password, rasdaman_username=username, loggerobject=logger)
 
 # 3- Apply Coverage onto the *rasdaman* layers and make them ready to select
 x=Coverage(layer_info)
 x.getBoundary()
 
-# 4- Filter out the samples that are covered by >1  of your selected layers 
-#x.getSamples("path/to/samplefile/with/geoinformation/file.csv")
+
 
 #x.getSamples("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/dest_v2.samps_3May2024.csv")
-#x.getSamples("/home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/samples_europe_pass.csv")
+#x.getSamples("/home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/samplesfile.csv")
 x.getSamples(samples)
 samplescovered=x.samples
 #samplescorr={'AT_Kar_See_1_2016-08-01': ('46.8136889', '13.50794792'), 'AT_Nie_Mau_1_2015-07-20': ('48.375', '15.56'), 'AT_Nie_Mau_1_2015-10-19': ('48.375', '15.56'), 'AT_Wie_Gro_1_2012-08-03': ('48.2', '16.37'), 'AT_Wie_Gro_1_2012-10-20': ('48.2', '16.37')}
-samplescorr=remove_partial_dates(samplescovered)
+#samplescorr=remove_partial_dates(samplescovered)
 
 # 5- Create a list of layers by selecting them 
 layers_to_analyze=select_objects("automatic",x)
@@ -62,13 +58,19 @@ for layer in layers_to_analyze:
             layerlist.append(entries_list)
         except:
             continue 
-    
-out = outdir+"/WormpickerResult.csv"
-#outstats="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/use_case/wormpicked_data/rasdaman_data_all_soilmoisture.csvStats.csv"
-logpath = outdir+"/WormpickerResult.log"
 
-# 6- Request the data for the SAMPLES for all chosen layers and save them as .csv
-requestDataWGS(info,layerlist,samplescorr,"NONE", logpath, offset=0, approximate=True, rasdaman_password=password, rasdaman_username=username, rasdaman_endpoint=endpoint)
+if outdir:    
+    outvar = outdir+"/WormpickerResult.csv"
+    logpath = outdir+"/WormpickerResult.log"
+else:
+    outvar="NONE"
+
+# Request the data for the SAMPLES for all chosen layers and save them as .csv
+# Credentials taken from .env file, you can save result as object
+# requestDataWGS(info,layerlist,samplescovered,"NONE", offset=0, approximate=True, loggerobject=logger)
+
+# Credentials parsed from input, results can be saved as object with e.g.: result = requestDataWGS()....
+requestDataWGS(info,layerlist,samplescovered,filepath=outvar, offset=0, approximate=True, rasdaman_password=password, rasdaman_username=username, rasdaman_endpoint=endpoint, loggerobject=logger)
 
 #requestDataWGS(info,layerlist,samplescorr,"/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/TestNALoop.csv", approximate="TRUE")
 
@@ -99,7 +101,4 @@ requestDataWGS(info,layerlist,samplescorr,"NONE", logpath, offset=0, approximate
 #            print(f"Error: One of the entries at index 12 or 13 is missing in item: {item}")
 
 
-# Access logs later
-print("Captured Logs:")
-for log in log_object.get_logs():
-    print(log)
+#follow()

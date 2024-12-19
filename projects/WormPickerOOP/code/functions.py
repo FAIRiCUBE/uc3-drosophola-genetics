@@ -11,6 +11,10 @@ from osgeo import gdal, osr
 import xmltodict
 import re
 
+import tkinter as tk
+from tkinter import ttk
+import tkinter.messagebox as messagebox
+
 #env_path="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/.env"
 
 ## Load environment variables from the file
@@ -18,6 +22,12 @@ import re
 #    for line in f:
 #        key, value = line.strip().split('=', 1)
 #        os.environ[key] = value
+
+# Access logs later
+
+def follow(log_object):
+    for log in log_object.get_logs():
+        print(log)
 
 def trans4mEPSG(InputCRS,OutputCRS,y,x):
     src_crs = InputCRS
@@ -29,14 +39,6 @@ def trans4mEPSG(InputCRS,OutputCRS,y,x):
     transform = osr.CoordinateTransformation(src_srs, tgt_srs)
     x_t, y_t, z_t = transform.TransformPoint(x, y, 0)
     return x_t, y_t
-
-
-import tkinter as tk
-from tkinter import ttk
-import tkinter.messagebox as messagebox
-
-
-mode="manual"
 
 
 def select_objects(mode, object, items_per_page=15):
@@ -111,53 +113,53 @@ def remove_partial_dates(data_dict):
     return data_dict
 
 
-def is_valid_iso_date(date_string):
-    try:
-        # Attempt to parse the string as an ISO-formatted date
-        datetime.fromisoformat(date_string)
-        return True
-    except ValueError:
-        return False
-
-def process_date_string(date_string):
-    if is_valid_iso_date(date_string):
-        print(f"{date_string} is already in ISO format. Doing nothing.")
-        return date_string
-    else:
-        # Add your processing logic here if the date_string is not in ISO format
-        print(f"Processing {date_string}...")
-        # For now, just returning the input date_string as an example
-        return date_string
-
-def get_grid_indices_for_axis_X(geo_lower_bound, geo_upper_bound, xmin, xmax, xres):       
-    print("geo_lower_bound_X: {}, geo_upper_bound_X: {}".format(geo_lower_bound, geo_upper_bound))
-    lower_grid_index = math.floor( (geo_lower_bound - xmin) / xres )
-    upper_grid_index = math.floor( (geo_upper_bound - xmin) / xres )
-    if geo_upper_bound == xmax:
-        upper_grid_index = upper_grid_index - 1       
-    return "({}:{})".format(lower_grid_index, upper_grid_index)
-    
-def get_grid_indices_for_axis_Y(geo_lower_bound, geo_upper_bound, ymin, ymax, yres):
-    print("geo_lower_bound_Y: {}, geo_upper_bound_Y: {}".format(geo_lower_bound, geo_upper_bound))
-    lower_grid_index = math.floor( (geo_upper_bound - ymax) / yres )
-    upper_grid_index = math.floor( (geo_lower_bound - ymax) / yres )
-    if geo_lower_bound == ymin:
-        upper_grid_index = upper_grid_index - 1   
-    return "({}:{})".format(lower_grid_index, upper_grid_index)
-
-
-def round_down_to_day(date_str):
-    # Parse the date string
-    try:
-        date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
-    except ValueError:
-        try:
-            date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M")
-        except ValueError:
-            date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H")
-    rounded_down_date = date_obj.replace(hour=0, minute=0, second=0)
-    rounded_down_date_str = rounded_down_date.strftime("%Y-%m-%dT%H:%M:%S")
-    return rounded_down_date_str
+#def is_valid_iso_date(date_string):
+#    try:
+#        # Attempt to parse the string as an ISO-formatted date
+#        datetime.fromisoformat(date_string)
+#        return True
+#    except ValueError:
+#        return False
+#
+#def process_date_string(date_string):
+#    if is_valid_iso_date(date_string):
+#        print(f"{date_string} is already in ISO format. Doing nothing.")
+#        return date_string
+#    else:
+#        # Add your processing logic here if the date_string is not in ISO format
+#        print(f"Processing {date_string}...")
+#        # For now, just returning the input date_string as an example
+#        return date_string
+#
+#def get_grid_indices_for_axis_X(geo_lower_bound, geo_upper_bound, xmin, xmax, xres):       
+#    print("geo_lower_bound_X: {}, geo_upper_bound_X: {}".format(geo_lower_bound, geo_upper_bound))
+#    lower_grid_index = math.floor( (geo_lower_bound - xmin) / xres )
+#    upper_grid_index = math.floor( (geo_upper_bound - xmin) / xres )
+#    if geo_upper_bound == xmax:
+#        upper_grid_index = upper_grid_index - 1       
+#    return "({}:{})".format(lower_grid_index, upper_grid_index)
+#    
+#def get_grid_indices_for_axis_Y(geo_lower_bound, geo_upper_bound, ymin, ymax, yres):
+#    print("geo_lower_bound_Y: {}, geo_upper_bound_Y: {}".format(geo_lower_bound, geo_upper_bound))
+#    lower_grid_index = math.floor( (geo_upper_bound - ymax) / yres )
+#    upper_grid_index = math.floor( (geo_lower_bound - ymax) / yres )
+#    if geo_lower_bound == ymin:
+#        upper_grid_index = upper_grid_index - 1   
+#    return "({}:{})".format(lower_grid_index, upper_grid_index)
+#
+#
+#def round_down_to_day(date_str):
+#    # Parse the date string
+#    try:
+#        date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+#    except ValueError:
+#        try:
+#            date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M")
+#        except ValueError:
+#            date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H")
+#    rounded_down_date = date_obj.replace(hour=0, minute=0, second=0)
+#    rounded_down_date_str = rounded_down_date.strftime("%Y-%m-%dT%H:%M:%S")
+#    return rounded_down_date_str
 
 
 def findDate(inputtime, description):
@@ -170,7 +172,6 @@ def findDate(inputtime, description):
     withinTime=False
     closest_date = None
     try:
-        print("Looking for XML metadata on temporal boundaries.")
         b=description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:metadata']['gmlcov:Extension']['ras:covMetadata']['ras:axes']['ras:time']['ras:areasOfValidity']['ras:area']
         for item in b: 
             starttime=datetime.strptime(item['@start'], datetime_format)
@@ -253,8 +254,7 @@ def findDate(inputtime, description):
 
 
 
-def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0, approximate=True, rasdaman_username=None, rasdaman_password=None, rasdaman_endpoint=None):
-    log=open(logfilepath, "a")
+def requestDataWGS(infoheader,layerlist,samples, filepath,offset=0, approximate=True, rasdaman_username=None, rasdaman_password=None, rasdaman_endpoint=None, loggerobject=None):
     #sys.stdout = log
     datetime.now()
     env_vars = dotenv_values()
@@ -292,17 +292,17 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
         latitude_sample=value[0] 
         longitude_sample=value[1]
         name_date = key
-        print(" ")
-        print(" ")
-        print("NEW SAMPLE")
-        print("COORDINATES lat/long:", latitude_sample, longitude_sample)
+        loggerobject.info("PROCESSING NEW SAMPLE")
+        loggerobject.info(f"COORDINATES - Input Latitude: {latitude_sample}, Input Longitude {longitude_sample}")
         try:
             date = value[2]
-            print("DATE ASKED:",date)
+            loggerobject.info(f"DATE SAMPLE: {date}")
             type(date)
         except IndexError:
-            date = str(name_date[-10:])
-            print("DATE ASKED:",date)
+            #date = str(name_date[-10:])
+            #loggerobject.warning(f"DATE QUERIED taken from samplename: {date} ")
+            loggerobject.warning("No date for sample given. Please provide a date column in the input file.")
+            return
         sample_result.append(name_date)
         sample_result.append(latitude_sample)
         sample_result.append(longitude_sample)
@@ -335,7 +335,6 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
                 number_bands=len(layerlist[0][-2])
                 layer=layerlist[0][0]
                 layerbands_nr=layerlist[0][-2]
-                print(layerbands_nr)
                 for offday in range(abs(offset)+1):
                     for col in layerbands_nr:
                         if offset >= 0:
@@ -346,7 +345,8 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
                             #sample_result.append([colname_new])
                         value_result.append(colname_new)
             layer=layerlist[data_entry][i_header.index("CoverageID")]
-            print(layer)
+            loggerobject.info(f"")
+            loggerobject.info(f"Processing Coverage {layer}")
             ###add description URL and get time stamps
             describe_url='https://fairicube.rasdaman.com/rasdaman/ows?&SERVICE=WCS&VERSION=2.1.0'
             response = requests.get(describe_url + "&REQUEST=DescribeCoverage&COVERAGEID=" + layer,auth=(rasdaman_username, rasdaman_password))
@@ -354,11 +354,11 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
                 if 'wcs:CoverageDescriptions' in xmltodict.parse(response.content).keys():
                     wcs_coverage_description = xmltodict.parse(response.content)
                 elif 'ows:ExceptionReport' in xmltodict.parse(response.content).keys():
-                    print("Credentials provided are not valid.")
+                    loggerobject.debug("Credentials provided are not valid.")
                 #print(response.content)
                 #print(wcs_coverage_description)
             except:
-                print("Response Content:", response.content)
+                loggerobject.debug(f"Response Content: {response.content}")
                 continue
             approxvar=approximate
             if approxvar is True:
@@ -368,19 +368,20 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
                     #date_obj = datetime.strptime(timetoquery_raw, "%Y-%m-%d")
                     #timetoquery = timetoquery_raw.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
                     #print(timetoquery)
-                    print("Querying approximate time:", timetoquery, "Difference in Days:", differencedays)
+                    loggerobject.info(f"Querying approximate time: {timetoquery}")
+                    loggerobject.info(f"Difference in Days: {differencedays}")
                 except:
-                    print("Could not execute function called: findDate " )
+                    loggerobject.error("Could not execute function called: findDate. Either date or coverade_description cannot be assigned." )
                     sample_result.append("na")
                     continue
             else:
                 date_obj = datetime.strptime(date, "%Y-%m-%d")
                 timetoquery = date_obj.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
                 differencedays="0"
-                print("Querying only sample date:", timetoquery, "Difference in Days:", differencedays)
+                loggerobject.warning(f"Querying sample date exactly without approximation at {timetoquery} . This can lead to sparse data. ")
             AxisLabels=layerlist[data_entry][i_header.index("axislabels")]
             if AxisLabels == "ds.earthserver.xyz":
-                print("Querying Earth Server Data")
+                loggerobject.info("Querying Earth Server Data")
                 #TimeLabel="ansi"
                 TimeLabel=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['@axisLabels'].split(" ")[0]
                 #YLabel="lat"
@@ -391,14 +392,14 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
                 TimeLabel=AxisLabels.split(",")[0]
                 YLabel=AxisLabels.split(",")[1]
                 XLabel=AxisLabels.split(",")[2]
-            print("Axislabels:",TimeLabel,YLabel, XLabel)
+            loggerobject.info(f"Axislabels: {TimeLabel} {YLabel} {XLabel}")
             #ansi_str_o="&subset=ansi(\"{}\")"
             ###### NEW TIME LABEL
             output_format = "text/csv"
             for dayoff in range(abs(offset)+1):
                 #date_obj = datetime.strptime(timetoquery, "%Y-%m-%dT%H:%M:%S.%fZ")
                 if offset >= 0 and isinstance(timetoquery, str):
-                    print("Offset positive!")
+                    loggerobject.info("Approximation parameter set. Offset is positive.")
                     date2=datetime.strptime(timetoquery[0:10], "%Y-%m-%d") + timedelta(days=dayoff)
                     #print(date2)
                 elif offset < 0 and isinstance(timetoquery, str):
@@ -410,8 +411,7 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
                 timetoquery = date2.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
                 query = f"for $c in ({layer}) return encode($c[{TimeLabel}(\"{timetoquery}\"),{XLabel} :\"EPSG:4326\"( {longitude_sample} ), {YLabel}:\"EPSG:4326\"( {latitude_sample}) ], \"{output_format}\")"
                 url = f"{base_wcs_url}&REQUEST=ProcessCoverages&QUERY={query}"
-                print(url)
-                print("                        ")
+                loggerobject.info(f" START QUERYING: {url}")
                 response = requests.get(url, auth=(rasdaman_username, rasdaman_password))
                 value_response=str(response.text)
                 #print(value_response)
@@ -428,30 +428,26 @@ def requestDataWGS(infoheader,layerlist,samples, filepath, logfilepath,offset=0,
                         sample_distances.append(differencedays)
                         value_result.append(singleval)
                     #sample_result.append(layer)
-                    print("RESULT:", valls)
-                    print("   ")
-                    print("_______________________________________")
+                    loggerobject.info(f"RESULT: {valls}")
+                    loggerobject.info("_______________________________________")
                 else:
-                    print(response)
+                    loggerobject.info(f" {response}")
                     for _ in range(number_bands):
                         t="NA"+str(_)
                         sample_result.append(t)
                         sample_distances.append("na")
                         value_result.append("NA")
-                print("##########################")
-                print(value_result)
+                loggerobject.info(f" {value_result}")
                     #sample_result.append(layer)
         result.append(sample_result)
         distances.append(sample_distances)
         #result.append(samples_results_sep)
         #header.append('query_sent,')  
     #sys.stdout = sys.__stdout__
-    print("----------------------")
-    print("                      ")
-    print(sample_distances)
     datetime.now()
     sys.stdout = sys.__stdout__
     if filepath!="NONE":
+        loggerobject.info(f"RESULT WRITTEN TO OUTPUT FILE: {filepath}")
         with open(filepath, "w", newline="") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(header)

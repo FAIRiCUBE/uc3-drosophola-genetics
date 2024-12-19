@@ -33,14 +33,17 @@ The main workflow established is executed by several python scripts manually, do
 - *code*: Stores all the python files containing functions and objects that are required for the Wormpicker to work. 
 - *example_use*: Contains a main.py file, that calls all the functions required to download data for geo referenced samples as well as example data file called *dest_v2.samps_25Feb2023.csv* (https://dest.bio/).
 
-
-## Example use
-How to use the package best is demonstrated in the directory [example_use](example_use/) and a [main file](example_use/main.py).
-
 # Functions
 
 All the functions necessary can be found in the [code](projects/WormPickerOOP/code) directory. 
 
+
+# Example Use
+
+
+## Running the Wormpicker like
+
+´´´ python3 /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/main.py -outdir /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/example_results -samples /home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/samplesfile.csv -username "fairicube_nhm" -password "Y0a4RheXR" ´´´  
 
 ## 1) Ask for UserCredentials
 [UserCred.py](code/UserCred.py)
