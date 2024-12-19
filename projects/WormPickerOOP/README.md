@@ -32,7 +32,7 @@ The main workflow established is executed by several python scripts manually, do
 
 **Directories**
 - *code*: Stores all the python files containing functions and objects that are required for the Wormpicker to work. 
-- *example_use*: Contains a main.py file, that calls all the functions required to download data for geo referenced samples as well as example data file called *dest_v2.samps_25Feb2023.csv* (https://dest.bio/).
+- *example_use*: Contains a main.py file, that calls all the functions required to download data for geo referenced samples as well as example data file called *samplesfile.csv*.
 
 # Functions
 
@@ -48,26 +48,28 @@ The program can be run from the terminal with the following command line:
 
 
 ```
- python3 /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/main.py -outdir /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/example_results -samples /home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/samplesfile.csv -username "fairicube_nhm" -password "Y0a4RheXR"
+ python3 main.py \
+    -outdir example_use/example_results \
+    -samples samplesfile.csv \
+    -username "rasdaman_username" \
+    -password "rasdaman_password" 
  
 ```
 
-The following parameters can e used with the script. 
+The following parameters can be used with the script. 
 
 - Rasdaman credentials: 
     - Username
     - Password
     - Service Endpoint
-- samples: A csv file carrying information on sampleId, lat, long and date.
+
+    If not provided manually , these parameters can be read from an env file as well.
+
+- samples: A csv file carrying information on sampleId, lat, long and date. This file is mandatory. 
 - outdir: If the result should be stored as csv provide the path to the output directory. 
 
-## 1) Ask for UserCredentials
-[UserCred.py](code/UserCred.py)
-The credentials that are required for fairicube.rasdaman.org, will be written to an customly created env file.
 
-## 2) Get Layer Information and Request Data
-[GetLayers_Window.py](projects/WormPickerOOP/code/GetLayers_Window.py)
-Please take into consideration, that at this time rasdaman layers do not provide a big variety of data in terms of time axis and therefore are not selected in time.
+Additional functions in the modules can be used to run custom versions of the wormpicker.
 
 
 # Output
