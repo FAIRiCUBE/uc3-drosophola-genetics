@@ -27,7 +27,8 @@ The main workflow established is executed by several python scripts manually, do
 ## Package Structure
 
 **Requirements**
-*WormpickerEnv.yml* - To set up an environment with all the required installations. 
+
+- *WormpickerEnv.yml* - To set up an environment with all the required installations. 
 
 **Directories**
 - *code*: Stores all the python files containing functions and objects that are required for the Wormpicker to work. 
@@ -35,15 +36,30 @@ The main workflow established is executed by several python scripts manually, do
 
 # Functions
 
-All the functions necessary can be found in the [code](projects/WormPickerOOP/code) directory. 
+All the necessary functions can be found in the [code](projects/WormPickerOOP/code) directory.
 
 
 # Example Use
 
 
-## Running the Wormpicker like
+## Running the Wormpicker 
 
-´´´ python3 /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/main.py -outdir /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/example_results -samples /home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/samplesfile.csv -username "fairicube_nhm" -password "Y0a4RheXR" ´´´  
+The program can be run from the terminal with the following command line:
+
+
+```
+ python3 /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/main.py -outdir /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/example_results -samples /home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/samplesfile.csv -username "fairicube_nhm" -password "Y0a4RheXR"
+ 
+```
+
+The following parameters can e used with the script. 
+
+- Rasdaman credentials: 
+    - Username
+    - Password
+    - Service Endpoint
+- samples: A csv file carrying information on sampleId, lat, long and date.
+- outdir: If the result should be stored as csv provide the path to the output directory. 
 
 ## 1) Ask for UserCredentials
 [UserCred.py](code/UserCred.py)

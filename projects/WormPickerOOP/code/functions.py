@@ -25,9 +25,6 @@ import tkinter.messagebox as messagebox
 
 # Access logs later
 
-def follow(log_object):
-    for log in log_object.get_logs():
-        print(log)
 
 def trans4mEPSG(InputCRS,OutputCRS,y,x):
     src_crs = InputCRS
@@ -362,7 +359,11 @@ def requestDataWGS(infoheader,layerlist,samples, filepath,offset=0, approximate=
                 continue
             approxvar=approximate
             if approxvar is True:
-                date_obj = datetime.strptime(date, "%Y-%m-%d")
+                loggerobject.info(f"Trying to find the date {date}")
+                try:
+                    date_obj = datetime.strptime(date, "%Y-%m-%d")
+                except:
+                    return
                 try:
                     timetoquery,differencedays=findDate(date,wcs_coverage_description)
                     #date_obj = datetime.strptime(timetoquery_raw, "%Y-%m-%d")
@@ -372,7 +373,7 @@ def requestDataWGS(infoheader,layerlist,samples, filepath,offset=0, approximate=
                     loggerobject.info(f"Difference in Days: {differencedays}")
                 except:
                     loggerobject.error("Could not execute function called: findDate. Either date or coverade_description cannot be assigned." )
-                    sample_result.append("na")
+                    sample_result.append("NA")
                     continue
             else:
                 date_obj = datetime.strptime(date, "%Y-%m-%d")
@@ -423,8 +424,8 @@ def requestDataWGS(infoheader,layerlist,samples, filepath,offset=0, approximate=
                     #sample_result.append(valls)
                     for singleval in valls.strip('"').split(","):
                         #print(singleval)
-                        singlevalq="{"+singleval+"}"
-                        sample_result.append(singlevalq)
+                        #singlevalq="{"+singleval+"}"
+                        sample_result.append(singleval)
                         sample_distances.append(differencedays)
                         value_result.append(singleval)
                     #sample_result.append(layer)
@@ -433,9 +434,10 @@ def requestDataWGS(infoheader,layerlist,samples, filepath,offset=0, approximate=
                 else:
                     loggerobject.info(f" {response}")
                     for _ in range(number_bands):
-                        t="NA"+str(_)
+                        #t="NA"+str(_)
+                        t="NA"
                         sample_result.append(t)
-                        sample_distances.append("na")
+                        sample_distances.append("NA")
                         value_result.append("NA")
                 loggerobject.info(f" {value_result}")
                     #sample_result.append(layer)
@@ -452,10 +454,10 @@ def requestDataWGS(infoheader,layerlist,samples, filepath,offset=0, approximate=
             writer = csv.writer(csvfile)
             writer.writerow(header)
             writer.writerows(result)
-        with open((filepath+"2"), "w", newline="") as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(header[3:])
-            writer.writerows(distances)
+        #with open((filepath+"2"), "w", newline="") as csvfile:
+        #    writer = csv.writer(csvfile)
+        #    writer.writerow(header[3:])
+        #    writer.writerows(distances)
             #writer.writerows(value_result)
     else:
         return result

@@ -48,8 +48,9 @@ class Coverage(object):
             reader = csv.DictReader(file)
             for row in reader:
                 lat=row["lat"] or row["latitude"]
-                long=row["long"] or row["longitude"]
-                date=row["date"] 
+                long=row["long"]
+                date=row["date"]
+                print(lat,long,date)
                 if lat == 'NA' and long == 'NA':
                     continue
                 #else:

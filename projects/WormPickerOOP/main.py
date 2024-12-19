@@ -23,21 +23,22 @@ outdir = args.outdir
 samples = args.samples
 username = args.username
 password = args.password
-endpoint=args.endpoint
+endpoint = args.endpoint
 
 
 # A) Provide your user Credentials for fairicube.rasdaman.org if you have not saved them in an .env file yet
 # B) Request some info about alyers available to select layers useful for your analysis, when providing a filepath, you can save this information as .csv
 #layer_info=getLayers(savepath="NONE", loggerobject=logger)
 
-layer_info=getLayers(savepath="NONE", rasdaman_endpoint=endpoint, rasdaman_password=password, rasdaman_username=username, loggerobject=logger)
+layer_info = getLayers(savepath="NONE",
+                       rasdaman_endpoint=endpoint,
+                       rasdaman_password=password,
+                       rasdaman_username=username,
+                       loggerobject=logger)
 
 # 3- Apply Coverage onto the *rasdaman* layers and make them ready to select
 x=Coverage(layer_info)
 x.getBoundary()
-
-
-
 #x.getSamples("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/dest_v2.samps_3May2024.csv")
 #x.getSamples("/home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/samplesfile.csv")
 x.getSamples(samples)
@@ -71,6 +72,14 @@ else:
 
 # Credentials parsed from input, results can be saved as object with e.g.: result = requestDataWGS()....
 requestDataWGS(info,layerlist,samplescovered,filepath=outvar, offset=0, approximate=True, rasdaman_password=password, rasdaman_username=username, rasdaman_endpoint=endpoint, loggerobject=logger)
+
+
+with open(logpath, "w", newline="") as csvfile:
+    writer = csv.writer(csvfile)
+    for log in log_object.get_logs():
+        #print(log_object.get_logs()[log])
+        row=[str(log)]
+        writer.writerow(row)
 
 #requestDataWGS(info,layerlist,samplescorr,"/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/example_use/TestNALoop.csv", approximate="TRUE")
 
