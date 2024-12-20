@@ -1,5 +1,5 @@
 Call: AllFreq ~ long + AImPP + Bio_5 + Bio_18 + AImP + SMcVSMU + mERA5snowD +      Bio_14 + SMpDNF + POGly_l + PasHayMcpa + PasHayMet + SMpVSMU +      Bio_4 + S1CRDH_VV 
- 
+
                      R2.adjusted
 <All variables>        0.3357019
 + S1CRDM_HH            0.2139664
@@ -145,5 +145,132 @@ Call: AllFreq ~ long + AImPP + Bio_5 + Bio_18 + AImP + SMcVSMU + mERA5snowD +   
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
+###V2
 
-"AllFreq ~ Lat + Long + PopStruct.PC1 + PopStruct.PC2 + PopStruct.PC3 +  long + AImPP + Bio_5 + Bio_18 + AImP + SMcVSMU + mERA5snowD + Bio_14 + SMpDNF + POGly_l + PasHayMcpa + PasHayMet + SMpVSMU + Bio_4 + S1CRDH_VV"
+
+Step: R2.adj= 0.2092251 
+Call: AllFreq ~ PasHayMet_l + SMpVSMU + AImH + Bio_5 + Date_num + Bio_4 +      AImP + POMet + mERA5snowD + Bio_14 + Bio_18 + S1CRDH_VV +      PO24d_l + PasHayFlu_l 
+ 
+                     R2.adjusted
+<All variables>        0.3101450
++ S1CRDM_HH            0.2118840
++ S1CRDM_HV            0.2118840
++ mERA5snow            0.2113829
++ POGly                0.2112629
++ mERA5lvc             0.2112424
++ AI340                0.2111752
++ ERA5hvc              0.2111359
++ AI354                0.2111224
++ POGly_l              0.2111069
++ ERA5lvg              0.2110974
++ Bio_8                0.2110956
++ S2L2AB01             0.2110910
++ ERA5lLAI             0.2110597
++ mERA5hvc             0.2110364
++ PasHayFlu            0.2110276
++ AI335                0.2109965
++ CH4mr                0.2109890
++ Bio_15               0.2108891
++ mERA5hLAI            0.2108715
++ AI335P               0.2108244
++ NO2gAMFtc            0.2107803
++ Bio_9                0.2107720
++ S1CRDH_VH            0.2107613
++ mERA5stl3            0.2107482
++ SMaSens              0.2107245
++ Bio_13               0.2107136
++ mERA5lLAI            0.2107082
++ mERA5windV           0.2106776
++ SMptO                0.2106737
++ S3OLCI681            0.2106463
++ ERA5hLAI             0.2106446
++ SMpVSM               0.2106399
++ Bio_17               0.2106362
++ PasHay24d_l          0.2106118
++ Bio_16               0.2104976
++ PasHayMcpa_l         0.2104942
++ Bio_12               0.2104939
++ PasHayGly            0.2104729
++ O3gOVC               0.2104590
++ SMatO                0.2104144
++ NO2gTLI              0.2103743
++ PasHay24d            0.2103232
++ PasHayGly_l          0.2102841
++ mERA5stype           0.2102810
++ SMpfID               0.2102721
++ SMcVSM               0.2102667
++ PasHayClo_l          0.2102210
++ Bio_19               0.2102157
++ SO2gVC               0.2102059
++ Bio_2                0.2101966
++ SMctO                0.2101896
++ mERA5stl4            0.2101607
++ PasHayClo            0.2101460
++ ERA5st3              0.2101384
++ PA24d                0.2101360
++ Bio_1                0.2101320
++ Bio_6                0.2101139
++ Bio_7                0.2101139
++ PasHayMcpa           0.2101058
++ Bio_3                0.2101005
++ mERA5vswl2           0.2100827
++ CLgCOT               0.2100774
++ COtccorr             0.2100584
++ CLgCBH               0.2100526
++ CLgCBP               0.2100343
++ SMaPercSat           0.2100243
++ PasHayMet            0.2100214
++ COtc                 0.2100024
++ AvgT_B               0.2099981
++ ERA5st4              0.2099909
++ CLgCF                0.2099907
++ mERA5stl2            0.2099545
++ mERA5_2mdt           0.2099234
++ AvgT_G               0.2099202
++ ERA5sp               0.2099189
++ SMcSmode             0.2098947
++ TotalPrecipitation   0.2098707
++ ERA5vswl1            0.2098381
++ SMcFBI               0.2098331
++ Bio_11               0.2098308
++ mERA5sp              0.2098257
++ ERA5prect            0.2098227
++ CH4bcorrmr           0.2098127
++ Bio_10               0.2097704
++ S3OLCI685            0.2097701
++ mERA5vswl1           0.2097696
++ CLgCTH               0.2097695
++ ERA5vswl2            0.2097000
++ mERA5stl1            0.2096956
++ CLgCTP               0.2096557
++ mERA5skint           0.2096150
++ mERA5_2mt            0.2095941
++ AvgT_R               0.2095926
++ mERA5windU           0.2095867
++ mERA5strd            0.2095814
++ SMaSmode             0.2095650
++ SMaF                 0.2095460
++ HCOHgFVC             0.2095071
++ ERA5totp             0.2094516
++ ERA5st2              0.2093741
+<none>                 0.2092251
++ POMet_l              0.2092251
++ NO2gAMFtrop          0.2092173
++ mERA5ssrd            0.2092059
++ ERA5windU            0.2091930
++ NO2gAMF              0.2091898
++ ERA5strd             0.2091692
++ ERA5windV            0.2091469
++ ERA5max2mt           0.2090877
++ mERA5totp            0.2090819
++ ERA5st1              0.2090798
++ ERA5_2mdt            0.2090649
++ ERA5min2mt           0.2090525
++ ERA5skint            0.2089584
++ ERA5_2mt             0.2088149
++ SMpSmode             0.2083373
+
+            Df    AIC      F Pr(>F)  
++ S1CRDM_HH  1 1387.9 1.5432  0.042 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

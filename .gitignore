@@ -41,3 +41,6 @@ projects/LandscapeGenomicsPipeline/RDA_utils/layers
 projects/WormPickerOOP/example_use/TryAgain.Rmd
 projects/ClimateData/CDS/Download.log
 projects/WormPickerOOP/.env
+projects/LandscapeGenomicsPipeline/RDA_utils/RDAResearchPlan/partialRDA/pRDAobjects
+projects/LandscapeGenomicsPipeline/RDA_utils/RDAResearchPlan/ordiR2step/ordiR2step.rds
+projects/LandscapeGenomicsPipeline/RDA_utils/RDAResearchPlan/populationStructure/pcaNeutral.rds
