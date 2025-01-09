@@ -1,6 +1,0 @@
-new("pcaProject", projDir = "/media/inter/ssteindl/FC/NewLandscapeGenomics/LandscapeGenomicsPipeline_newTest/results/2L/LEA/jday_run2/", 
-    pcaDir = "genotypes.pca/", n = 8L, L = 7625L, K = 8L, center = TRUE, 
-    scale = FALSE, pcaProject.file = "genotypes.pcaProject", 
-    input.file = "genotypes.lfmm", eigenvalue.file = "genotypes.eigenvalues", 
-    eigenvector.file = "genotypes.eigenvectors", sdev.file = "genotypes.sdev", 
-    projection.file = "genotypes.projections")

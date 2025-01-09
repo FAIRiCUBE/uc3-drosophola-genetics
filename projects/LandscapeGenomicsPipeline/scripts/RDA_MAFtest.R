@@ -52,223 +52,182 @@ get_worldclim_data <- function(meta.sub) {
 }
 
 args <- commandArgs(TRUE)
-af_file<-args[1]
-meta2024<-args[2]
-outdir<-args[4]
-region<-args[5]
-errorperc<- as.numeric(args[6])
-dir.create(outdir)
+#af_file<-args[1]
+#meta2024<-args[2]
+#outdir<-args[4]
+#region<-args[5]
+#errorperc<- as.numeric(args[6])
+#dir.create(outdir)
 
-meta <- get_meta_data(meta2024)
+#meta <- get_meta_data(meta2024)
 
+#af <- read.table(af_file, header=TRUE, na.strings = NaN)
+#loci <- paste(af$Chr, af$Pos, sep=".")
+#af_sel <- af %>% dplyr::select(3:ncol(af))
+#af2 <- as.data.frame(t(af_sel))
+#colnames(af2) <- loci
+#
+#AllFreq=af2
+#rownames(AllFreq) <- gsub("\\.", "-", rownames(AllFreq))
+#common_elements <- intersect(meta$sampleId, row.names(AllFreq))
+## Subset the data frames based on the intersection
+#matchedMeta  <- meta[meta$sampleId %in% common_elements, ]
+
+
+errorperc <- as.numeric(args[1])
+outdir <- args[2]
+# READING ENVIRONMENTAL DATA
+envdata="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Env.csv"
+Env <- read.csv(envdata, header=TRUE)
+rownames(Env) <- Env$sample
+Dates <- as.Date(Env$Date_num)
+custom_origin <- as.Date(min(Env$Date_num))
+Env$Date_num <- as.numeric(as.Date(Dates) - custom_origin)
+## Dates <- as.Date(Env$Date_num + custom_origin)
+#UncertaintyParameters <- c("SMcVSMU", "SMpVSMU", "AImPP", "SMpDNF", "SMcDNF", "SMaDNF", "SMaPercSatU", "AI340P", "AI354P", "AImHP", "CH4mrP", "CLgCBHP", "SO2gVCP", "O3gOVCP", "NO2gAMFtcpk", "NO2gAMFtcp", "HCOHgFVCP", "COtcP", "CLgCTPP", "CLgCTHP", "CLgCOTP", "CLgCFP", "CLgCBPP")
+#Env <- Env[!colnames(Env) %in% UncertaintyParameters]
+
+# READING ALLELE FREQUENCY FILE 
+af_file="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/Subsampled_fullgenome.final_DP15.af"
 af <- read.table(af_file, header=TRUE, na.strings = NaN)
+ann="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/data/annotationdata/annotations.txt"
+annotations <- read.table(ann, na.strings = NaN)
+annotations <- unique(annotations)
+
+colnames(annotations) <- c("Chr", "Pos", "Gene")
+rownames(annotations) <- paste0(annotations$Chr,".", annotations$Pos)
 loci <- paste(af$Chr, af$Pos, sep=".")
-af_sel <- af %>% dplyr::select(3:ncol(af))
-af2 <- as.data.frame(t(af_sel))
+af2 <- as.data.frame(t(af %>% dplyr::select(3:ncol(af))))
 colnames(af2) <- loci
 
 AllFreq=af2
 rownames(AllFreq) <- gsub("\\.", "-", rownames(AllFreq))
-common_elements <- intersect(meta$sampleId, row.names(AllFreq))
-# Subset the data frames based on the intersection
-matchedMeta  <- meta[meta$sampleId %in% common_elements, ]
+freq_mean <- colMeans(AllFreq)
+
+## WORK
 
 errorval_lower <- 1*errorperc/100
 errorval_higher <- 1 - errorval_lower
 
-freq_mean <- colMeans(AllFreq)
 #AllFreq <- AllFreq[,-which(freq_mean>=0.95 | freq_mean<=0.05)]
 AllFreq <- AllFreq[,-which(freq_mean>=errorval_higher | freq_mean<=errorval_lower)]
 
-## Get Worldclim Data
+AllFreq <- AllFreq[rownames(AllFreq) %in% rownames(Env),]
+Env <- Env[rownames(Env) %in% rownames(AllFreq),]
+Dates <- Env$Date_num
+Lat <- Env$lat
+Long <- Env$long
+Coordinates <- as.data.frame(cbind(Lat, Long))
+rownames(Coordinates) <- Env$sample
+colnames(Coordinates) <- c("Lat", "Long")
+Env <- as.data.frame(Env[,5:ncol(Env)])
+Env$Date_num <- Dates
 
-FileEnv <- paste0(outdir,"/Env.csv")
-if (file.exists(FileEnv)) {
-  # Load the file
-  Env <- readRDS(file=FileEnv)
-  message("Env/Biolcim file loaded successfully.")
-} else {
-  # Generate the file
-  Env <- get_worldclim_data(matchedMeta)
-  saveRDS(Env, file=FileEnv)
-  message("File generated and saved successfully.")
-  
-}
+print("Testing different Allele Frequencies")
+print(nrow(AllFreq))
+print(ncol(AllFreq))
 
-print("This is Env.")
-rownames(Env) <- matchedMeta$sampleId
-Env <- na.exclude(Env)
-matchedMeta  <- meta[meta$sampleId %in% rownames(Env), ]
-Coordinates <- as.data.frame(cbind(matchedMeta$sampleId, as.numeric(matchedMeta$lat), as.numeric(matchedMeta$long)))
-colnames(Coordinates) <- c("sampleId", "Latitude", "Longitude")
+AFsin <- asin(sqrt(AllFreq))
 
-
-
-Env2 <- Env
+print("SCALING AND CENTERING")
 Env <- scale(Env, center=TRUE, scale=TRUE) # center=TRUE, scale=TRUE are the defaults for scale()
-
-
-## Recovering scaling coefficients
 scale_env <- attr(Env, 'scaled:scale')
 center_env <- attr(Env, 'scaled:center')
-## Climatic table
-Env <- as.data.frame(na.exclude(Env))
-
-new_labels <- function(x) {
-  x <- gsub("wc2.1_2.5m_b", "B", x)
-  return(x)
-}
 
 
-FileEnvPCA <- paste0(outdir,"/EnvPCA.rds")
-if (file.exists(FileEnvPCA)) {
-  # Load the file
-  Env.PCA <- readRDS(file=FileEnvPCA)
-  message("File loaded successfully.")
-} else {
-  # Generate the file
-  Env.PCA <- FactoMineR::PCA(Env)
-  saveRDS(Env.PCA, file=FileEnvPCA)
-  message("File generated and saved successfully.")
-  
-}
-
-neutral_SNPS<-args[3]
-AllFreq_neutral <- read.table(neutral_SNPS, header = T)
-colnames(AllFreq_neutral) <- gsub("\\.", "-", colnames(AllFreq_neutral))
-
-AF2_neutral <- as.data.frame(t(AllFreq_neutral %>% dplyr::select(3:ncol(AllFreq_neutral))))
-colnames(AF2_neutral) <- paste(AllFreq_neutral$Chr, AllFreq_neutral$Pos, sep=".")
-AllFreq_neutral=AF2_neutral[rownames(AF2_neutral) %in% rownames(Env),]
-
-FilePCANeutral <- paste0(outdir,"/pcaNeutral.rds")
-
-if (file.exists(FilePCANeutral)) {
-  # Load the file
-  pca_neutral <- readRDS(file=FilePCANeutral)
-  message("File loaded successfully.")
-} else {
-  # Generate the file
-  pca_neutral <- rda(AllFreq_neutral[,-1], scale=T) # PCA in vegan uses the rda() call without any predictors
-  saveRDS(pca_neutral, file=FilePCANeutral)
-  message("File generated and saved successfully.")
-  
-}
+### PREPARING NEUTRAL SNP AND COORDINATES
+neutral_SNPS <- "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/Subsampled_fullgenome_NeutralSNPS_80.tsv"
 
 
+AllFreq_neutral <- read.table(neutral_SNPS, header = F)
+rownames(AllFreq_neutral) <- paste(AllFreq_neutral$V1, AllFreq_neutral$V2, sep=".")
+Loci <- rownames(AllFreq_neutral)
+AF2_neutral <- AllFreq[,colnames(AllFreq) %in% Loci]
+AllFreq_neutral=AF2_neutral[gsub("\\.", "-", rownames(AF2_neutral)) %in% rownames(Env),]
+
+FilePCANeutral <- paste0(outdir,"/populationStructure/pcaNeutral.rds")
+pca_neutral <- rda(AllFreq_neutral[,-1], scale=T)
 PCs_neutral <- scores(pca_neutral, choices=c(1:3), display="sites", scaling=0)
 PopStruct <- data.frame(Population = rownames(AllFreq_neutral), PCs_neutral)
 
+###LOAD THIS FROM FILE
+bv <- read.csv("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RDA_utils/RDAResearchPlan/ordiR2step/best_variables.csv")
+best_variables <- bv[,2]
+#EnvComp <- Env[best_variables]
+EnvComp <- Env[,colnames(Env) %in% best_variables]
 
-####2.Variable selection: forward model building procedure 
-Variables <- data.frame(Env)
-colnames(Variables) <- new_labels(colnames(Variables))
-Parameters <- colnames(Variables)
+
+print("INTERSECTING COORDINATES AND ENVCOMP AND NEUTRAL PCS")
+Variables <- data.frame(Coordinates, EnvComp, PopStruct$PC1, PopStruct$PC2, PopStruct$PC3)
+
+##only components without lat, long
+VariablesN <- Variables[,3:ncol(Variables)]
+
+##included
+Factors <- colnames(EnvComp)
 
 
-AllFreq <- AllFreq[rownames(AllFreq) %in% rownames(Env),]
 
-###RDA0 needed??
-RDA0 <- rda(AllFreq ~ 1,  Variables) 
-formula_string <- paste("AllFreq ~", paste(Parameters, collapse = " + "))
-# Convert the string to a formula
+
+## FULL MODEL: pRDAfull
+formula_string <- paste("AllFreq ~ Lat + Long + PopStruct.PC1 + PopStruct.PC2 + PopStruct.PC3 + ", paste(Factors, collapse = " + "))
 formula <- as.formula(formula_string)
+pRDAfull <- rda(formula, Variables)
 
-# Perform the redundancy analysis (RDA)
-RDAfull <- rda(formula, data = Variables)
-
-###PERMUTATION TEST
-
-#####2. FS FUCNTION
-#install.packages("packfor", repos = "http://R-Forge.R-project.org")
-library(packfor)
-
-global_r2 <- RsquareAdj(RDAfull)$adj.r.squared
-
-
-RsquareAdj(RDAfull)$adj.r.squared
-
-##determining linear dependencies
-##As a rule of the thumb, if √VIF>2 multicollinearity is considered high.
-
-
-sqrt(vif.cca(RDAfull)) 
-
-
-#anov2_glob <- anova.cca(SelectedRDA)
-#anov2_axis <- anova.cca(SelectedRDA, by="axis")
-#anov2_terms <- anova.cca(SelectedRDA, by="terms")
-
-Latitude <- as.numeric(Coordinates$Latitude)
-Longitude <- as.numeric(Coordinates$Longitude)
-Coords <- cbind(Latitude, Longitude)
-PC1 <- PopStruct$PC1
-PC2 <- PopStruct$PC2
-PC3 <- PopStruct$PC3
-
-##PARTIAL RDA including LAT/LONG and neutral population structure
-Vars <- cbind(Variables, Latitude, Longitude, PC1, PC2, PC3 )
-
-##Full model including PCs of neutral genetic strucutre and Coordinate Information 
-pRDAfull <- rda(AllFreq ~  . , Vars)
-summary(pRDAfull)
-RsquareAdj(pRDAfull)$adj.r.squared
+RsquareAdj(pRDAfull)$r.squared
 
 #anova(pRDAfull)
 
-##Pure climate model
-#pRDAclim <- rda(AllFreq ~  . + Condition(Latitude + Longitude),  Vars[,1:(ncol(Vars)-2)])
-pRDAclim <- rda(AllFreq ~  . + Condition(Latitude + Longitude + PC1 + PC2 + PC3), Variables)
-
-summary(pRDAclim)
-RsquareAdj(pRDAclim)$adj.r.squared
-#anova(pRDAclim)
-
-#############################
-##### Pure neutral population structure model  
-formula_string <- paste("AllFreq ~ PC1 + PC2 + PC3 + Condition(Longitude + Latitude +", paste(colnames(Variables), collapse = " + "), ")")
-# Convert the string to a formula
+##SUBMODEL1: climate model
+formula_string <-paste("AllFreq ~ ", paste(Factors, collapse = " + "), "+ Condition(Lat + Long + PopStruct.PC1 + PopStruct.PC2 + PopStruct.PC3)")
 formula <- as.formula(formula_string)
-# Perform the redundancy analysis (RDA)
-pRDAstruct <- rda(formula, data = Variables)
-#pRDAstruct <- rda(AllFreq ~ PC1 + PC2 + PC3 + Condition(Longitude + Latitude + MAR + EMT + MWMT + CMD + Tave_wt + DD_18 + MAP + Eref + PAS),  Variables)
-RsquareAdj(pRDAstruct)$adj.r.squared
-anova(pRDAstruct)
+pRDAclim <- rda(formula, Variables)
 
+RsquareAdj(pRDAclim)$r.squared
+#anova(pRDAclim)  
+
+## SUBMODEL 2: population strucutre model
+formula_string <- paste("AllFreq ~ PopStruct.PC1 + PopStruct.PC2 + PopStruct.PC3 + Condition(Lat + Long +", paste(Factors, collapse = " + "), ")")
+formula_struct <- as.formula(formula_string)
+pRDAstruct <- rda(formula_struct, Variables)
+
+RsquareAdj(pRDAstruct)$r.squared
+
+ 
 
 ####################
 ##Pure geography model
-formula_string <- paste("AllFreq ~ Longitude + Latitude + Condition(", paste(colnames(Variables), collapse = " + "), " + PC1 + PC2 + PC3)")
-# Convert the string to a formula
-formula <- as.formula(formula_string)
-# Perform the redundancy analysis (RDA)
-pRDAgeog <- rda(formula, data = Vars)
+formula_string <- paste("AllFreq ~ Lat + Long + Condition(", paste(Factors, collapse = " + "), "+ PopStruct.PC1 + PopStruct.PC2 + PopStruct.PC3)")
+formula_geog <- as.formula(formula_string)
+pRDAgeog <- rda(formula_geog, Variables)
+
 #pRDAgeog <- rda(AllFreq ~ Longitude + Latitude + Condition(MAR + EMT + MWMT + CMD + Tave_wt + DD_18 + MAP + Eref + PAS + PC1 + PC2 + PC3),  Variables)
-RsquareAdj(pRDAgeog)$adj.r.squared
+RsquareAdj(pRDAgeog)$r.squared
 
 
 ##confounded variance
-confVar <- RsquareAdj(pRDAfull)$adj.r.squared - RsquareAdj(pRDAclim)$adj.r.squared - RsquareAdj(pRDAstruct)$adj.r.squared - RsquareAdj(pRDAgeog)$adj.r.squared
-vp <- varpart(AllFreq, Variables, PopStruct[,2:4], Coords)
+confVar <- RsquareAdj(pRDAfull)$r.squared - RsquareAdj(pRDAclim)$r.squared - RsquareAdj(pRDAstruct)$r.squared - RsquareAdj(pRDAgeog)$r.squared
+vp <- varpart(AllFreq, EnvComp, PopStruct[,2:4], Coordinates)
 #VennDiagram <- plot(vp)
 #ggsave(file = paste0(outdir, "/VariancePartitions",errorval_lower,".png"), VennDiagram, width = 15, height = 6)
 
-png(file = paste0(outdir, "/VarMAFtest_", errorval_lower, ".png"), width = 15, height = 6, units = "in", res = 300)
-plot(vp)
+png(file = paste0(outdir, "/VarMAFtest_", errorval_lower, ".png"), width = 15, height = 10, units = "in", res = 300)
+#plot(vp, Xnames = c("Environment", "PopulationStructure", "Geography"))
+plot(vp, bg= c("#01985a", "#009ddb", "#f3c400"), Xnames = c("Environment", "PopulationStructure", "Geography"), digits=3)
 dev.off()
 
 result <- rbind(vp$part$fract, vp$part$indfract, vp$part$contr1)
-write.csv(result, file=paste0("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA/Var_MAFtest",errorval_lower,".csv"))
+write.csv(result, file=paste0(outdir, "/Var_MAFtest",errorval_lower,".csv"))
 
 
 ###### just tow ork in studio 
 library(tidyverse)
 
 # Specify the directory containing the CSV files
-directory <- "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA"
+#directory <- "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA"
 
 # List all CSV files in the directory
-csv_files <- list.files(path = directory, pattern = "\\VarMAFtest_.*.csv$", full.names = TRUE)
+csv_files <- list.files(path = outdir, full.names = TRUE) # pattern = "\\Var_MAFtest_.*.csv$", 
 
 
 file_names <- sapply(csv_files, function(x) {
@@ -297,7 +256,7 @@ r_square_df <- data.frame(
   do.call(cbind, r_square_values)
 )
 
-colnames(r_square_df) <- c("Variance",names(data_list))
+colnames(r_square_df) <- c("ID",names(data_list))
 rownames(r_square_df) <- data_list[[1]]$X
 
 
@@ -307,6 +266,8 @@ r_square_long <- r_square_df %>%
   pivot_longer(cols = -ID, names_to = "MAF", values_to = "Variance") %>%
   mutate(MAF = as.numeric(MAF)) %>%
   arrange(MAF, ID)
+
+r_square_long <- na.exclude(r_square_long)
 
 plott <- ggplot(r_square_long, aes(x = MAF, y = Variance, color = ID, group = ID)) +
   geom_line() +
@@ -323,7 +284,7 @@ plott <- ggplot(r_square_long, aes(x = MAF, y = Variance, color = ID, group = ID
 
 
 #png(file =  "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA/VarPartitions_NonConfounded.png", plott, width = 15, height = 6, units = "in", res = 300)
-ggsave(file =  "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/RDA/VarMAFtest_Confounded.png", plott, width = 15, height = 6)
+ggsave(file =  paste0(outdir, "/VarMAFtest_Confounded.png"), plott, width = 15, height = 6)
 
 #r_square_long <- r_square_df %>%
 #  as.data.frame() %>%
