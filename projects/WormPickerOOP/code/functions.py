@@ -4,20 +4,27 @@ import csv
 import requests
 from dotenv import dotenv_values
 from dateutil import parser     
-from datetime import datetime
+from datetime import datetime, timedelta
 #from module_crs_converter import trans4mEPSG
 import math
 from osgeo import gdal, osr
+import xmltodict
+import re
 
+import tkinter as tk
+from tkinter import ttk
+import tkinter.messagebox as messagebox
 
+#env_path="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/.env"
 
-env_path = '/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/WormPickerOOP'
+## Load environment variables from the file
+#with open(env_path) as f:
+#    for line in f:
+#        key, value = line.strip().split('=', 1)
+#        os.environ[key] = value
 
-# Load environment variables from the file
-with open(env_path) as f:
-    for line in f:
-        key, value = line.strip().split('=', 1)
-        os.environ[key] = value
+# Access logs later
+
 
 def trans4mEPSG(InputCRS,OutputCRS,y,x):
     src_crs = InputCRS
@@ -30,468 +37,483 @@ def trans4mEPSG(InputCRS,OutputCRS,y,x):
     x_t, y_t, z_t = transform.TransformPoint(x, y, 0)
     return x_t, y_t
 
-#env_vars = dotenv_values()
-## Access specific environment variables
-#rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT')
-#rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
-#rasdaman_password = env_vars.get('RASDAMAN_CRED_PASSWORD')
-#base_wcs_url = rasdaman_endpoint + "?service=WCS&version=2.1.0"
 
-class Coverage(object):
-    def __init__(self,data):
-        self._data=data
-        self._ID= data[0]
-        self._CRS=data[1]
-        self._minlat=data[2]
-        self._maxlar= data[3]
-        self._minlong=data[4]
-        self._maxlong=data[5]
-        self._fromtime=data[6] 
-        self._totime=data[7]
-        lnames=[]
-        for lna in range(1,len(data)):
-            lnames.append(data[lna][0])
-        self.layers=lnames
-    def getBoundary(self):
-        minlats=[]
-        maxlats=[]
-        minlongs=[]
-        maxlongs=[]  
-        for minl in range(1,len(self._data)):
-            crs=self._data[minl][1]
-            if crs=="EPSG/0/4326":
-                min_y, min_x = trans4mEPSG("EPSG:4326","EPSG:3035", float(self._data[minl][4]), float(self._data[minl][2]))
-                max_y, max_x = trans4mEPSG("EPSG:4326","EPSG:3035",float(self._data[minl][5]), float(self._data[minl][3]))
-                minlats.append(min_x)
-                maxlats.append(max_x)
-                minlongs.append(min_y)
-                maxlongs.append(max_y)
-            else:
-                minlats.append(float(self._data[minl][2]))
-                maxlats.append(float(self._data[minl][3]))
-                minlongs.append(float(self._data[minl][4]))
-                maxlongs.append(float(self._data[minl][5]))
-        self.minlat=min([x for x in minlats if x != float('inf')])
-        self.maxlat= max([x for x in maxlats if x != float('inf')])
-        self.minlong=min([x for x in minlongs if x != float('inf')])
-        self.maxlong=max([x for x in maxlongs if x != float('inf')])
-    def getSamples(self,path):
-        filtered_data={}
-        with open(path, 'r') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                lat=row["lat"]
-                long=row["long"]
-                if lat == 'NA' and long == 'NA':
-                    continue
-                else:
-                    long,lat=trans4mEPSG("EPSG:4326","EPSG:3035",float(long),float(lat))
-                if float(lat) > self.minlat and float(lat) < self.maxlat and float(long) > self.minlong and float(long) < self.maxlong:
-                    sampleinfo=(row["lat"],row["long"])
-                    filtered_data[row["sampleId"]] = sampleinfo
-                    #filtered_data.append(sampleinfo)
-        self.samples=filtered_data
-
-##into README
-#layer_info=[]
-#cos=Coverage(layer_info)
-#cos.getBoundary()
-#cos.getSamples("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/data/dest_v2.samps_25Feb2023.csv")
-
-#samplescovered=cos.samples
-
-#import os
-#make this suitable for sample list
-#def getSamples(path):
-#    if os.path.exists(path):
-#        if os.path.isfile(path):
-#            with open(path, 'r') as file:
-#                lines = file.readlines()
-#                for line in lines:
-#                    print(line.strip())  # Process each line as desired
-#        else:
-#            print(f"Error: '{path}' is not a file.")
-#    else:
-#        print(f"Error: Path '{path}' does not exist.")
-#
-
-#getSamples("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/data/dest_v2.samps_25Feb2023.csv")
-
-#def getCoverageData():
-    ###request and store??
-## 1. Get Layers (shall download the layerinfo from the requested server)
-## 2. Get Samples (give an input file to create list/object of samples)
-## 3. Filter
-## 4. GetCoverage (is a function that combines download)
-import tkinter as tk
-from tkinter import ttk
-import tkinter.messagebox as messagebox
-
-#def show_selected_options():
-#    selected_options = []
-#    for index, var in enumerate(option_vars):
-#        if var.get() == 1:
-#            selected_options.append(index)
-#    if selected_options:
-#        for index in selected_options:
-#            x = option_names[index]
-#            messagebox.showinfo("Selected Option", f"You chose {x}")
-#            chosen_layers.append(x)
-#        window.destroy()
-#mode="auto"
-mode="manual"
-
-#if mode=="manual":
-#    objects_list = cos.layers
-#    window = tk.Tk()
-#    window.title("Select Objects")
-#    option_vars = []
-#    option_names=[]
-#    chosen_layers=[]
-#    for index, option in enumerate(objects_list):
-#        var = tk.IntVar(window)
-#        check_button = ttk.Checkbutton(window, text=option, variable=var)
-#        check_button.grid(row=index, column=0, sticky="w")
-#        option_vars.append(var)
-#        option_names.append(option)
-#    btn_submit = ttk.Button(window, text="Submit", command=show_selected_options)
-#    btn_submit.grid(row=len(objects_list), column=0, pady=10)
-#    window.mainloop()
-#    use_layers=chosen_layers
-#else:
-#    use_layers=cos.layers
-### now layers are in use_layers
-#def show_selected_options():
-#    selected_options = []
-#    for index, var in enumerate(option_vars):
-#        if var.get() == 1:
-#            selected_options.append(index)
-#    if selected_options:
-#        for index in selected_options:
-#            x = option_names[index]
-#            messagebox.showinfo("Selected Option", f"You chose {x}")
-#            chosen_layers.append(x)
-#        window.destroy()
-
-def select_objects(mode, object):
-    cos=object
+def select_objects(mode, object, items_per_page=15):
+    cos = object
     if mode == "manual":
         def show_selected_options():
-            global chosen_layers
+            nonlocal chosen_layers
             chosen_layers = [option_names[i] for i, var in enumerate(option_vars) if var.get() == 1]
             window.destroy()
+        def next_page():
+            nonlocal current_page
+            current_page += 1
+            show_page()
+        def prev_page():
+            nonlocal current_page
+            if current_page > 0:
+                current_page -= 1
+                show_page()
+        def show_page():
+            nonlocal next_button, prev_button, btn_submit
+            for widget in window.winfo_children():
+                widget.grid_forget()
+            start = current_page * items_per_page
+            end = (current_page + 1) * items_per_page
+            for index, option in enumerate(objects_list[start:end]):
+                var = tk.IntVar(value=0)
+                check_button = ttk.Checkbutton(window, text=option, variable=var)
+                check_button.grid(row=index, column=0, sticky="w")
+                option_vars.append(var)
+                option_names.append(option)
+            if start > 0:
+                prev_button.grid(row=items_per_page + 1, column=0, pady=10, padx=5, sticky="ew")
+            if end < len(objects_list):
+                next_button.grid(row=items_per_page + 1, column=1, pady=10, padx=5, sticky="ew")
+            btn_submit.grid(row=items_per_page + 2, column=0, pady=10, sticky="ew")
         objects_list = cos.layers
+        chosen_layers = []
+        current_page = 0
         window = tk.Tk()
         window.title("Select Layers")
+        window.geometry("800x400")  # Set the size of the window
+        window.resizable(False, False)  # Make the window non-resizable
         option_vars = []
         option_names = []
-        for index, option in enumerate(objects_list):
-            var = tk.IntVar(window)
-            check_button = ttk.Checkbutton(window, text=option, variable=var)
-            check_button.grid(row=index, column=0, sticky="w")
-            option_vars.append(var)
-            option_names.append(option)
+        next_button = ttk.Button(window, text="Next", command=next_page)
+        prev_button = ttk.Button(window, text="Previous", command=prev_page)
         btn_submit = ttk.Button(window, text="Submit", command=show_selected_options)
-        btn_submit.grid(row=len(objects_list), column=0, pady=10)
+        show_page()
         window.mainloop()
         use_layers = chosen_layers
-    if mode == "automatic":
+    elif mode == "automatic":
         use_layers = cos.layers
+    else:
+        raise ValueError("Invalid mode provided.")
     return use_layers
 
-###README USAGE
-#layers_to_analyze=select_objects("automatic", cos)
+
+#####
+def remove_partial_dates(data_dict):
+    # Regular expression pattern for "MM-DDTT00"
+    invalid_data_pattern = re.compile(r"\d{4}-\d{2}-\d{2}$")
+    # List to store keys to remove
+    keys_to_remove = []
+    # # Identify keys with partial dates
+    for key in data_dict.keys():
+        date_part= key.split('_')[-1]
+        if not invalid_data_pattern.match(date_part):
+            keys_to_remove.append(key)
+            # Remove identified keys 
+    for key in keys_to_remove:
+        del data_dict[key]
+    return data_dict
 
 
-##repeat this for samples!?!?!
-###
-#data_use=[]
-#for layer in use_layers:
-#    for i in range(0,len(cos._data)):
-#        entries_list=list(cos._data[i])
+#def is_valid_iso_date(date_string):
+#    try:
+#        # Attempt to parse the string as an ISO-formatted date
+#        datetime.fromisoformat(date_string)
+#        return True
+#    except ValueError:
+#        return False
+#
+#def process_date_string(date_string):
+#    if is_valid_iso_date(date_string):
+#        print(f"{date_string} is already in ISO format. Doing nothing.")
+#        return date_string
+#    else:
+#        # Add your processing logic here if the date_string is not in ISO format
+#        print(f"Processing {date_string}...")
+#        # For now, just returning the input date_string as an example
+#        return date_string
+#
+#def get_grid_indices_for_axis_X(geo_lower_bound, geo_upper_bound, xmin, xmax, xres):       
+#    print("geo_lower_bound_X: {}, geo_upper_bound_X: {}".format(geo_lower_bound, geo_upper_bound))
+#    lower_grid_index = math.floor( (geo_lower_bound - xmin) / xres )
+#    upper_grid_index = math.floor( (geo_upper_bound - xmin) / xres )
+#    if geo_upper_bound == xmax:
+#        upper_grid_index = upper_grid_index - 1       
+#    return "({}:{})".format(lower_grid_index, upper_grid_index)
+#    
+#def get_grid_indices_for_axis_Y(geo_lower_bound, geo_upper_bound, ymin, ymax, yres):
+#    print("geo_lower_bound_Y: {}, geo_upper_bound_Y: {}".format(geo_lower_bound, geo_upper_bound))
+#    lower_grid_index = math.floor( (geo_upper_bound - ymax) / yres )
+#    upper_grid_index = math.floor( (geo_lower_bound - ymax) / yres )
+#    if geo_lower_bound == ymin:
+#        upper_grid_index = upper_grid_index - 1   
+#    return "({}:{})".format(lower_grid_index, upper_grid_index)
+#
+#
+#def round_down_to_day(date_str):
+#    # Parse the date string
+#    try:
+#        date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+#    except ValueError:
 #        try:
-#            index=entries_list.index(layer)
-#            data_use.append(entries_list)
-#        except:
-#            continue
+#            date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M")
+#        except ValueError:
+#            date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H")
+#    rounded_down_date = date_obj.replace(hour=0, minute=0, second=0)
+#    rounded_down_date_str = rounded_down_date.strftime("%Y-%m-%dT%H:%M:%S")
+#    return rounded_down_date_str
 
-def requestData(layerlist,samples, filepath):
-    env_vars = dotenv_values()
-    rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT')
-    rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
-    rasdaman_password = env_vars.get('RASDAMAN_CRED_PASSWORD')
-    base_wcs_url = rasdaman_endpoint + "?service=WCS&version=2.1.0"
-    result=[]
-    header=[]
-    header.append('Sample')
-    for data_entry in range(0,len(layerlist)):
-        layer=layerlist[data_entry][0]
-        header.append(layer)
-    log = open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/WormpickerRequest.log", "a")
+
+def findDate(inputtime, description):
+    # Example format of your datetime strings, adjust as necessary
+    datetime_format = "%Y-%m-%dT%H:%M:%S.%fZ"
+    date_obj = datetime.strptime(inputtime, "%Y-%m-%d")
+    timestring = date_obj.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
+    testtime = datetime.strptime(timestring, datetime_format)
+    min_diff_days = float('inf')
+    withinTime=False
+    closest_date = None
+    try:
+        b=description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gmlcov:metadata']['gmlcov:Extension']['ras:covMetadata']['ras:axes']['ras:time']['ras:areasOfValidity']['ras:area']
+        for item in b: 
+            starttime=datetime.strptime(item['@start'], datetime_format)
+            endtime=datetime.strptime(item['@end'], datetime_format)
+            if (starttime < testtime < endtime):
+                withinTime=True
+                closest_date=testtime
+                min_diff_days=0
+                return closest_date,min_diff_days
+                break
+            else:
+                start_diff_days = abs((starttime - testtime).days)
+                end_diff_days = abs((endtime - testtime).days)
+                if start_diff_days < min_diff_days:
+                    min_diff_days = start_diff_days
+                    closest_date = starttime + timedelta(days=1)
+                if end_diff_days < min_diff_days:
+                    min_diff_days = end_diff_days
+                    closest_date = endtime - timedelta(days=1)
+                if not withinTime and closest_date is not None:
+                    continue
+                    #print("Sample time not within boundaries. Finding closest time slice....")
+        return closest_date, min_diff_days
+    except KeyError:
+        #print("Trying to find right key.")
+        starttime_str=description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['gml:lowerCorner'].split(" ")[0][1:-1]
+        endtime_str=description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['gml:upperCorner'].split(" ")[0][1:-1]
+        starttime=datetime.strptime(starttime_str, datetime_format)
+        endtime=datetime.strptime(endtime_str, datetime_format)
+        if starttime < testtime < endtime:
+            #print("Sample time", testtime, "within time ranges of layer:", starttime_str, endtime_str)
+            return testtime, "0"
+        else:
+            start_diff_days = abs((starttime - testtime).days)
+            end_diff_days = abs((endtime - testtime).days)
+            if start_diff_days < min_diff_days:
+                min_diff_days = start_diff_days
+                closest_date = starttime + timedelta(days=1)
+            if end_diff_days < min_diff_days:
+                min_diff_days = end_diff_days
+                closest_date = endtime - timedelta(days=1)
+            return closest_date,min_diff_days
+    except TypeError:
+        #print("Handling Type Error.")
+        try:
+            timestamps=description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:domainSet']['gmlrgrid:ReferenceableGridByVectors']['gmlrgrid:generalGridAxis'][0]['gmlrgrid:GeneralGridAxis']['gmlrgrid:coefficients']
+            if timestring in timestamps:
+                #print(timestring, "Sample time within time ranges of layer.")
+                return timestring, "0"
+            else:
+                for time in timestamps.split(" "):
+                    #print(time)
+                    #print(testtime)
+                    diff = abs((testtime - datetime.strptime(time[1:-1], datetime_format)).days)
+                    if diff < min_diff_days:
+                        min_diff_days = diff
+                        closest_date = time[1:-1]
+                return closest_date, min_diff_days
+        except KeyError:
+            starttime_str=description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['gml:lowerCorner'].split(" ")[0][1:-1]
+            endtime_str=description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['gml:upperCorner'].split(" ")[0][1:-1]
+            #print(starttime_str, endtime_str)
+            starttime=datetime.strptime(starttime_str, datetime_format)
+            endtime=datetime.strptime(endtime_str, datetime_format)
+            if starttime < testtime < endtime:
+                #print("Sample time within time ranges of layer.",)
+                return testtime, "0"
+            else:
+                start_diff_days = abs((starttime - testtime).days)
+                end_diff_days = abs((endtime - testtime).days)
+                if start_diff_days < min_diff_days:
+                    min_diff_days = start_diff_days
+                    closest_date = starttime + timedelta(days=1)
+                if end_diff_days < min_diff_days:
+                    min_diff_days = end_diff_days
+                    closest_date = endtime - timedelta(days=1)
+                return closest_date,min_diff_days
+###wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['gml:upperCorner'].split(" ")[0][1:-1]
+#result,diff=findDate("2021-03-01",wcs_coverage_description)
+
+
+
+def requestDataWGS(infoheader,layerlist,samples, filepath,offset=0, approximate=True, rasdaman_username=None, rasdaman_password=None, rasdaman_endpoint=None, loggerobject=None):
     #sys.stdout = log
+    datetime.now()
+    env_vars = dotenv_values()
+    #rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT') 
+    #rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
+    #rasdaman_password = env_vars.get('RASDAMAN_CRED_PASSWORD')
+    rasdaman_endpoint = rasdaman_endpoint or env_vars.get('RASDAMAN_SERVICE_ENDPOINT') 
+    rasdaman_username = rasdaman_username or env_vars.get('RASDAMAN_CRED_USERNAME')
+    rasdaman_password = rasdaman_password or env_vars.get('RASDAMAN_CRED_PASSWORD')
+    base_wcs_url = rasdaman_endpoint + "?SERVICE=WCS&VERSION=2.1.0"
+    result=[]
+    distances=[]
+    header=[]
+    header.append('sample')
+    header.append('lat')
+    header.append('lon')
+    for data_entry in range(0,len(layerlist)):
+            i_header=infoheader
+            if len(layerlist) > 1:
+                number_bands=len(layerlist[data_entry][-2])
+                layer=layerlist[data_entry][0]
+                layerbands_nr=layerlist[data_entry][-2]
+                for offday in range(abs(offset)+1):
+                    for col in layerbands_nr:
+                        if offset > 0:
+                            colname_new=str(layer)+"_"+str(col)+"+"+str(offday)
+                        if offset < 0:
+                            colname_new=str(layer)+"_"+str(col)+"-"+str(offday)
+                        else:
+                            colname_new=str(layer)+"_"+str(col)
+                        header.append(colname_new)
     for key, value in samples.items():
         sample_result=[]
-        latitude_sample = value[0] 
-        longitude_sample = value[1] 
+        sample_distances=[]
+        latitude_sample=value[0] 
+        longitude_sample=value[1]
         name_date = key
-        date = str(name_date[-10:])
-        time_asked= date + 'T00:00:00Z'
-        sample_result.append(name_date)
-        print(sample_result)
-        #layer=None
-        #converted_date=None
+        loggerobject.info("PROCESSING NEW SAMPLE")
+        loggerobject.info(f"COORDINATES - Input Latitude: {latitude_sample}, Input Longitude {longitude_sample}")
         try:
-            converted_date = datetime.strptime(date, "%Y-%m-%d").isoformat() + "Z"
-            search_time=parser.isoparse(converted_date)
-            print(search_time)
-        except ValueError:
-            converted_date = date
-            continue
-        for data_entry in range(0,len(layerlist)):
-            layer=layerlist[data_entry][0]
-           #header.append(layer) 
-            crs=layerlist[data_entry][1] 
-            resolution=layerlist[data_entry][8] 
-            latitude_request = latitude_sample
-            longitude_request = longitude_sample
-            time_min= layerlist[data_entry][6] 
-            time_max= layerlist[data_entry][7]
-            datetime1 = parser.isoparse(time_min)
-            datetime2 = parser.isoparse(time_max)
-            strlat="&subset=Y({},{})"
-            strlon = "&subset=X({},{})"
-            ansi_str="&subset=ansi(\"{}\")"    
-            #print(latitude_request)
-            if search_time > datetime1 and search_time < datetime2:
-                print("YES")  #make this to acommand which produces a file, saying which samples and layers REALLYY overlap (also in time)
-                ##produce timestamp here
-                ansi_val=converted_date
-                subset_ansi=ansi_str.format(ansi_val)
-            else:
-                print(time_asked, "# NOT COVERED TEMPORALLY, only retrieving data for:", time_min)
-                #set timestamp here a general one, the one were coverage is there
-                ansi_val=time_min
-                subset_ansi=ansi_str.format(ansi_val)
-            if crs=="EPSG/0/4326":
-                latitude_request=latitude_request
-                longitude_request=longitude_request
-                strlat="&subset=Lat({},{})"
-                strlon = "&subset=Long({},{})"
-            else:
-                crs_indicator= crs.replace("EPSG/0/", "EPSG:")
-                longitude_request,latitude_request= trans4mEPSG("EPSG:4326",crs_indicator,float(longitude_request), float(latitude_request))
-                x1= float(latitude_request)
-                x2= x1 + float(resolution)
-                #x2=x1
-                #print(x1,x2, resolution)
-                #strlat="&subset=Lat({},{})"
-                subset_lat = strlat.format(x1,x2)
-                y1= float(longitude_request)
-                #y2=y1
-                y2= y1 + float(resolution)
-                #strlon = "&subset=Long({},{})"
-                subset_long= strlon.format(y1,y2)
-                #print("CRS:",crs, "RESOLUTION:", resolution, subset_long, subset_lat)
-            request_cov_id = "&COVERAGEID=" + layer
-            request_encode_format = "&FORMAT=text/csv"
-            #print(name_date, request_cov_id, request_encode_format, layer)
-            if float(latitude_request) < float(layerlist[data_entry][3]) and float(latitude_request) > float(layerlist[data_entry][2]) and float(longitude_request) > float(layerlist[data_entry][4]) and float(longitude_request) < float(layerlist[data_entry][5]):
-                response = requests.get(base_wcs_url + "&request=GetCoverage" + request_cov_id + subset_ansi + subset_lat + subset_long + request_encode_format,auth=(rasdaman_username, rasdaman_password), verify=False)
-                valls=(str(response.text)[1:-1])
-                sample_result.append(valls)
-            else:
-                #print("YAY")
-                valls=("NA")
-                sample_result.append(valls)
-        result.append(sample_result)
-    #sys.stdout = sys.__stdout__
-    print("DONE")
-    if filepath!="NONE":
-        with open(filepath, "w", newline="") as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(header)
-            writer.writerows(result)
-    else:
-        return result
-
-#
-# x= requestData(data_use,cos.samples,"/adada")
-
-
-#def getBoundary(data):
-#    minlats=[]
-#    maxlats=[]
-#    minlongs=[]
-#    maxlongs=[]  
-#    for minl in range(1,len(data)):
-#        crs=data[minl][1]
-#        #print(minl)
-#        if crs=="EPSG/0/4326":
-#            min_y, min_x = trans4mEPSG("EPSG:4326","EPSG:3035", float(data[minl][4]), float(data[minl][2]))
-#            max_y, max_x = trans4mEPSG("EPSG:4326","EPSG:3035",float(data[minl][5]), float(data[minl][3]))
-#            minlats.append(min_x)
-#            maxlats.append(max_x)
-#            minlongs.append(min_y)
-#            maxlongs.append(max_y)
-#        else:
-#            minlats.append(float(data[minl][2]))
-#            #print(minlats)
-#            maxlats.append(float(data[minl][3]))
-#            #print(maxlats)
-#            minlongs.append(float(data[minl][4]))
-#            maxlongs.append(float(data[minl][5]))
-#        minlat=min([x for x in minlats if x != float('inf')])
-#        maxlat= max([x for x in maxlats if x != float('inf')])
-#        minlong=min([x for x in minlongs if x != float('inf')])
-#        maxlong=max([x for x in maxlongs if x != float('inf')])
-#    return(minlat,maxlat,minlong,maxlong)
-#
-#s=getBoundary(layer_info)
-
-
-
-###TO DO HERE:
-# make it usable with new code
-
-# geo extent in EPSG:4326
-#xmin = 0
-#xmax = 180
-#ymin = 0
-#ymax = 90
-#
-## geo resolution of Long (X) axis
-#xres = 1
-#
-## geo resolution of Lat (Y) axis
-## (e.g. Lat axis, then pixel 0th is at 90 degree and pixel 89th at 0 degree with yres = -1)
-#yres = -1
-
-def get_grid_indices_for_axis_X(geo_lower_bound, geo_upper_bound, xmin, xmax, xres):       
-    print("geo_lower_bound_X: {}, geo_upper_bound_X: {}".format(geo_lower_bound, geo_upper_bound))
-    lower_grid_index = math.floor( (geo_lower_bound - xmin) / xres )
-    upper_grid_index = math.floor( (geo_upper_bound - xmin) / xres )
-    if geo_upper_bound == xmax:
-        upper_grid_index = upper_grid_index - 1       
-    return "({}:{})".format(lower_grid_index, upper_grid_index)
-    
-def get_grid_indices_for_axis_Y(geo_lower_bound, geo_upper_bound, ymin, ymax, yres):
-    print("geo_lower_bound_Y: {}, geo_upper_bound_Y: {}".format(geo_lower_bound, geo_upper_bound))
-    lower_grid_index = math.floor( (geo_upper_bound - ymax) / yres )
-    upper_grid_index = math.floor( (geo_lower_bound - ymax) / yres )
-    if geo_lower_bound == ymin:
-        upper_grid_index = upper_grid_index - 1   
-    return "({}:{})".format(lower_grid_index, upper_grid_index)
-
-def requestDataProcess(layerlist,samples, filepath):
-    env_vars = dotenv_values()
-    rasdaman_endpoint = env_vars.get('RASDAMAN_SERVICE_ENDPOINT')
-    rasdaman_username = env_vars.get('RASDAMAN_CRED_USERNAME')
-    rasdaman_password = env_vars.get('RASDAMAN_CRED_PASSWORD')
-    base_wcs_url = rasdaman_endpoint + "?service=WCS&version=2.1.0"
-    result=[]
-    header=[]
-    header.append('Sample')
-    for data_entry in range(0,len(layerlist)):
-        layer=layerlist[data_entry][0]
-        header.append(layer)
-    log = open("/media/ssteindl/fairicube/uc3/uc3-drosophola-genetics/projects/WormPicker/output/WormpickerRequest.log", "a")
-    #sys.stdout = log
-    for key, value in samples.items():
-        sample_result=[]
-        latitude_sample = value[0] 
-        longitude_sample = value[1]
-        name_date = key
-        date = str(name_date[-10:])
-        time_asked= date + 'T00:00:00Z'
+            date = value[2]
+            loggerobject.info(f"DATE SAMPLE: {date}")
+            type(date)
+        except IndexError:
+            #date = str(name_date[-10:])
+            #loggerobject.warning(f"DATE QUERIED taken from samplename: {date} ")
+            loggerobject.warning("No date for sample given. Please provide a date column in the input file.")
+            return
         sample_result.append(name_date)
-        print(sample_result)
-        #layer=None
-        #converted_date=None
-        try:
-            converted_date = datetime.strptime(date, "%Y-%m-%d").isoformat() + "Z"
-            search_time=parser.isoparse(converted_date)
-            print(search_time)
-        except ValueError:
-            converted_date = date
-            continue
+        sample_result.append(latitude_sample)
+        sample_result.append(longitude_sample)
+        #print("TRYING:", date)
+        #days_offset=0+offset
         for data_entry in range(0,len(layerlist)):
-            layer=layerlist[data_entry][0]
-           #header.append(layer) 
-            crs=layerlist[data_entry][1] 
-            latitude_request = latitude_sample
-            longitude_request = longitude_sample
-            time_min= layerlist[data_entry][6] 
-            time_max= layerlist[data_entry][7]
-            datetime1 = parser.isoparse(time_min)
-            datetime2 = parser.isoparse(time_max)
-            ymin = float(layerlist[data_entry][2]) 
-            ymax = float(layerlist[data_entry][3]) 
-            xmin = float(layerlist[data_entry][4]) 
-            xmax = float(layerlist[data_entry][5]) 
-            xres=float(layerlist[data_entry][8])
-            yres=float(layerlist[data_entry][9])
-            #strlat="&subset=Y({},{})"
-            #strlon = "&subset=X({},{})"
-            ansi_str="&subset=ansi(\"{}\")"    
-            #print(latitude_request)
-            if search_time > datetime1 and search_time < datetime2:
-                print("YES")  #make this to acommand which produces a file, saying which samples and layers REALLYY overlap (also in time)
-                ##produce timestamp here
-                ansi_val=converted_date
-                #subset_ansi=ansi_str.format(ansi_val)
+            value_result=[]
+            i_header=infoheader
+            ##old
+            #print(i_header)
+            if len(layerlist) > 1:
+                number_bands=len(layerlist[data_entry][-2])
+                #print(number_bands)
+                ##new block 2 lines
+                layer=layerlist[data_entry][0]
+                layerbands_nr=layerlist[data_entry][-2]
+                for offday in range(abs(offset)+1):
+                    for col in layerbands_nr:
+                        if offset > 0:
+                            colname_new=str(layer)+"_"+str(col)+"+"+str(offday)
+                            #sample_result.append([colname_new])
+                        if offset < 0:
+                            colname_new=str(layer)+"_"+str(col)+"-"+str(offday)
+                        else:
+                            colname_new=str(layer)+"_"+str(col)
+                            #sample_result.append([colname_new])
+                        #header.append(colname_new)
+                        value_result.append(colname_new)
             else:
-                print(time_asked, "# NOT COVERED TEMPORALLY, only retrieving data for:", time_min)
-                #set timestamp here a general one, the one were coverage is there
-                ansi_val=time_min
-                #subset_ansi=ansi_str.format(ansi_val)
-            if crs=="EPSG/0/4326":
-                print("CRS IS 4326")
-                y1=latitude_request
-                x1=longitude_request
-                #strlat="&subset=Lat({},{})"
-                #strlon = "&subset=Long({},{})"
+                number_bands=len(layerlist[0][-2])
+                layer=layerlist[0][0]
+                layerbands_nr=layerlist[0][-2]
+                for offday in range(abs(offset)+1):
+                    for col in layerbands_nr:
+                        if offset >= 0:
+                            colname_new=str(layer)+"_"+str(col)+"+"+str(offday)
+                            #sample_result.append([colname_new])
+                        else:
+                            colname_new=str(layer)+"_"+str(col)+"-"+str(offday)
+                            #sample_result.append([colname_new])
+                        value_result.append(colname_new)
+            layer=layerlist[data_entry][i_header.index("CoverageID")]
+            loggerobject.info(f"")
+            loggerobject.info(f"Processing Coverage {layer}")
+            ###add description URL and get time stamps
+            describe_url='https://fairicube.rasdaman.com/rasdaman/ows?&SERVICE=WCS&VERSION=2.1.0'
+            response = requests.get(describe_url + "&REQUEST=DescribeCoverage&COVERAGEID=" + layer,auth=(rasdaman_username, rasdaman_password))
+            try:
+                if 'wcs:CoverageDescriptions' in xmltodict.parse(response.content).keys():
+                    wcs_coverage_description = xmltodict.parse(response.content)
+                elif 'ows:ExceptionReport' in xmltodict.parse(response.content).keys():
+                    loggerobject.debug("Credentials provided are not valid.")
+                #print(response.content)
+                #print(wcs_coverage_description)
+            except:
+                loggerobject.debug(f"Response Content: {response.content}")
+                continue
+            approxvar=approximate
+            if approxvar is True:
+                loggerobject.info(f"Trying to find the date {date}")
+                try:
+                    date_obj = datetime.strptime(date, "%Y-%m-%d")
+                except:
+                    return
+                try:
+                    timetoquery,differencedays=findDate(date,wcs_coverage_description)
+                    #date_obj = datetime.strptime(timetoquery_raw, "%Y-%m-%d")
+                    #timetoquery = timetoquery_raw.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
+                    #print(timetoquery)
+                    loggerobject.info(f"Querying approximate time: {timetoquery}")
+                    loggerobject.info(f"Difference in Days: {differencedays}")
+                except:
+                    loggerobject.error("Could not execute function called: findDate. Either date or coverade_description cannot be assigned." )
+                    sample_result.append("NA")
+                    continue
             else:
-                print("CRS IS NOT WGS84")
-                crs_indicator= crs.replace("EPSG/0/", "EPSG:")
-                longitude_request,latitude_request= trans4mEPSG("EPSG:4326",crs_indicator,float(longitude_request), float(latitude_request))
-                y1= float(latitude_request)
-                #x2= x1 + float(resolution)
-                #x2=x1
-                #print(x1,x2, resolution)
-                #strlat="&subset=Lat({},{})"
-                #subset_lat = strlat.format(x1,x2)
-                x1= float(longitude_request)
-                #y2=y1
-                #y2= y1 + float(resolution)
-                #strlon = "&subset=Long({},{})"
-                #subset_long= strlon.format(y1,y2)
-                #print("CRS:",crs, "RESOLUTION:", resolution, subset_long, subset_lat)
-                print(x1)
-                grid_indices_axis_X = get_grid_indices_for_axis_X(x1, x1, xmin, xmax, xres)
-                grid_indices_axis_Y = get_grid_indices_for_axis_Y(y1, y1, ymin, ymax, yres)
-                output_format = "text/csv"
-            #print(name_date, request_cov_id, request_encode_format, layer)
-            if x1 < xmax and x1 > xmin and y1 > ymin and y1 < ymax:
-                print("YES CONDITIONS ARE MET")
-                query = f"for $c in ({layer}) return encode($c[ ansi(\"{ansi_val}\"), X:\"CRS:1\"{grid_indices_axis_X}, Y:\"CRS:1\"{grid_indices_axis_Y} ], \"{output_format}\")"
-                # Construct the URL with variables
+                date_obj = datetime.strptime(date, "%Y-%m-%d")
+                timetoquery = date_obj.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
+                differencedays="0"
+                loggerobject.warning(f"Querying sample date exactly without approximation at {timetoquery} . This can lead to sparse data. ")
+            AxisLabels=layerlist[data_entry][i_header.index("axislabels")]
+            if AxisLabels == "ds.earthserver.xyz":
+                loggerobject.info("Querying Earth Server Data")
+                #TimeLabel="ansi"
+                TimeLabel=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['@axisLabels'].split(" ")[0]
+                #YLabel="lat"
+                YLabel=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['@axisLabels'].split(" ")[1]
+                #XLabel="lon"
+                XLabel=wcs_coverage_description['wcs:CoverageDescriptions']['wcs:CoverageDescription']['gml:boundedBy']['gml:Envelope']['@axisLabels'].split(" ")[2]
+            else:
+                TimeLabel=AxisLabels.split(",")[0]
+                YLabel=AxisLabels.split(",")[1]
+                XLabel=AxisLabels.split(",")[2]
+            loggerobject.info(f"Axislabels: {TimeLabel} {YLabel} {XLabel}")
+            #ansi_str_o="&subset=ansi(\"{}\")"
+            ###### NEW TIME LABEL
+            output_format = "text/csv"
+            for dayoff in range(abs(offset)+1):
+                #date_obj = datetime.strptime(timetoquery, "%Y-%m-%dT%H:%M:%S.%fZ")
+                if offset >= 0 and isinstance(timetoquery, str):
+                    loggerobject.info("Approximation parameter set. Offset is positive.")
+                    date2=datetime.strptime(timetoquery[0:10], "%Y-%m-%d") + timedelta(days=dayoff)
+                    #print(date2)
+                elif offset < 0 and isinstance(timetoquery, str):
+                    date2=datetime.strptime(timetoquery[0:10], "%Y-%m-%d") - timedelta(days=dayoff)
+                elif offset >= 0 and isinstance(timetoquery, datetime):
+                    date2=timetoquery + timedelta(days=dayoff)
+                else:
+                    date2=timetoquery - timedelta(days=dayoff)
+                timetoquery = date2.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4] + "Z"
+                query = f"for $c in ({layer}) return encode($c[{TimeLabel}(\"{timetoquery}\"),{XLabel} :\"EPSG:4326\"( {longitude_sample} ), {YLabel}:\"EPSG:4326\"( {latitude_sample}) ], \"{output_format}\")"
                 url = f"{base_wcs_url}&REQUEST=ProcessCoverages&QUERY={query}"
+                loggerobject.info(f" START QUERYING: {url}")
                 response = requests.get(url, auth=(rasdaman_username, rasdaman_password))
-                valls=(str(response.text)[1:-1])
-                sample_result.append(valls)
-                print(query)
-            else:
-                print("NAY")
-                valls=("NA")
-                sample_result.append(valls)
+                value_response=str(response.text)
+                #print(value_response)
+                if isinstance(value_response, str) and value_response.startswith("{") and value_response.endswith("}"):
+                    valls=str(response.text)[1:-1].replace(" ", ",")
+                else:
+                    valls=str(response.text).replace(" ", ",")
+                if response.status_code == 200 and valls != '':
+                    #sample_result.append(valls)
+                    for singleval in valls.strip('"').split(","):
+                        #print(singleval)
+                        #singlevalq="{"+singleval+"}"
+                        sample_result.append(singleval)
+                        sample_distances.append(differencedays)
+                        value_result.append(singleval)
+                    #sample_result.append(layer)
+                    loggerobject.info(f"RESULT: {valls}")
+                    loggerobject.info("_______________________________________")
+                else:
+                    loggerobject.info(f" {response}")
+                    for _ in range(number_bands):
+                        #t="NA"+str(_)
+                        t="NA"
+                        sample_result.append(t)
+                        sample_distances.append("NA")
+                        value_result.append("NA")
+                loggerobject.info(f" {value_result}")
+                    #sample_result.append(layer)
         result.append(sample_result)
+        distances.append(sample_distances)
+        #result.append(samples_results_sep)
+        #header.append('query_sent,')  
     #sys.stdout = sys.__stdout__
-    print("----------------------")
-    print("                      ")
+    datetime.now()
+    sys.stdout = sys.__stdout__
     if filepath!="NONE":
+        loggerobject.info(f"RESULT WRITTEN TO OUTPUT FILE: {filepath}")
         with open(filepath, "w", newline="") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(header)
             writer.writerows(result)
+        #with open((filepath+"2"), "w", newline="") as csvfile:
+        #    writer = csv.writer(csvfile)
+        #    writer.writerow(header[3:])
+        #    writer.writerows(distances)
+            #writer.writerows(value_result)
     else:
         return result
+    
+
+
+####### 
+
+def summarize_csv(file_path,output_text_file):
+    # Initialize a dictionary to hold the summary
+    summary = {}
+    column_data = {}
+    # Open and read the CSV file
+    with open(file_path, mode='r') as csvfile:
+        reader = csv.reader(csvfile)      
+        # Read header
+        headers = next(reader)        
+        # Initialize columns in the summary dictionary
+        for header in headers:
+            summary[header] = {
+                'NA Count': 0,
+                'NC Count': 0,
+                'Non-Zero Numeric Count': 0,
+                'Total Count': 0
+            }
+            column_data[header] = []       
+        # Process each row
+        for row in reader:
+            for i, value in enumerate(row):
+                header = headers[i]
+                column_data[header].append(value)
+                summary[header]['Total Count'] += 1 
+                if value == "na":
+                    summary[header]['NA Count'] += 1
+                elif value == "nc":
+                    summary[header]['NC Count'] += 1
+                else:
+                    try:
+                        # Convert to float and check if it is not zero
+                        numeric_value = float(value)
+                        if numeric_value != 0:
+                            summary[header]['Non-Zero Numeric Count'] += 1
+                    except ValueError:
+                        # Ignore values that cannot be converted to float
+                        pass
+    # Prepare to write summary to text file
+    with open(output_text_file, 'w') as file:
+        for column, stats in summary.items():
+            total_count = stats['Total Count']
+            na_percentage = (stats['NA Count'] / total_count) * 100 if total_count > 0 else 0
+            nc_percentage = (stats['NC Count'] / total_count) * 100 if total_count > 0 else 0
+            non_zero_numeric_percentage = (stats['Non-Zero Numeric Count'] / total_count) * 100 if total_count > 0 else 0
+            
+            # Write summary for each column
+            file.write(f"Column: {column}\n")
+            file.write(f"  NA Percentage: {na_percentage:.2f}%\n")
+            file.write(f"  NC Percentage: {nc_percentage:.2f}%\n")
+            file.write(f"  Non-Zero Numeric Percentage: {non_zero_numeric_percentage:.2f}%\n")
+            file.write("\n")
