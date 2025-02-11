@@ -1,3 +1,15 @@
+# Purpose
+Download environemntal data from the Rasdaman GmbH database for predefined point coordinates for a specific date if available.
+
+
+
+# Web Application
+
+If you want to use the WP Tool via WebApp, please visit: 
+https://wormpicker.nilu.no/
+Required input file is a .csv file with columns "sampleId, lat, long, date".
+
+
 
 # Package Information
 
