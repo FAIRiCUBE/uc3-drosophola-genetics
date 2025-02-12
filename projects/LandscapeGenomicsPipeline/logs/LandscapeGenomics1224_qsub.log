@@ -1,0 +1,41 @@
+mkdir: das Verzeichnis „/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/DataAnalysis_after_RDA_1224“ kann nicht angelegt werden: Die Datei existiert bereits
+mkdir: das Verzeichnis „/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/DataAnalysis_after_RDA_1224/results“ kann nicht angelegt werden: Die Datei existiert bereits
+mkdir: das Verzeichnis „/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/DataAnalysis_after_RDA_1224/results/EuropePass“ kann nicht angelegt werden: Die Datei existiert bereits
+mkdir: das Verzeichnis „/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/DataAnalysis_after_RDA_1224/results/EuropePass/summary“ kann nicht angelegt werden: Die Datei existiert bereits
+mkdir: das Verzeichnis „data“ kann nicht angelegt werden: Die Datei existiert bereits
+DOWNLOADING VCF FROM DEST.bio AND EXTRACTING SAMPLENAMES
+/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/data/PoolSeq2024.vcf.gz
+/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/data/PoolSeq2024.vcf.gz
+/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/data/EuropeSamples_Pass.csv
+EuropePass
+PERFORMING LINEAR REGRESSION
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attache Paket: ‘gridExtra’
+
+Das folgende Objekt ist maskiert ‘package:dplyr’:
+
+    combine
+
+
+Attache Paket: ‘maps’
+
+Das folgende Objekt ist maskiert ‘package:purrr’:
+
+    map
+
+Warnmeldung:
+In dir.create(directory_path, recursive = TRUE) :
+  'results/EuropePass/LinearRegressions' existiert bereits
+[1] 153
+[1] 121
+Es gab 50 oder mehr Warnungen (Anzeige der ersten 50 mit warnings())

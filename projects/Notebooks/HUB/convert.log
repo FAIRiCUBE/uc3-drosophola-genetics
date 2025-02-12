@@ -1,0 +1,25 @@
+PLINK v2.00a3.7LM 64-bit Intel (24 Oct 2022)
+Options in effect:
+  --allow-extra-chr
+  --export structure
+  --out convert
+  --vcf ipyrad.vcf
+
+Hostname: nhm-phylo2
+Working directory: /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/Notebooks/HUB
+Start time: Wed Jul 24 14:04:24 2024
+
+Random number seed: 1721822664
+2051170 MiB RAM detected; reserving 1025585 MiB for main workspace.
+Using up to 256 threads (change this with --threads).
+--vcf: 6624 variants scanned.
+--vcf: convert-temporary.pgen + convert-temporary.pvar.zst +
+convert-temporary.psam written.
+19 samples (0 females, 0 males, 19 ambiguous; 19 founders) loaded from
+convert-temporary.psam.
+6624 variants loaded from convert-temporary.pvar.zst.
+Note: No phenotype data present.
+Error: Only VCF, BCF, oxford, bgen-1.x, haps, hapslegend, A, AD, Av, ped, tped,
+compound-genotypes, and ind-major-bed output have been implemented so far.
+
+End time: Wed Jul 24 14:04:24 2024

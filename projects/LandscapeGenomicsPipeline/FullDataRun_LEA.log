@@ -1,0 +1,348 @@
+mkdir: das Verzeichnis „/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun“ kann nicht angelegt werden: Die Datei existiert bereits
+mkdir: das Verzeichnis „/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results“ kann nicht angelegt werden: Die Datei existiert bereits
+mkdir: das Verzeichnis „/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs“ kann nicht angelegt werden: Die Datei existiert bereits
+mkdir: das Verzeichnis „/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/summary“ kann nicht angelegt werden: Die Datei existiert bereits
+mkdir: das Verzeichnis „data“ kann nicht angelegt werden: Die Datei existiert bereits
+DOWNLOADING VCF FROM DEST.bio AND EXTRACTING SAMPLENAMES
+/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/data/PoolSeq2024.vcf.gz
+/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/data/PoolSeq2024.vcf.gz
+/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/data/EuropeSamples_Pass.csv
+AllSNPs
+PERFORMING LINEAR REGRESSION
+PERFORMING LFMM
+lat
+1
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ purrr     1.0.2
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+[1] "After removing monomorphic rows,526264SNPs  are being analysed"
+[1] "DIMENSIONS OF GENO"
+[1] 295
+[1] 526264
+[1] "A new geno.lffm.file has been created."
+[1] "lat"
+[1] "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/lat/gradients.env"
+[1] "CALCULATING LFMM2"
+[1] "*********************************************************"
+[1] " Conversion from the lfmm format to the geno format"
+[1] "*********************************************************"
+
+	- number of detected individuals:	295
+	- number of detected loci:		526264
+
+The project is saved into :
+ results/AllSNPs/LEA/genotypes.snmfProject 
+
+To load the project, use:
+ project = load.snmfProject("results/AllSNPs/LEA/genotypes.snmfProject")
+
+To remove the project, use:
+ remove.snmfProject("results/AllSNPs/LEA/genotypes.snmfProject")
+
+[1] 253277277
+[1] "*************************************"
+[1] "*          create.dataset            *"
+[1] "*************************************"
+summary of the options:
+
+        -n (number of individuals)                 295
+        -L (number of loci)                        526264
+        -s (seed random init)                      253277277
+        -r (percentage of masked data)             0.05
+        -x (genotype file in .geno format)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.geno
+        -o (output file in .geno format)           /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno
+
+ Write genotype file with masked data, /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno:		OK.
+
+[1] "*************************************"
+[1] "* sNMF K = 1  repetition 1      *"
+[1] "*************************************"
+summary of the options:
+
+        -n (number of individuals)             295
+        -L (number of loci)                    526264
+        -K (number of ancestral pops)          1
+        -x (input file)                        /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno
+        -q (individual admixture file)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run1/genotypes_r1.1.Q
+        -g (ancestral frequencies file)        /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run1/genotypes_r1.1.G
+        -i (number max of iterations)          200
+        -a (regularization parameter)          10
+        -s (seed random init)                  4548244573
+        -e (tolerance error)                   1E-05
+        -p (number of processes)               1
+        - diploid
+
+Read genotype file /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno:		OK.
+
+
+Main algorithm:
+
+Least-square error: 1161436.301409
+Write individual ancestry coefficient file /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run1/genotypes_r1.1.Q:		OK.
+Write ancestral allele frequency coefficient file /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run1/genotypes_r1.1.G:	OK.
+
+[1] "*************************************"
+[1] "*    cross-entropy estimation       *"
+[1] "*************************************"
+summary of the options:
+
+        -n (number of individuals)         295
+        -L (number of loci)                526264
+        -K (number of ancestral pops)      1
+        -x (genotype file)                 /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.geno
+        -q (individual admixture)          /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run1/genotypes_r1.1.Q
+        -g (ancestral frequencies)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run1/genotypes_r1.1.G
+        -i (with masked genotypes)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno
+        - diploid
+
+Cross-Entropy (all data):	 0.0126491
+Cross-Entropy (masked data):	 0.0129134
+The project is saved into :
+ results/AllSNPs/LEA/genotypes.snmfProject 
+
+To load the project, use:
+ project = load.snmfProject("results/AllSNPs/LEA/genotypes.snmfProject")
+
+To remove the project, use:
+ remove.snmfProject("results/AllSNPs/LEA/genotypes.snmfProject")
+
+[1] 870625049
+[1] "*************************************"
+[1] "*          create.dataset            *"
+[1] "*************************************"
+summary of the options:
+
+        -n (number of individuals)                 295
+        -L (number of loci)                        526264
+        -s (seed random init)                      870625049
+        -r (percentage of masked data)             0.05
+        -x (genotype file in .geno format)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.geno
+        -o (output file in .geno format)           /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno
+
+ Write genotype file with masked data, /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno:		OK.
+
+[1] "*************************************"
+[1] "* sNMF K = 1  repetition 2      *"
+[1] "*************************************"
+summary of the options:
+
+        -n (number of individuals)             295
+        -L (number of loci)                    526264
+        -K (number of ancestral pops)          1
+        -x (input file)                        /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno
+        -q (individual admixture file)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run2/genotypes_r2.1.Q
+        -g (ancestral frequencies file)        /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run2/genotypes_r2.1.G
+        -i (number max of iterations)          200
+        -a (regularization parameter)          10
+        -s (seed random init)                  94730669305625
+        -e (tolerance error)                   1E-05
+        -p (number of processes)               1
+        - diploid
+
+Read genotype file /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno:		OK.
+
+
+Main algorithm:
+
+Least-square error: 1161262.579550
+Write individual ancestry coefficient file /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run2/genotypes_r2.1.Q:		OK.
+Write ancestral allele frequency coefficient file /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run2/genotypes_r2.1.G:	OK.
+
+[1] "*************************************"
+[1] "*    cross-entropy estimation       *"
+[1] "*************************************"
+summary of the options:
+
+        -n (number of individuals)         295
+        -L (number of loci)                526264
+        -K (number of ancestral pops)      1
+        -x (genotype file)                 /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.geno
+        -q (individual admixture)          /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run2/genotypes_r2.1.Q
+        -g (ancestral frequencies)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run2/genotypes_r2.1.G
+        -i (with masked genotypes)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno
+        - diploid
+
+Cross-Entropy (all data):	 0.0126438
+Cross-Entropy (masked data):	 0.0130243
+The project is saved into :
+ results/AllSNPs/LEA/genotypes.snmfProject 
+
+To load the project, use:
+ project = load.snmfProject("results/AllSNPs/LEA/genotypes.snmfProject")
+
+To remove the project, use:
+ remove.snmfProject("results/AllSNPs/LEA/genotypes.snmfProject")
+
+[1] "TESTING THE LFMM2 OBJECT"
+[1] "EXPORTIN P-VALUES TO CSV FILE"
+[1] "PLOT MANHATTAN"
+Fehler: Objekt 'DATA' nicht gefunden
+Ausführung angehalten
+lon
+1
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ purrr     1.0.2
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+[1] "After removing monomorphic rows,526264SNPs  are being analysed"
+[1] "File exists and has been opened."
+[1] "lon"
+[1] "/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/lon/gradients.env"
+[1] "CALCULATING LFMM2"
+[1] "*********************************************************"
+[1] " Conversion from the lfmm format to the geno format"
+[1] "*********************************************************"
+The project is saved into :
+ results/AllSNPs/LEA/genotypes.snmfProject 
+
+To load the project, use:
+ project = load.snmfProject("results/AllSNPs/LEA/genotypes.snmfProject")
+
+To remove the project, use:
+ remove.snmfProject("results/AllSNPs/LEA/genotypes.snmfProject")
+
+[1] 1328977051
+[1] "*************************************"
+[1] "*          create.dataset            *"
+[1] "*************************************"
+summary of the options:
+
+        -n (number of individuals)                 295
+        -L (number of loci)                        526264
+        -s (seed random init)                      1328977051
+        -r (percentage of masked data)             0.05
+        -x (genotype file in .geno format)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.geno
+        -o (output file in .geno format)           /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno
+
+ Write genotype file with masked data, /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno:		OK.
+
+[1] "*************************************"
+[1] "* sNMF K = 1  repetition 1      *"
+[1] "*************************************"
+summary of the options:
+
+        -n (number of individuals)             295
+        -L (number of loci)                    526264
+        -K (number of ancestral pops)          1
+        -x (input file)                        /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno
+        -q (individual admixture file)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run1/genotypes_r1.1.Q
+        -g (ancestral frequencies file)        /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run1/genotypes_r1.1.G
+        -i (number max of iterations)          200
+        -a (regularization parameter)          10
+        -s (seed random init)                  94877156545691
+        -e (tolerance error)                   1E-05
+        -p (number of processes)               1
+        - diploid
+
+Read genotype file /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno:		OK.
+
+
+Main algorithm:
+
+Least-square error: 1162115.555823
+Write individual ancestry coefficient file /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run1/genotypes_r1.1.Q:		OK.
+Write ancestral allele frequency coefficient file /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run1/genotypes_r1.1.G:	OK.
+
+[1] "*************************************"
+[1] "*    cross-entropy estimation       *"
+[1] "*************************************"
+summary of the options:
+
+        -n (number of individuals)         295
+        -L (number of loci)                526264
+        -K (number of ancestral pops)      1
+        -x (genotype file)                 /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.geno
+        -q (individual admixture)          /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run1/genotypes_r1.1.Q
+        -g (ancestral frequencies)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run1/genotypes_r1.1.G
+        -i (with masked genotypes)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno
+        - diploid
+
+Cross-Entropy (all data):	 0.0126483
+Cross-Entropy (masked data):	 0.0129385
+The project is saved into :
+ results/AllSNPs/LEA/genotypes.snmfProject 
+
+To load the project, use:
+ project = load.snmfProject("results/AllSNPs/LEA/genotypes.snmfProject")
+
+To remove the project, use:
+ remove.snmfProject("results/AllSNPs/LEA/genotypes.snmfProject")
+
+[1] 418384838
+[1] "*************************************"
+[1] "*          create.dataset            *"
+[1] "*************************************"
+summary of the options:
+
+        -n (number of individuals)                 295
+        -L (number of loci)                        526264
+        -s (seed random init)                      418384838
+        -r (percentage of masked data)             0.05
+        -x (genotype file in .geno format)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.geno
+        -o (output file in .geno format)           /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno
+
+ Write genotype file with masked data, /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno:		OK.
+
+[1] "*************************************"
+[1] "* sNMF K = 1  repetition 2      *"
+[1] "*************************************"
+summary of the options:
+
+        -n (number of individuals)             295
+        -L (number of loci)                    526264
+        -K (number of ancestral pops)          1
+        -x (input file)                        /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno
+        -q (individual admixture file)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run2/genotypes_r2.1.Q
+        -g (ancestral frequencies file)        /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run2/genotypes_r2.1.G
+        -i (number max of iterations)          200
+        -a (regularization parameter)          10
+        -s (seed random init)                  4607182419218402246
+        -e (tolerance error)                   1E-05
+        -p (number of processes)               1
+        - diploid
+
+Read genotype file /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno:		OK.
+
+
+Main algorithm:
+
+Least-square error: 1161680.748913
+Write individual ancestry coefficient file /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run2/genotypes_r2.1.Q:		OK.
+Write ancestral allele frequency coefficient file /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run2/genotypes_r2.1.G:	OK.
+
+[1] "*************************************"
+[1] "*    cross-entropy estimation       *"
+[1] "*************************************"
+summary of the options:
+
+        -n (number of individuals)         295
+        -L (number of loci)                526264
+        -K (number of ancestral pops)      1
+        -x (genotype file)                 /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.geno
+        -q (individual admixture)          /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run2/genotypes_r2.1.Q
+        -g (ancestral frequencies)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/K1/run2/genotypes_r2.1.G
+        -i (with masked genotypes)         /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LEA/genotypes.snmf/masked/genotypes_I.geno
+        - diploid
+
+Cross-Entropy (all data):	 0.0126437
+Cross-Entropy (masked data):	 0.0130236
+The project is saved into :
+ results/AllSNPs/LEA/genotypes.snmfProject 
+
+To load the project, use:
+ project = load.snmfProject("results/AllSNPs/LEA/genotypes.snmfProject")
+
+To remove the project, use:
+ remove.snmfProject("results/AllSNPs/LEA/genotypes.snmfProject")
+
