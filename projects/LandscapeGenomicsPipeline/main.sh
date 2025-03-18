@@ -1,6 +1,6 @@
 ##!/bin/sh
 ## name of Job
-#PBS -N LandscapeGenomics
+#PBS -N LEA_MAF_Selected_Vars
 ## Redirect output stream to this file.
 #PBS -o /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/logs
 ## Stream Standard Output AND Standard Error to outputfile (see above)
@@ -20,12 +20,14 @@ arm="EuropePass"
 samplelist="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/data/EuropeSamples_Pass.csv"
 input="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/data/PoolSeq2024.vcf.gz"
 metadata="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/dest_v2.samps_3May2024.csv"
-envdata="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Env.csv"
+envdata="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Env_imputed.csv"
 AF="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/Subsampled_fullgenome.final_DP15.af"
 
 
 #bash LandscapeGenomics.sh $wd $continent $arm $samplelist $input $metadata $envdata $AF >> FullDataRun_LEA_qsub.log 2>&1
-bash /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/LandscapeGenomics_qsub.sh $wd $continent $arm $samplelist $input $metadata $envdata $AF $scriptdir >> /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/logs/LandscapeGenomics1224_qsub.log 2>&1
+#bash /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/LandscapeGenomics_qsub.sh $wd $continent $arm $samplelist $input $metadata $envdata $AF $scriptdir >> /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/logs/LandscapeGenomics1224_qsub.log 2>&1
+
+bash /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/LandscapeGenomics.sh $wd $continent $arm $samplelist $input $metadata $envdata $AF $scriptdir >> /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/logs/LandscapeGenomics160125_qsub.log 2>&1
 
 #bash ${scriptdir}/LandscapeGenomics_onlyRDA.sh $wd $continent $arm $samplelist $input $metadata $envdata $AF >> FullDataRun_RDA_qsub.log 2>&1
 ###bash /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/LandscapeGenomics_onlyLinear.sh

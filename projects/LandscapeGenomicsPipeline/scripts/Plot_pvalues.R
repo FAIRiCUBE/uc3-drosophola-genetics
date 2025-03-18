@@ -14,7 +14,7 @@ args <- commandArgs(TRUE)
 ## set working directory
 setwd(args[1]) 
 arm=args[4]
-directory_path=paste("results/",arm, "/LinearRegressions", sep="")
+directory_path=paste("results/LinearRegressionsAfterRDA", sep="")
 dir.create(directory_path, recursive = TRUE)
 ## read AlleleFrequency Matrix
 DATA=read.table(args[2],header=3)
@@ -134,11 +134,11 @@ for ( i in colnames(envfile)){
     pvalcsv2[[ID2]]<- p.val.arcsin
     facs2 <- append(facs2,ID2)
     #write.csv(pvalcsv, paste(directory_path,"/",i,"_pvalues_single.csv", sep=""), row.names= FALSE)
-    write.csv(pvalcsv, paste("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LinearRegressions/LinearRegr2/",i,"_pvalues.csv", sep=""), row.names=FALSE)
+    write.csv(pvalcsv, paste(directory_path,"/",i,"_pvalues.csv", sep=""), row.names=FALSE)
     #outliers <- na.exclude(pvalcsv[pvalcsv[[ID2]] < thres_env,])
     outliers <- na.omit(pvalcsv[pvalcsv[[ID2]] < thres_env,])
     #write.csv(outliers, paste(directory_path,"/",i,"_pvalues_outliers.csv", sep=""), row.names= FALSE)
-    write.csv(outliers, paste("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullDataRun/results/AllSNPs/LinearRegressions/LinearRegr2/",i,"_pvalue_outliers.csv", sep=""), row.names=FALSE)
+    write.csv(outliers, paste(directory_path,"/",i,"_pvalue_outliers.csv", sep=""), row.names=FALSE)
     #pdf(paste0("Histograms_P_Values_",i,".pdf"),
     #width=15,
     #height=5)
@@ -167,7 +167,7 @@ for ( i in colnames(envfile)){
   }
 }
 
-write.csv(pvalcsv2, paste(directory_path,"/Merged_pvalues.arcsin.csv", sep=""), row.names= FALSE)
+#write.csv(pvalcsv2, paste(directory_path,"/Merged_pvalues.arcsin.csv", sep=""), row.names= FALSE)
 
 ##export DATA to directory
 ##pvalpath=paste(directoy_path, "/P_Values.csv")

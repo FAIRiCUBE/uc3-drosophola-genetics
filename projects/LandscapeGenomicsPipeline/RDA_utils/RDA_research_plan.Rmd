@@ -125,6 +125,13 @@ for (col in names(replace_list)) {
 ##EnvNULL <- EnvNULL[!grepl("^UA|RU|BY|DK", rownames(EnvNULL)), ]
 EnvNULL <- as.data.frame(cbind(datevals,EnvNULL))
 
+###remove rasdaman era5
+r_pattern="ds.earthserver.xyz..7000..ERA5"
+Rasda_cols <- grep(r_pattern, colnames(EnvNULL), value = TRUE)
+print(Rasda_cols)
+EnvNULL <- EnvNULL[, !colnames(EnvNULL) %in% Rasda_cols]
+colnames(EnvNULL) <- gsub("\\.y","",colnames(EnvNULL))
+
 ## count/frequency of Null/NA’s for each Env
 
 NA_NULL_Proportions <- data.frame(
@@ -139,17 +146,18 @@ NA_NULL_Proportions <- data.frame(
 #Env85_cols <- rownames(NA_NULL_Proportions[NA_NULL_Proportions$NA_proportion < 0.15 & NA_NULL_Proportions$NULL_proportion < 0.15 ,])
 
 
+
+##filter for env
 Env85_cols <- rownames(NA_NULL_Proportions[
   (is.na(NA_NULL_Proportions$NA_proportion) | NA_NULL_Proportions$NA_proportion < 0.15) &
   (is.na(NA_NULL_Proportions$NULL_proportion) | NA_NULL_Proportions$NULL_proportion < 0.15),
 ])
 
-
 Env85 <- EnvNULL[colnames(EnvNULL) %in% Env85_cols]
+#Env90 <- EnvNULL[colnames(EnvNULL) %in% Env90_cols]
 
-RasdaERA5 <- colnames(Env85)[51:57]
-Env85 <-  Env85[, !colnames(Env85) %in% RasdaERA5]
-colnames(Env85) <- gsub("\\.y","",colnames(Env85))
+
+
 ###work with this
 #rownames(Env85) <- Env_Full$sample
 #EnvCore <- Env_Full[!grepl("^UA|RU|BY|DK", rownames(Env85)), ]
@@ -157,8 +165,10 @@ colnames(Env85) <- gsub("\\.y","",colnames(Env85))
 ###check proportion now 
  
 ### check samples NA proportion
-EnvNULLsamples <- as.data.frame(t(Env85))
-colnames(EnvNULLsamples) <- rownames(Env85)
+EnvNULLsamples <- as.data.frame(t(Env85)) #sample filter first: EnvNULLsamples <- as.data.frame(t(EnvNULL))
+
+colnames(EnvNULLsamples) <- rownames(Env85) #colnames(EnvNULLsamples) <- rownames(EnvNULL)
+
 
 
 NA_NULL__SAMPLE_Proportions <- data.frame(
@@ -192,7 +202,7 @@ Env85_samples_cols <- rownames(NA_NULL__SAMPLE_Proportions[
   (is.na(NA_NULL__SAMPLE_Proportions$NULL_proportion) | NA_NULL__SAMPLE_Proportions$NULL_proportion < 0.15),
 ])
 
-Env85 <-  Env85[rownames(Env85) %in% Env85_samples_cols,] 
+Env85 <-  Env85[rownames(Env85) %in% Env85_samples_cols,] ##Env85 <-  EnvNULL[rownames(EnvNULL) %in% Env85_samples_cols,] 
 EnvCore <- Env85
 ##remove all ds_earthserver,era5??
 
@@ -249,7 +259,7 @@ columns_to_impute_idw <- metadata$Layer.Name[metadata$Type=="Numeric"]
 
 df <- EnvCore[,colnames(EnvCore) %in% columns_to_impute_idw]
 # Transform Date to numeric for temporal calculations
-Date_num <- as.numeric(as.Date(EnvCore$date, format = "%Y-%m-%d"))
+Date_num <- as.numeric(as.Date(EnvCore$datevals, format = "%Y-%m-%d"))
 df <- as.data.frame(cbind(Date_num,as.data.frame(lapply(df, as.numeric))))
 #df <- as.data.frame(lapply(EnvCore[,4:ncol(EnvCore)], as.numeric))
 #df$date <- EnvCore$date
@@ -294,7 +304,7 @@ for (col in colnames(df)) {
   df <- impute_column(df, col)
 }
 
-columns_to_impute_median <- metadata$Layer.Name[metadata$Type=="Categoric" | metadata$Type=="Uncertain" | metadata$Type=="Unknown"]
+columns_to_impute_categoric <- metadata$Layer.Name[metadata$Type=="Categoric" | metadata$Type=="Uncertain" | metadata$Type=="Unknown"]
 
 replace_na_with_median <- function(x) {
   row_median <- median(x, na.rm = TRUE)
@@ -302,9 +312,14 @@ replace_na_with_median <- function(x) {
   return(x)
   }
 
+replace_na_with_mode <- function(x) {
+  row_mode <- modal(x, na.rm = TRUE)
+  x[is.na(x)] <- row_mode
+  return(x)
+  }
 
-categoric_data <- as.data.frame(lapply(EnvCore[,colnames(EnvCore) %in% columns_to_impute_median], as.numeric))
-categoric_imputed <- as.data.frame(lapply(categoric_data,replace_na_with_median))
+categoric_data <- as.data.frame(lapply(EnvCore[,colnames(EnvCore) %in% columns_to_impute_categoric], as.numeric))
+categoric_imputed <- as.data.frame(lapply(categoric_data,replace_na_with_mode))
 
 EnvCore_imputed <- as.data.frame(cbind(df,categoric_imputed))
 
@@ -440,7 +455,7 @@ for (start in seq(1, num_cols, by = 12)) {
   plots <- lapply(names(DATA[,start:end]), function(col_name) {
     create_plot(DATA[,start:end][[col_name]], col_name) })
   # Save plots to a PDF file
-  pdf(file = sprintf("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Stats/ValidationAfterImputation/Validatio_after_Correction_and_Imputation_%d.pdf", start), width = 14, height = 11)
+  #pdf(file = sprintf("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Stats/ValidationAfterImputation/Validatio_after_Correction_and_Imputation_%d.pdf", start), width = 14, height = 11)
   grid.arrange(grobs = plots, ncol = 3, nrow = 4)
   dev.off()
 }
@@ -452,17 +467,12 @@ for (start in seq(1, num_cols, by = 12)) {
 
 ## Including Plots
 
-You can also embed plots, for example:
 
 ```{r pcaplot, fig.width=20, fig.height=14 , echo=FALSE}
 rownames(EnvCore_imputed) <- rownames(EnvCore)
 
 patterns <- metadata$Layer.Name
 replacements <- metadata$Short.Name
-
-
-
-
 
 # Functions
 get_meta_data <- function(csvfile) {
@@ -482,13 +492,16 @@ get_worldclim_data <- function(meta.sub) {
 meta2024 <- "/home/ssteindl/mounts/BioMem_2/ssteindl/UC3/ClimateData/samples_europe_pass.csv"
 meta <- get_meta_data(meta2024)
 WC <- get_worldclim_data(meta)
-rownames(WC) <- meta$sampleId
+rownames(WC) <- gsub("\\.","-",meta$sampleId)
 
-ROWS <- WC[rownames(WC) %in% rownames(DATA),]
+ROWS <- WC[rownames(WC) %in% rownames(EnvCore),]
 colnames(ROWS) <- gsub("wc2.1_2.5m_b","B", colnames(ROWS))
 DATA <- as.data.frame(cbind(DATA, ROWS))
+rownames(DATA) <- rownames(EnvCore)
 
-
+names(DATA) <- sapply(names(DATA), function(x) {
+if (x %in% patterns) replacements[match(x, patterns)] else x
+})
 
 
 pr <- prcomp(DATA, scale. = TRUE)
@@ -498,7 +511,7 @@ fviz_pca_biplot(pr)
 fviz_pca_var(pr, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), repel = TRUE)
 
 
-write.csv(DATA, file="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Env.csv")
+write.csv(DATA, file="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/ClimateData/Env_imputed.csv")
 
 
 ``` 

@@ -3,7 +3,7 @@
 ################################################# CREATING REQUIRED DIRECTORIES TO PROCESS AND STORE OUTPUTS ##################################################
 #scriptdir="/home/sonjastndl/s3/LGA/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts"
 LGAdir=$(pwd)
-scriptdir="${LGAdir}/scripts"
+scriptdir="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts"
 wd="$1"
 continent="$2"
 arm="$3"
@@ -178,43 +178,70 @@ echo "PERFORMING LINEAR REGRESSION"
 ################################################## PERFORM LFMM 2 (LATENT FACTOR MIXED MODEL) ###################################################
 echo "PERFORMING LFMM"
 
-LeaOut="${wd}/results/${arm}/LEA"
+LeaOut="${wd}/results/${arm}/LEA2_MAF"
 mkdir $LeaOut
 #
-variables=$(head -n 1 "$envdata" | sed 's/\r$//')
+#### ORIGINAL BEFORE RDA ###variables=$(head -n 1 "$envdata" | sed 's/\r$//')
+
+###AFTER RDA####
+#variables=$(awk -F '","' 'NR > 1 {gsub(/^"|"$/, "", $2); print $2}' /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RDA_utils/RDA_ResearchPlan_FilterMethod1/ordiR2step/best_variables.csv)
 #echo $variables
 ##  #Use a for loop to iterate over words (assuming space-separated words)
-IFS=',' read -ra header_elements <<< "$variables"
+#IFS=',' read -ra header_elements <<< "$variables"
 
 #Rscript /home/sonjastndl/s3/InstallLea.R
 ##test
 #Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $metadata_new "bio1" $rep
+variables=($(awk -F '","' 'NR > 1 {gsub(/^"|"$/, "", $2); print $2}' /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RDA_utils/RDA_ResearchPlan_FilterMethod1/ordiR2step/best_variables.csv))
 
-#for ((i = 1; i < 4; i++)); do
-for ((i = 1; i < ${#header_elements[@]}; i++)); do
-    element=${header_elements[i]} 
+#IFS=',' read -r -a variables <<< "$(awk -F '","' 'NR > 1 {gsub(/^"|"$/, "", $2); print $2}' /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RDA_utils/RDA_ResearchPlan_FilterMethod1/ordiR2step/best_variables.csv)"
+
+
+for element in "${variables[@]}"; do
     echo "$element"
-    #echo $LeaOut
-    #echo $AF
-    rep=1
-    echo $rep
-    # Add your processing here
-    #Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $envdata $element $rep
     echo """
 ##!/bin/sh
-## name of Job
-#PBS -N RasdaLEA_${element}
+## name of Job 
+#PBS -N LEA_MAF_${element}
 ## Redirect output stream to this file.
-#PBS -o /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RasdaTest/logs
+#PBS -o /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/logs
 ## Stream Standard Output AND Standard Error to outputfile (see above)
 #PBS -j oe
 ## Select a maximum of 20 cores and 200gb of RAM
-#PBS -l select=1:ncpus=10:mem=50gb
+#PBS -l select=1:ncpus=5:mem=100gb
 ## load all necessary software into environment
-
-Rscript ${scriptdir}/LEA_old.r $LeaOut $AF $envdata $element $rep """ > ${LeaOut}/shell/test_${element}.sh
-    qsub ${LeaOut}/shell/test_${element}.sh
+Rscript ${scriptdir}/LEA_old.r $LeaOut $AF $envdata $element $rep """ > ${LeaOut}/test_${element}.sh
+qsub ${LeaOut}/test_${element}.sh
 done
+ 
+# repeat this part of the code to do the permutation testing of 100x 
+
+ 
+#for ((i = 1; i < 4; i++)); do
+#for ((i = 1; i < ${#header_elements[@]}; i++)); do
+#    element=${header_elements[i]} 
+#    echo "$element"
+#    echo $LeaOut
+#    #echo $AF
+#    rep=1
+#    echo "WHHAT"
+#    # Add your processing here
+#    #Rscript ${scriptdir}/LEA_RunLFMM2.R $LeaOut $AF $envdata $element $rep
+#    echo """
+#    ##!/bin/sh
+#    ## name of Job 
+#    #PBS -N RasdaLEA_${element}
+#    ## Redirect output stream to this file.
+#    #PBS -o /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RasdaTest/logs
+#    ## Stream Standard Output AND Standard Error to outputfile (see above)
+#    #PBS -j oe
+#    ## Select a maximum of 20 cores and 200gb of RAM
+#    #PBS -l select=1:ncpus=5:mem=100gb
+#    ## load all necessary software into environment
+#
+#    Rscript ${scriptdir}/LEA_old.r $LeaOut $AF $envdata $element $rep """ > ${LeaOut}/test_${element}.sh
+#    #qsub ${LeaOut}/shell/test_${element}.sh
+#done
 #Rscript ${scriptdir}/PlotLEAPValues.r $wd $AF $metadata_new $arm $FinalOut
 
 ###Rscript ${scriptdir}/ComparePValues.R $AF ${wd}/results/${arm}/GM $LeaOut $FinalOut
@@ -230,9 +257,9 @@ done
 ####RDA
 #AF_file="${wd}/results/fullgenome2/Subsampled_fullgenome2.final_DP15.af"
 #metadata="${wd}/dest_v2.samps_3May2024.csv"
-neutral_af="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/Neutral.final.af"
-RDA_out="${wd}/results/${arm}/RDA"
-mkdir $RDA_out
+#neutral_af="/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/FullData2/results/fullgenome/Neutral.final.af"
+#RDA_out="${wd}/results/${arm}/RDA"
+#mkdir $RDA_out
 #RDA_out="${wd}/results/fullgenome2/RDA_annotations"
 #wc_folder="" ##needs to be included in script
 #env_data="/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RDA-landscape-genomics/wc2.5"

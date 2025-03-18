@@ -36,11 +36,16 @@ remove_monomorphic_rows <- function(genotype_data) {
 DATA_full <- read.table(args[2], h=T, sep="\t")
 rownames(DATA_full) <- paste0(DATA_full$Chr, DATA_full$Pos)
 SUB <- DATA_full[3:length(DATA_full)]
+###extra filter 
+freq_mean <- rowMeans(SUB)
+SUB <- SUB[-which(freq_mean>=0.95 | freq_mean<=0.05),]
+####
 samples <- gsub("\\.", "-", colnames(DATA_full))
 colnames(SUB) <- gsub("\\.", "-", colnames(SUB))
 ss_data <- metadata[metadata$sample %in% samples,]
 s_data <- na.exclude(ss_data)
 SUB2 <- SUB[colnames(SUB) %in% s_data$sample]
+SUB2 <- asin(sqrt(SUB2))
 SUB2 <- remove_monomorphic_rows(SUB2)
 
 
@@ -48,9 +53,10 @@ s_data <- s_data[s_data$sample %in% colnames(SUB2), ]
 DATA_full <- DATA_full[rownames(DATA_full) %in% rownames(SUB2), ]
 
 
-varname_or=paste(args[4])
+
+varname=paste(args[4])
 #print(colnames(s_data))
-varname <- gsub("\\+", ".", varname_or)
+#varname <- gsub("\\+", ".", varname_or)
 
 print(varname)
 
@@ -71,8 +77,9 @@ if (file.exists(geno_object)) {
   print("File exists and has been opened.")
 } else {
   tr <- t(as.matrix(SUB2))
-  tr <- round(tr,4)
-  print("DIMENSIONS OF GENO")
+  #tr_asin <- asin(sqrt(tr))
+  tr <- round(tr,2)
+  print("DIMENSIONS OF GENO-LFMM")
   print(nrow(tr))
   print(ncol(tr))
   # Write the matrix to an LFMM file
@@ -80,7 +87,9 @@ if (file.exists(geno_object)) {
   print("A new geno.lffm.file has been created.")
 }
 
-
+print(dim(tr))
+first_line <- readLines(geno_object, n = 1)
+print(length(strsplit(first_line, " ")[[1]]))
 
 var_index <- match(varname, colnames(s_data))
 print(varname)
@@ -111,12 +120,12 @@ markerpos <- data.frame(
                  
 #colnames(markerpos) <- c("Chr","Pos", "Pval")
                  
-write.csv(markerpos, paste(repdir,"/",varname,"_LEA_pvals.csv", sep=""))
+write.csv(markerpos, paste(repdir,"/",varname,"_LEA_pvals.csv", sep=""), row.names=FALSE)
 
 Bonf=0.05/(nrow(markerpos)+1)
 #markerpos <- as.data.frame(markerpos)
 outliers <- markerpos[markerpos$Pval < Bonf,]
-write.csv(outliers, paste(repdir,"/",varname,"_LEA_pvals_outliers.csv", sep=""))
+write.csv(outliers, paste(repdir,"/",varname,"_LEA_pvals_outliers.csv", sep=""), row.names=FALSE)
 
 
 print("LOADING ANNOTATIONS")
