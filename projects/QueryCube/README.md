@@ -48,13 +48,13 @@ The main workflow established is executed by several python scripts manually, do
 
 # Functions
 
-All the necessary functions can be found in the [code](projects/WormPickerOOP/code) directory.
+All the necessary functions can be found in the [code](projects/QueryCube/code) directory.
 
 
 # Example Use
 
 
-## Running the Wormpicker 
+## Running Query Cube 
 
 The program can be run from the terminal with the following command line:
 
@@ -81,7 +81,7 @@ The following parameters can be used with the script.
 - outdir: If the result should be stored as csv provide the path to the output directory. 
 
 
-Additional functions in the modules can be used to run custom versions of the wormpicker.
+Additional functions in the modules can be used to run custom workflows of Query Cube.
 
 
 # Output
