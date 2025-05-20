@@ -31,3 +31,4 @@ bash /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/proje
 
 #bash ${scriptdir}/LandscapeGenomics_onlyRDA.sh $wd $continent $arm $samplelist $input $metadata $envdata $AF >> FullDataRun_RDA_qsub.log 2>&1
 ###bash /media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/scripts/LandscapeGenomics_onlyLinear.sh
+
