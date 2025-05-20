@@ -230,7 +230,6 @@ ordiplot(mod, scaling=1, type="text")
 dev.off()
 
 write.csv(best_variables, file=paste0(outdir,"/ordiR2step/best_variables.csv"))
-#best_variables <- c("PasHayMet_l","SMpVSMU","AImH","Bio_5","Date_num","Bio_4","AImP","POMet","mERA5snowD","Bio_14","Bio_18","S1CRDH_VV","PO24d_l","PasHayFlu_l")
 
 EnvComp <- Env[best_variables]
 #EnvComp <- Env[,colnames(Env) %in% best_variables]
@@ -596,7 +595,7 @@ dev.off()
 
 ############## Adaptive Association via radapt, something does not fit its is > 50k SNPs... :(
 
-source("/media/inter/ssteindl/FC/usecaserepo/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RDA-landscape-genomics/src/rdadapt.R")
+source("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/RDA_utils/src/rdadapt.R")
 rdadapt_env<-rdadapt(RDA_env, 2)
 
 ## P-values threshold after Bonferroni correction (st.dev of 3.5 is 0.0005?)
@@ -605,8 +604,11 @@ thres_env <- 0.05/length(rdadapt_env$p.values)
 
 ## Identifying the loci that are below the p-value threshold
 #outliers <- data.frame(Loci = colnames(AllFreq)[which(rdadapt_env$p.values<thres_env)], p.value = rdadapt_env$p.values[which(rdadapt_env$p.values<thres_env)], contig = unlist(lapply(strsplit(colnames(AllFreq)[which(rdadapt_env$p.values<thres_env)], split = "_"), function(x) x[1])))
-outliers <- data.frame(Loci = colnames(AllFreq)[which(rdadapt_env$p.values<thres_env)], p.value = rdadapt_env$p.values[which(rdadapt_env$p.values<thres_env)], contig = unlist(lapply(strsplit(colnames(AllFreq)[which(rdadapt_env$p.values<thres_env)], split = "\\."), function(x) x[1])))
 
+#### outliers <- data.frame(Loci = colnames(AllFreq)[which(rdadapt_env$p.values<thres_env)], p.value = rdadapt_env$p.values[which(rdadapt_env$p.values<thres_env)], contig = unlist(lapply(strsplit(colnames(AllFreq)[which(rdadapt_env$p.values<thres_env)], split = "\\."), function(x) x[1])))
+rownames(rdadapt_env) <- colnames(AllFreq)
+outliers_o <- rdadapt_env[order(rdadapt_env$p.values),][1:500,]
+outliers <- data.frame(Loci = rownames(outliers), p.value = outliers$p.values, contig = unlist(lapply(strsplit(rownames(outliers), split = "\\."), function(x) x[1])))
 
 ####intersect outliers####
 
@@ -651,7 +653,7 @@ TAB_loci$chromosome <- sub("\\..*", "", TAB_loci$names)
 TAB_loci$type <- "All Loci"
 TAB_loci$type[TAB_loci$names%in%outliers$Loci] <- "Outlier"
 #TAB_loci$type[TAB_loci$names%in%top_1p_chromosome_outliers] <- "Top1"
-TAB_loci$type <- ifelse(TAB_loci$type == "Top1", 
+TAB_loci$type <- ifelse(TAB_loci$type == "Outlier", #top1
                         paste0("Chr ", TAB_loci$chromosome), 
                         TAB_loci$type)
 TAB_loci$type <- factor(TAB_loci$type, levels = c(unique(TAB_loci$type)))
@@ -804,5 +806,9 @@ names(LOC) <- gsub(".pval.arcsin","", names(LOC))
 
 LEA_files <- list.files("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/LandscapeGenomicsPipeline/DataAnalysis_after_RDA_1224/results/EuropePass/LEA/", pattern = "outliers.csv$",recursive = TRUE,  full.names = TRUE)
  
+
+
+### add the info about alternative allele
+AF_file2 <- read.delim("/media/inter/ssteindl/EAA/data/genomic/Subsampled_DP15.af", sep="\t", h=F)
 
 

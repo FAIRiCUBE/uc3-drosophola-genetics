@@ -2,19 +2,18 @@
 
 #install.packages('pegas')
 args <- commandArgs(TRUE)
+
 library(dplyr)
+#install.packages('pegas')
 library(pegas)
 library(ggplot2)
 library(raster)
 library(ggrepel)
-library(LEA)
-library(rnaturalearth)
-library(rnaturalearthdata)
 library(RColorBrewer)
 library(ggpubr)
 library(vegan)
 library(robust)
-library(qvalue)
+#library(qvalue)
 library(FactoMineR)
 library(factoextra)
 library(tidyverse)
@@ -115,7 +114,7 @@ if (file.exists(ModFILE)) {
 } else {
   # Generate the file
   mod <- ordiR2step(RDA0, RDAfull, Pin = 0.01, R2permutations = 1000, R2scope = T, parallel = 20)
-  saveRDS(mod, file=ModFILE)
+  #saveRDS(mod, file=ModFILE)
   message("File generated and saved successfully.")
 }
 

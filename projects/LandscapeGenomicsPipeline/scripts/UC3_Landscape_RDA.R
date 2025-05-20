@@ -26,7 +26,6 @@ library(tidyverse)
 library(gridExtra)
 
 
-
 # Functions
 get_meta_data <- function(csvfile) {
   meta <- read.csv(csvfile, header = TRUE)
@@ -78,7 +77,6 @@ print("Working with Allele Frequencies Means >=0.95 or <=0.05 ")
 print(nrow(AllFreq))
 print(ncol(AllFreq))
 
-
 print("READING ENVIRONMENTAL DATA")
 Env <- read.csv(envdata, header=TRUE)
 columns_with_only_na_string <- sapply(Env, function(x) all(x == "na"))
@@ -93,14 +91,11 @@ print("READING NULL VALUES DATA")
 null_values <- read.csv("/media/inter/ssteindl/FC/usecaserepo/SYNC0524/uc3-drosophola-genetics/projects/WormPickerOOP/NUllValuesDetail.csv", header=FALSE)
 null_values$V1 <- gsub("--7000--", "..7000..", null_values$V1)
 
-
-
 rownames(Env) <- c(Env2$sample)
 Env <- as.data.frame(Env)
 Rclean <- Env[, colSums(Env == "na") != nrow(Env)]
 df_numeric <- as.data.frame(lapply(Rclean, as.numeric))
 #Env <- na.exclude(Env)
-
 
 # Nur Spaltennamen auswählen, die sowohl in null_values$V1 als auch in df_numeric vorhanden sind
 valid_columns <- intersect(null_values$V1, colnames(df_numeric))
@@ -138,7 +133,6 @@ replace_na_with_median <- function(x) {
 rownames(df_new)<- Env2$sample
 #core_europe <- df_new[!grepl("^UA|RU|BY|DK", rownames(df_new)), ]
 
-
 na_count_col <- sapply(df_new, function(x) sum(is.na(x)))
 cols_to_keep <- na_count_col <= nrow(df_new)*0.05
 remains <- df_new[, cols_to_keep]
@@ -153,7 +147,6 @@ print("SCALING AND CENTERING")
 Env <- scale(ENV, center=TRUE, scale=TRUE) # center=TRUE, scale=TRUE are the defaults for scale()
 scale_env <- attr(Env, 'scaled:scale')
 center_env <- attr(Env, 'scaled:center')
-
 
 print("FIRST PCA")
 #colnames(remains) <- paste(substr(colnames(remains), 1, 4), 1:ncol(remains), sep = "_")
@@ -394,7 +387,6 @@ RsquareAdj(pRDAclim)
 png(filename = paste0(outdir,"/pRDA_climate.png"), width = 800, height = 600)
 plot(pRDAclim)
 dev.off()
-
 
 png(filename = paste0(outdir,"/CorrPlot.png"), width = 800, height = 600)
 corrplot(cor(VariablesN), type="upper")

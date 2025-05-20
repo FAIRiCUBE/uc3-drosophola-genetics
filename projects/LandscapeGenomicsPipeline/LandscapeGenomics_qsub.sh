@@ -142,7 +142,7 @@ Sub4="${wd}/results/${arm}/Subsampled_${arm}.final_DP15.vcf.gz"
 #
 #python3 ${scriptdir}/VCF2AF.py --input ${Sub4} > ${wd}/results/${arm}/Subsampled_${arm}.final_DP15.af
 #python3 ${scriptdir}/VCF2AF.py --input ${wd}/results/${arm}/Subsampled_neutral.vcf.gz > ${wd}/results/${arm}/Neutral.final.af
-#
+# 
 #
 ####annotate SNPs#
 #
