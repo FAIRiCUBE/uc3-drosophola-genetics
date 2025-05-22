@@ -8,9 +8,11 @@
 
 <h3 align="center">Use Case 3 - Drosophila Genetics </h3>
 
-  <p align="center">
+  <p align="left">
     The objective of Use Case 3 is to integrate genomic data of the fruit fly Drosophila melanogaster, which is one of the best-studied model organisms and a world-wide human commensal, with comprehensive environmental and climate information. This interdisciplinary approach aims to identify how environmental factors shape genetic variation and influence evolutionary processes. 
-    The repository is organized into subdirectories, each of which is linked to a specific project or component contributing to Use Case 3.  
+    The repository is organized into subdirectories, each of which is linked to a specific project or component contributing to Use Case 3.
+  </p>
+   <p align="center">
     <br />
     <a href="https://fairicube.nilu.no/"><strong>Explore FAIRiCUBE »</strong></a>
     <br />
@@ -24,10 +26,6 @@
 </div>
 
 
-<!-- TABLE OF CONTENTS -->
-1. [About the Repository](#about-the-repository)
-2. [Hypothesis and Research Questions](#hypothesis-and-research-questions)
-3. [Projects](#novel-aspects)
 
 
 ## About the Repository
