@@ -1,19 +1,3 @@
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-[![Projects][contributors-shield]][projects]
-[![Climate Data][forks-shield]][projects/ClimateData]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![project_license][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
-
 
 <!-- PROJECT LOGO -->
 <br />
@@ -25,54 +9,55 @@
 <h3 align="center">Use Case 3 - Drosophila Genetics </h3>
 
   <p align="center">
-    project_description
+    The objective of Use Case 3 is to integrate genomic data of the fruit fly Drosophila melanogaster, which is one of the best-studied model organisms and a world-wide human commensal, with comprehensive environmental and climate information. This interdisciplinary approach aims to identify how environmental factors shape genetic variation and influence evolutionary processes. 
+    The repository is organized into subdirectories, each of which is linked to a specific project or component contributing to Use Case 3.  
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <a href="https://fairicube.nilu.no/"><strong>Explore FAIRiCUBE »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    <a href="https://fairicube.nilu.no/uc3-environmental-adaptation-genomics-in-drosophila/">Website</a>
     &middot;
-    <a href="https://github.com/github_username/repo_name/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    <a href="https://fairicube.readthedocs.io/en/latest/user_guide/eox_lab/">FAIRiCUBE Lab</a>
     &middot;
-    <a href="https://github.com/github_username/repo_name/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://catalog.eoxhub.fairicube.eu/">Metadata Catalog</a>
   </p>
 </div>
 
 
-
 <!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+1. [About the Repository](#about-the-repository)
+2. [Hypothesis and Research Questions](#hypothesis-and-research-questions)
+3. [Projects](#novel-aspects)
 
 
+## About the Repository
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
+The structure of this GitHub repository—with its multiple subdirectories—emerged directly from the interdisciplinary nature of the project. The integration of genomic data with Earth Observation (EO) data presented unique challenges that required the development of tailored tools and workflows. One such example is the "QueryCube" tool, which was specifically created to bridge the gap between these distinct data domains and enable meaningful cross-domain analysis. Rather than being predefined, the subdirectories evolved organically as different scientific disciplines—ranging from bioinformatics to geospatial science—contributed their perspectives, methods, and requirements. The resulting modular organization reflects this collaborative process and ensures that the project remains extensible, transparent, and usable across diverse research communities.
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+## Hypothesis And Research Questions
 
-Here's a blank template to get started. To avoid retyping too much info, do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`, `project_license`
+1. How does environmental variation across space and time correlate with patterns of genetic diversity in Drosophila melanogaster populations?
+2. Which genomic regions or genes in Drosophila melanogaster show signatures of adaptation to specific environmental conditions?
+3. Can combinations of environmental factors predict changes in genetic structure or the presence of adaptive alleles in natural populations?
+4. Is it possible to also investigate those research questions in an urban context?
+
+![Scheme](docs/Scheme.png)
+
+## Projects
+
+To answer those complex questions, Use Case 3 is structured into various sub projects to 
+
+### [Gap Filling](projects/gap_filling)
+ This sub-project handles missing data issues within environmental or observational datasets. It explores algorithms and methodologies for interpolating, estimating, or simulating missing values based on surrounding information or predictive models.
+
+### [QueryCube](projects/QueryCube)
+The FAIRiCUBE "Query Cube" aims to fill this gap, enabling users with little experience in working with geospatial data to access relevant values from gridded resources for the point locations they’re interested in. All the user must do is to provide a coordinate pair, and indicate for which of the available gridded resources they’d require values. The Worm Picker accesses the complete FAIRiCUBE at the spatial location specified, and extracts a vector containing the requested information.
+
+### [Environmental Association Analysis](projects/LandscapeGenomicsPipeline)
+ Dedicated to the analysis pipeline, this directory includes scripts and tools for processing raw data, statistical analysis, visualizations, and reporting. It supports both exploratory and confirmatory data analysis for Use Case 3.
+
+### [Vienna City Fly](https://nhmvienna.github.io/ViennaCityFly/)
+ The FAIRiCUBE directory [uc3-vienna-city-fly](https://github.com/FAIRiCUBE/uc3-vienna-city-fly) engages with the citizen science aspect of the use case. It includes tools for data collection from non-professional contributors, platforms for public interaction, and methodologies for quality control and validation of user-submitted data.
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
