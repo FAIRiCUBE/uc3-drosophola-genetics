@@ -30,7 +30,7 @@
 
 ## About the Repository
 
-The structure of this GitHub repository—with its multiple subdirectories—emerged directly from the interdisciplinary nature of the project. The integration of genomic data with Earth Observation (EO) data presented unique challenges that required the development of tailored tools and workflows. One such example is the "QueryCube" tool, which was specifically created to bridge the gap between these distinct data domains and enable meaningful cross-domain analysis. Rather than being predefined, the subdirectories evolved organically as different scientific disciplines—ranging from bioinformatics to geospatial science—contributed their perspectives, methods, and requirements. The resulting modular organization reflects this collaborative process and ensures that the project remains extensible, transparent, and usable across diverse research communities.
+The structure of this GitHub repository, with its multiple subdirectories, emerged directly from the interdisciplinary nature of the project. The integration of genomic data with Earth Observation (EO) data presented unique challenges that required the development of tailored tools and workflows. One such example is the "QueryCube" tool, which was specifically created to bridge the gap between these distinct data domains and enable meaningful cross-domain analysis. Rather than being predefined, the subdirectories evolved organically as different scientific disciplines—ranging from bioinformatics to geospatial science—contributed their perspectives, methods, and requirements. The resulting modular organization is very crosslinked and reflects this collaborative process and ensures that the project remains extensible, transparent, and usable across diverse research communities.
 
 ## Hypothesis And Research Questions
 
@@ -43,8 +43,6 @@ The structure of this GitHub repository—with its multiple subdirectories—eme
 
 ## Projects
 
-To answer those complex questions, Use Case 3 is structured into various sub projects to 
-
 ### [Gap Filling](projects/gap_filling)
  This sub-project handles missing data issues within environmental or observational datasets. It explores algorithms and methodologies for interpolating, estimating, or simulating missing values based on surrounding information or predictive models.
 
@@ -52,10 +50,13 @@ To answer those complex questions, Use Case 3 is structured into various sub pro
 The FAIRiCUBE "Query Cube" aims to fill this gap, enabling users with little experience in working with geospatial data to access relevant values from gridded resources for the point locations they’re interested in. All the user must do is to provide a coordinate pair, and indicate for which of the available gridded resources they’d require values. The Worm Picker accesses the complete FAIRiCUBE at the spatial location specified, and extracts a vector containing the requested information.
 
 ### [Environmental Association Analysis](projects/LandscapeGenomicsPipeline)
- Dedicated to the analysis pipeline, this directory includes scripts and tools for processing raw data, statistical analysis, visualizations, and reporting. It supports both exploratory and confirmatory data analysis for Use Case 3.
+Dedicated to the analysis pipeline, this directory includes scripts and tools for downlaoding and processing raw data, statistical analysis, visualizations, and reporting. It supports both exploratory and confirmatory data analysis for Use Case 3.
 
 ### [Vienna City Fly](https://nhmvienna.github.io/ViennaCityFly/)
- The FAIRiCUBE directory [uc3-vienna-city-fly](https://github.com/FAIRiCUBE/uc3-vienna-city-fly) engages with the citizen science aspect of the use case. It includes tools for data collection from non-professional contributors, platforms for public interaction, and methodologies for quality control and validation of user-submitted data.
+The FAIRiCUBE directory [uc3-vienna-city-fly](https://github.com/FAIRiCUBE/uc3-vienna-city-fly) engages with the citizen science aspect of the use case. It includes tools for data collection from non-professional contributors, platforms for public interaction, and methodologies for quality control and validation of user-submitted data.
+
+
+### [Use Case Summary]()
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
