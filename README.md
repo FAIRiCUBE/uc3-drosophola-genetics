@@ -39,7 +39,7 @@ Research Questions On Urban <em>Drosophila</em> <br>
 1. What is the species composition of <em>Drosophila</em> communities in urban environments?<br>
 2. What are the key environmental factors that determine the distribution of flies in the City of Vienna?<br>
 3. How does the genetic diversity of urban <em>D. melanogaster</em> populations compare with that of populations from rural regions?<br>
-4. Can citizen science provide reliable data on the diversity and ecology of Drosophila in urban environments?<br>
+4. Can citizen science provide reliable data on the diversity and ecology of <em>Drosophila</em> in urban environments?<br>
 5. How does participation in such a project influence public awareness and interest in biodiversity and scientific research?<br>
 
 Research Questions On European <em>Drosophila</em>
@@ -52,7 +52,7 @@ Research Questions On European <em>Drosophila</em>
 ## Projects
 
 ### [Vienna City Fly](https://nhmvienna.github.io/ViennaCityFly/)
-This repository [Urban Drosophila Ecology](https://github.com/capoony/UrbanDrosophilaEcology) engages with the uran ecology aspect of the City Fly Project. It contains the complete data analysis pipeline for the Vienna City Fly Project, including combination of species abundance data with high-resolution environmental and climate data to understand how urban landscapes influence Drosophila community structure and distribution.
+This repository [Urban Drosophila Ecology](https://github.com/capoony/UrbanDrosophilaEcology) engages with the uran ecology aspect of the City Fly Project. It contains the complete data analysis pipeline for the Vienna City Fly Project, including combination of species abundance data with high-resolution environmental and climate data to understand how urban landscapes influence <em>Drosophila</em> community structure and distribution.
 The directoryIt includes tools for data collection from non-professional contributors, platforms for public interaction, and methodologies for quality control and validation of user-submitted data.
 
 ### [Gap Filling](projects/gap_filling)
@@ -67,7 +67,7 @@ Dedicated to the analysis pipeline, this directory includes scripts and tools fo
 
 ### Use Case Summary
 
-Overall, The research of Use Case 3 has improved our understanding of the relationship between environmental factors and biodiversity focusing on fruit flies of the genus <em>Drosophila</em>. By integrating various earth observation and biodiversity datasets and employing innovative analytical techniques, the project shed light on the ecology and evolutionary potential of urban <em>Drosophila</em> species facing global environmental changes. Empowered by Citizen Science we investigated environment influence the urban <em>Drosophila</em> species community and the genetic variation of Drosophila melanogaster populations. In summary, our “Drosophila adaptation” use case, successfully combined comprehensive earth observation data for climate and land use available in the public domain with newly generated biodiversity and genetic datasets to gain novel insights into how biodiversity is influenced by environmental change. 
+Overall, The research of Use Case 3 has improved our understanding of the relationship between environmental factors and biodiversity focusing on fruit flies of the genus <em>Drosophila</em>. By integrating various earth observation and biodiversity datasets and employing innovative analytical techniques, the project shed light on the ecology and evolutionary potential of urban <em>Drosophila</em> species facing global environmental changes. Empowered by Citizen Science we investigated environment influence the urban <em>Drosophila</em> species community and the genetic variation of <em>Drosophila melanogaster</em> populations. In summary, our “<em>Drosophila</em> adaptation” use case, successfully combined comprehensive earth observation data for climate and land use available in the public domain with newly generated biodiversity and genetic datasets to gain novel insights into how biodiversity is influenced by environmental change. 
 
 For a more visual representation of our UC concept, have a look [here](https://uc3.fairicube.nilu.no/).
 
