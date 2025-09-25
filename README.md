@@ -56,7 +56,10 @@ Dedicated to the analysis pipeline, this directory includes scripts and tools fo
 The FAIRiCUBE directory [uc3-vienna-city-fly](https://github.com/FAIRiCUBE/uc3-vienna-city-fly) engages with the citizen science aspect of the use case. It includes tools for data collection from non-professional contributors, platforms for public interaction, and methodologies for quality control and validation of user-submitted data.
 
 
-### [Use Case Summary]()
+### Use Case Summary
 
+Overall, The research of Use Case 3 has improved our understanding of the relationship between environmental factors and biodiversity focusing on fruit flies of the genus Drosophila. By integrating various earth observation and biodiversity datasets and employing innovative analytical techniques, the project shed light on the ecology and evolutionary potential of urban Drosophila species facing global environmental changes. Empowered by Citizen Science we investigated environment influence the urban Drosophila species community and the genetic variation of Drosophila melanogaster populations. In summary, our “Drosophila adaptation” use case, successfully combined comprehensive earth observation data for climate and land use available in the public domain with newly generated biodiversity and genetic datasets to gain novel insights into how biodiversity is influenced by environmental change. 
+
+For a more visual representation of our UC concept, have a look [here](https://uc3.fairicube.nilu.no/).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
