@@ -6,7 +6,7 @@ Download environmental data from the Rasdaman GmbH database for predefined point
 # Web Application
 
 If you want to use the WP Tool via WebApp, please visit: 
-https://wormpicker.nilu.no/
+https://querycube.nilu.no/
 Required input file is a .csv file with columns "sampleId, lat, long, date".
 
 
@@ -48,7 +48,7 @@ The main workflow established is executed by several python scripts manually, do
 
 # Functions
 
-All the necessary functions can be found in the [code](projects/QueryCube/code) directory.
+All the necessary functions can be found in the code directory.
 
 
 # Example Use
