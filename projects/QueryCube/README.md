@@ -32,7 +32,7 @@ This code has been developed within UC3 of FAIRiCUBE the Project.
 Currently the OGC WCS Service used is provided by rasdaman (https://ows.rasdaman.org/rasdaman/ows#/services).
 The FAIRiCUBE specific WCS is accessable via: https://fairicube.rasdaman.com/rasdaman/ows#/services 
 
-The main workflow established is executed by several python scripts manually, documented compact in a [main file](example_use/main.py) with execution code, further explanation and backround can be read under [Workflow](#workflow). 
+The main workflow established is executed by several python scripts manually, documented compact in a main file with execution code.
 
 
 
